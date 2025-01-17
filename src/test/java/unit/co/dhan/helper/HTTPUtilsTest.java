@@ -1,5 +1,6 @@
 package co.dhan.helper;
 
+import co.dhan.UnitTestRoot;
 import co.dhan.http.DhanHTTP;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HTTPUtilsTest {
+class HTTPUtilsTest extends UnitTestRoot {
 
     @Test
     public void testFullURLWithSlashPrefix() {

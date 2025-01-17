@@ -1,5 +1,6 @@
 package co.dhan.api;
 
+import co.dhan.api.ondemand.E2EOrderEndpointTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -8,7 +9,7 @@ import java.util.Properties;
 
 public abstract class E2EDhanTestRoot {
     protected static Properties ConfigurationProperties;
-    protected DhanContext dhanContext;
+    protected DhanConnection dhanConnection;
     protected DhanCore dhanCore;
 
 
@@ -16,7 +17,7 @@ public abstract class E2EDhanTestRoot {
     static void setUpOnce() throws IOException {
         ConfigurationProperties = new Properties();
         ConfigurationProperties
-                .load(E2EOrdersTest.class
+                .load(E2EOrderEndpointTest.class
                         .getClassLoader()
                         .getResourceAsStream("integration-test.properties")
                 );
@@ -24,8 +25,9 @@ public abstract class E2EDhanTestRoot {
 
     @BeforeEach
     void setUp() {
-        dhanContext = new DhanContext("", "");
-        dhanCore = new DhanCore(dhanContext);
+        dhanConnection = new DhanConnection(ConfigurationProperties.getProperty("dhan.clientID"),
+                ConfigurationProperties.getProperty("dhan.accessToken"));
+        dhanCore = new DhanCore(dhanConnection);
     }
 
 }

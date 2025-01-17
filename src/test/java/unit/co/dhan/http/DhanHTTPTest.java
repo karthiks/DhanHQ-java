@@ -1,5 +1,6 @@
 package co.dhan.http;
 
+import co.dhan.UnitTestRoot;
 import okhttp3.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class DhanHTTPTest {
+
+public class DhanHTTPTest extends UnitTestRoot {
 
     @Mock private OkHttpClient mockHttpClient;
     @Mock private Response mockResponse;

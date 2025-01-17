@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.constant.Exchange;
 import co.dhan.constant.Segment;
 import co.dhan.http.DhanAPIException;
@@ -38,21 +38,21 @@ public class SecurityEndpoint {
         String EdisInquire = "/edis/inquire/%s";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public SecurityEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public SecurityEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     public EDISStatus getEDISStatusOf(String isin) throws DhanAPIException {
         String endpoint = String.format(APIEndopint.EdisInquire, isin);
-        return dhanContext.getDhanHTTP()
+        return dhanConnection.getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(EDISStatus.class);
     }
 
     public String generateTPIN() throws DhanAPIException {
-        dhanContext.getDhanHTTP().doHttpGetRequest(APIEndopint.EdisTPin);
+        dhanConnection.getDhanHTTP().doHttpGetRequest(APIEndopint.EdisTPin);
         return APIParam.OTPSent;
     }
 
@@ -66,7 +66,7 @@ public class SecurityEndpoint {
         payload.put(APIParam.Segment, String.valueOf(segment));
         payload.put(APIParam.Bulk, String.valueOf(bulk));
 
-        DhanResponse dhanResponse = dhanContext.getDhanHTTP()
+        DhanResponse dhanResponse = dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndopint.EdisForm, payload);
         ObjectMapper objectMapper = new ObjectMapper();
         try {

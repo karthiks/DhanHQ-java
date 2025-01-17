@@ -1,6 +1,10 @@
 package co.dhan.http;
 
+import co.dhan.dto.ExchangeSegmentSecuritiesLTPWrapper;
+import co.dhan.helper.ExchangeSegmentSecuritiesLTPDeserializer;
 import co.dhan.helper.HTTPUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Getter;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -18,8 +22,7 @@ public class DhanHTTP {
     private final String clientID;
     private final String accessToken;
 
-    @Getter
-    private OkHttpClient httpClient;
+    @Getter private OkHttpClient httpClient;
 
     public DhanHTTP(String clientID, String accessToken) {
         this.clientID = clientID;
@@ -27,7 +30,7 @@ public class DhanHTTP {
         httpClient = buildHTTPClient();
     }
 
-    DhanHTTP(String clientID, String accessToken, OkHttpClient httpClient) {
+    public DhanHTTP(String clientID, String accessToken, OkHttpClient httpClient) {
         this.clientID = clientID;
         this.accessToken = accessToken;
         this.httpClient = httpClient;

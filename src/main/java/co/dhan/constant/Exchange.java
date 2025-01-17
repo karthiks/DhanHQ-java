@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Exchange {
+    IDX("Index"),
     NSE("National Stock Exchange"),
     BSE("Bombay Stock Exchange"),
     MCX("Multi Commodity Exchange"),

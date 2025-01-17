@@ -1,6 +1,9 @@
 package co.dhan.helper;
 
+import co.dhan.dto.ExchangeSegmentSecuritiesLTPWrapper;
 import co.dhan.http.DhanHTTP;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import okhttp3.HttpUrl;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,6 +11,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HTTPUtils {
+
+    public static ObjectMapper DhanObjectMapper;
+
+    static {
+        DhanObjectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ExchangeSegmentSecuritiesLTPWrapper.class,
+                new ExchangeSegmentSecuritiesLTPDeserializer());
+        DhanObjectMapper.registerModule(module);
+    }
 
     @NotNull
     public static String fullURL(@NotNull String endpoint) {
@@ -23,7 +36,7 @@ public class HTTPUtils {
 
     @NotNull
     public static String endpointWithURLParameters(@NotNull String endpoint, Map<String,String> requestParameters){
-        if(requestParameters == null)  return endpoint;
+        if(requestParameters == null || requestParameters.isEmpty())  return endpoint;
         String urlParams = requestParameters.entrySet().stream()
                 .map(entry -> String.format("%s=%s",entry.getKey(),entry.getValue()))
                 .collect(Collectors.joining("&"));
@@ -34,4 +47,5 @@ public class HTTPUtils {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         return httpBuilder.build();
     }
+
 }

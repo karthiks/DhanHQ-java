@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.http.DhanAPIException;
 import co.dhan.dto.Ledger;
 
@@ -18,10 +18,10 @@ public class StatementEndpoint {
         String LedgerReport = "/ledger?from-date=%s&to-date=%s";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public StatementEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public StatementEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     /**
@@ -36,7 +36,7 @@ public class StatementEndpoint {
         String endpoint = String.format(APIEndopint.LedgerReport,
                 fromDate.format(pattern),
                 toDate.format(pattern));
-        return dhanContext.getDhanHTTP()
+        return dhanConnection.getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(Ledger.class);
     }

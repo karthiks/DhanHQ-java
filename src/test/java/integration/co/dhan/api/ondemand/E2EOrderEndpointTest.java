@@ -1,5 +1,6 @@
-package co.dhan.api;
+package co.dhan.api.ondemand;
 
+import co.dhan.api.E2EDhanTestRoot;
 import co.dhan.dto.OrderStatusDTO;
 import co.dhan.http.DhanAPIException;
 import co.dhan.dto.Order;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class E2EOrdersTest extends E2EDhanTestRoot {
+public class E2EOrderEndpointTest extends E2EDhanTestRoot {
 
     @Test
     void getOrdersSuccessfully() throws DhanAPIException, IOException {

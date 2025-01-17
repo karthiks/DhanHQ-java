@@ -13,14 +13,16 @@ public class DhanCore {
     private final TraderControlEndpoint traderControlEndpoint;
     private final StatementEndpoint statementEndpoint;
     private final SecurityEndpoint securityEndpoint;
+    private final MarketFeedEndpoint marketFeedEndpoint;
 
-    public DhanCore(DhanContext dhanContext) {
-        orderEndpoint = new OrderEndpoint(dhanContext);
-        foreverOrderEndpoint = new ForeverOrderEndpoint(dhanContext);
-        portfolioEndpoint = new PortfolioEndpoint(dhanContext);
-        fundsEndpoint = new FundsEndpoint(dhanContext);
-        traderControlEndpoint = new TraderControlEndpoint(dhanContext);
-        statementEndpoint = new StatementEndpoint(dhanContext);
-        securityEndpoint = new SecurityEndpoint(dhanContext);
+    public DhanCore(DhanConnection dhanConnection) {
+        orderEndpoint = new OrderEndpoint(dhanConnection);
+        foreverOrderEndpoint = new ForeverOrderEndpoint(dhanConnection);
+        portfolioEndpoint = new PortfolioEndpoint(dhanConnection);
+        fundsEndpoint = new FundsEndpoint(dhanConnection);
+        traderControlEndpoint = new TraderControlEndpoint(dhanConnection);
+        statementEndpoint = new StatementEndpoint(dhanConnection);
+        securityEndpoint = new SecurityEndpoint(dhanConnection);
+        marketFeedEndpoint = new MarketFeedEndpoint(dhanConnection);
     }
 }

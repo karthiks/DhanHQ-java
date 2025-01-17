@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.constant.PositionType;
 import co.dhan.constant.ProductType;
@@ -30,21 +30,21 @@ public class PortfolioEndpoint {
         String ConvertPosition = "/positions/convert";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public PortfolioEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public PortfolioEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     public List<Holding> getCurrentHoldings() throws DhanAPIException {
-        List<Holding> holdings = dhanContext.getDhanHTTP()
+        List<Holding> holdings = dhanConnection.getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetCurrentHoldings)
                 .convertToType(new TypeReference<List<Holding>>() {});
         return holdings;
     }
 
     public List<Position> getCurrentPositions() throws DhanAPIException {
-        List<Position> positions = dhanContext.getDhanHTTP()
+        List<Position> positions = dhanConnection.getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetCurrentPositions)
                 .convertToType(new TypeReference<List<Position>>() {});
         return positions;
@@ -61,7 +61,7 @@ public class PortfolioEndpoint {
         payload.put(APIParam.ToProductType, toProductType.toString());
         payload.put(APIParam.ConvertQuantity, String.valueOf(convertQuantity));
 
-        return dhanContext.getDhanHTTP()
+        return dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.ConvertPosition, payload);
     }
 }

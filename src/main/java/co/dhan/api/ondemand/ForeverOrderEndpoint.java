@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.dto.OrderStatusDTO;
 import co.dhan.http.DhanAPIException;
 import co.dhan.dto.Order;
@@ -40,10 +40,10 @@ public class ForeverOrderEndpoint {
         String CancelForeverOrder = "/forever/orders/%s";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public ForeverOrderEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public ForeverOrderEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     public OrderStatusDTO placeForeverOrder(Order order, String tag) throws DhanAPIException {
@@ -66,7 +66,7 @@ public class ForeverOrderEndpoint {
             payload.put(APIParam.CorrelationID,tag.trim());
         }
 
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.CreateForeverOrder, payload)
                 .convertToType(OrderStatusDTO.class);
@@ -90,7 +90,7 @@ public class ForeverOrderEndpoint {
         payload.put(APIParam.Validity, order.getValidity().toString());
 
         String endpoint = String.format(APIEndpoint.ModifyForeverOrder,order.getOrderId());
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpPutRequest(endpoint, payload)
                 .convertToType(OrderStatusDTO.class);
@@ -99,7 +99,7 @@ public class ForeverOrderEndpoint {
 
     public OrderStatusDTO cancelForeverOrder(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.CancelForeverOrder,orderID);
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpDeleteRequest(endpoint)
                 .convertToType(OrderStatusDTO.class);
@@ -107,7 +107,7 @@ public class ForeverOrderEndpoint {
     }
 
     public List<Order> getAllForeverOrders() throws DhanAPIException {
-        List<Order> orders = dhanContext
+        List<Order> orders = dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetAllExistingForeverOrders)
                 .convertToType(new TypeReference<List<Order>>() {});

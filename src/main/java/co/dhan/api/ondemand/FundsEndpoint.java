@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.constant.ProductType;
 import co.dhan.constant.TransactionType;
@@ -28,14 +28,14 @@ public class FundsEndpoint {
         String ComputeMargin = "/margincalculator";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public FundsEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public FundsEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     public FundSummary getFundLimitDetails() throws DhanAPIException {
-        return dhanContext.getDhanHTTP()
+        return dhanConnection.getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetFundLimitDetails)
                 .convertToType(FundSummary.class);
     }
@@ -51,7 +51,7 @@ public class FundsEndpoint {
         payload.put(APIParam.Price, BigDecimalUtils.toBigDecimal(price).toString());
         payload.put(APIParam.TriggerPrice, BigDecimalUtils.toBigDecimal(triggerPrice).toString());
 
-        return dhanContext.getDhanHTTP()
+        return dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.ComputeMargin,payload)
                 .convertToType(Margin.class);
     }

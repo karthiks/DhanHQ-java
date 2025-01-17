@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanResponse;
@@ -22,15 +22,15 @@ public class TraderControlEndpoint {
         String ManageKillSwitch = "/killswitch?killSwitchStatus=%s";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public TraderControlEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public TraderControlEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     public String manageKillSwitch(KillSwitchStatus killSwitchStatus) throws DhanAPIException {
         String endpoint = String.format(APIEndopint.ManageKillSwitch, killSwitchStatus.toString());
-        DhanResponse dhanResponse = dhanContext.getDhanHTTP()
+        DhanResponse dhanResponse = dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(endpoint, new HashMap<>());
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> map = null;

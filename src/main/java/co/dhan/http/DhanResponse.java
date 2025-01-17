@@ -1,5 +1,6 @@
 package co.dhan.http;
 
+import co.dhan.helper.HTTPUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,7 @@ public class DhanResponse {
      */
     public <T> T convertToType(Class<T> clazz) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(responseBody,clazz);
+            return HTTPUtils.DhanObjectMapper.readValue(responseBody,clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,8 +34,7 @@ public class DhanResponse {
      */
     public <T> T convertToType(TypeReference<T> typeReference) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(responseBody,typeReference);
+            return HTTPUtils.DhanObjectMapper.readValue(responseBody,typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

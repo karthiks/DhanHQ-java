@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.DhanContext;
+import co.dhan.api.DhanConnection;
 import co.dhan.constant.AMOTime;
 import co.dhan.dto.OrderStatusDTO;
 import co.dhan.http.DhanAPIException;
@@ -46,10 +46,10 @@ public class OrderEndpoint {
         String PlaceSliceOrder = "/orders/slicing";
     }
 
-    private final DhanContext dhanContext;
+    private final DhanConnection dhanConnection;
 
-    public OrderEndpoint(DhanContext dhanContext) {
-        this.dhanContext = dhanContext;
+    public OrderEndpoint(DhanConnection dhanConnection) {
+        this.dhanConnection = dhanConnection;
     }
 
     /**
@@ -86,7 +86,7 @@ public class OrderEndpoint {
         }
 
         String endpoint = slice? APIEndpoint.PlaceSliceOrder : APIEndpoint.PlaceOrder;
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpPostRequest(endpoint, payload)
                 .convertToType(OrderStatusDTO.class);
@@ -135,7 +135,7 @@ public class OrderEndpoint {
         payload.put(APIParam.TriggerPrice, String.valueOf(order.getTriggerPrice()));
 
         String endpoint = String.format(APIEndpoint.ModifyOrder,order.getOrderId());
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpPutRequest(endpoint, payload)
                 .convertToType(OrderStatusDTO.class);
@@ -144,7 +144,7 @@ public class OrderEndpoint {
 
     public OrderStatusDTO cancelOrder(String orderID) throws IOException, DhanAPIException {
         String endpoint = String.format(APIEndpoint.CancelOrder,orderID);
-        OrderStatusDTO orderStatus = dhanContext
+        OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
                 .doHttpDeleteRequest(endpoint)
                 .convertToType(OrderStatusDTO.class);
@@ -152,7 +152,7 @@ public class OrderEndpoint {
     }
 
     public List<Order> getCurrentOrders() throws IOException, DhanAPIException {
-        List<Order> orders = dhanContext
+        List<Order> orders = dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetOrders)
                 .convertToType(new TypeReference<List<Order>>() {});
@@ -161,7 +161,7 @@ public class OrderEndpoint {
 
     public Order getOrderByID(String orderID) throws IOException, DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByID,orderID);
-        Order order = dhanContext
+        Order order = dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(Order.class);
@@ -170,7 +170,7 @@ public class OrderEndpoint {
 
     public Order getOrderByCorrelationID(String correlationID) throws IOException, DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByCorrelationID,correlationID);
-        Order order = dhanContext
+        Order order = dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(Order.class);
