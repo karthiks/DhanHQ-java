@@ -1,6 +1,6 @@
 package co.dhan.helper;
 
-import co.dhan.dto.ExchangeSegmentSecuritiesLTPWrapper;
+import co.dhan.dto.ExchangeSegmentCandlestickWrapper;
 import co.dhan.http.DhanHTTP;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -17,8 +17,8 @@ public class HTTPUtils {
     static {
         DhanObjectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(ExchangeSegmentSecuritiesLTPWrapper.class,
-                new ExchangeSegmentSecuritiesLTPDeserializer());
+        module.addDeserializer(ExchangeSegmentCandlestickWrapper.class,
+                new ExchangeSegmentCandlestickDeserializer());
         DhanObjectMapper.registerModule(module);
     }
 

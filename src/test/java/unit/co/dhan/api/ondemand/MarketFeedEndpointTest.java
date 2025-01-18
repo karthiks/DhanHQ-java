@@ -4,7 +4,7 @@ import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.dto.ExchangeSegmentSecurities;
-import co.dhan.dto.SecurityLTP;
+import co.dhan.dto.Candlestick;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
@@ -56,16 +56,16 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
                         exchangeSegmentSecurities.toMapOfStrings()))
                 .thenReturn(stubDhanResponse);
 
-        Map<ExchangeSegment, List<SecurityLTP>> map = marketFeedEndpoint
+        Map<ExchangeSegment, List<Candlestick>> map = marketFeedEndpoint
                 .getLTPFor(exchangeSegmentSecurities)
                 .getExchangeSegmentSecuritiesLTPMap();
 
         assertThat(map.get(ExchangeSegment.NSE_EQ))
-                .isEqualTo(List.of(new SecurityLTP("11536", "4520")));
+                .isEqualTo(List.of(new Candlestick("11536", "4520")));
         assertThat(map.get(ExchangeSegment.NSE_FNO))
                 .isEqualTo(List.of(
-                        new SecurityLTP("49081", "368.15"),
-                        new SecurityLTP("49082","694.35")));
+                        new Candlestick("49081", "368.15"),
+                        new Candlestick("49082","694.35")));
     }
 
     @Test
@@ -104,16 +104,16 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
                         exchangeSegmentSecurities.toMapOfStrings()))
                 .thenReturn(stubDhanResponse);
 
-        Map<ExchangeSegment, List<SecurityLTP>> map = marketFeedEndpoint
+        Map<ExchangeSegment, List<Candlestick>> map = marketFeedEndpoint
                 .getOHLCFor(exchangeSegmentSecurities)
                 .getExchangeSegmentSecuritiesLTPMap();
 
         assertThat(map.get(ExchangeSegment.NSE_EQ))
-                .isEqualTo(List.of(new SecurityLTP("11536", "4525.55", "4521.45", "4507.85","4530","4500")));
+                .isEqualTo(List.of(new Candlestick("11536", "4525.55", "4521.45", "4507.85","4530","4500")));
         assertThat(map.get(ExchangeSegment.NSE_FNO))
                 .isEqualTo(List.of(
-                        new SecurityLTP("49081", "368.15","0","368.15","0","0"),
-                        new SecurityLTP("49082","694.35","0","694.35","0","0")));
+                        new Candlestick("49081", "368.15","0","368.15","0","0"),
+                        new Candlestick("49082","694.35","0","694.35","0","0")));
 
     }
 }

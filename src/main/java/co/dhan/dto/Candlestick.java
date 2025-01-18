@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class SecurityLTP {
+public class Candlestick {
 
     public static String JSONPropertyLastPrice = "last_price";
     public static String JSONPropertyOHLC = "ohlc";
@@ -23,12 +23,12 @@ public class SecurityLTP {
     private String high;
     private String low;
 
-    public SecurityLTP(String security, String ltp) {
+    public Candlestick(String security, String ltp) {
         this.security = security;
         this.ltp = ltp;
     }
 
-    public SecurityLTP(String security, String ltp, String open, String close, String high, String low) {
+    public Candlestick(String security, String ltp, String open, String close, String high, String low) {
         this.security = security;
         this.ltp = ltp;
         this.open = open;

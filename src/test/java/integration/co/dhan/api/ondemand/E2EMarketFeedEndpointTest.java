@@ -3,7 +3,7 @@ package co.dhan.api.ondemand;
 import co.dhan.api.E2EDhanTestRoot;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.dto.ExchangeSegmentSecurities;
-import co.dhan.dto.SecurityLTP;
+import co.dhan.dto.Candlestick;
 import co.dhan.http.DhanAPIException;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ public class E2EMarketFeedEndpointTest extends E2EDhanTestRoot {
     public void getLTPForSecurities() throws DhanAPIException {
         ExchangeSegmentSecurities exchangeSegmentSecurities = new ExchangeSegmentSecurities();
         exchangeSegmentSecurities.add(ExchangeSegment.BSE_EQ, Set.of("1026077", "1026078"));
-        Map<ExchangeSegment, List<SecurityLTP>> map = dhanCore
+        Map<ExchangeSegment, List<Candlestick>> map = dhanCore
                 .getMarketFeedEndpoint()
                 .getLTPFor(exchangeSegmentSecurities)
                 .getExchangeSegmentSecuritiesLTPMap();

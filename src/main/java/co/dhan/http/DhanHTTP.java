@@ -1,10 +1,6 @@
 package co.dhan.http;
 
-import co.dhan.dto.ExchangeSegmentSecuritiesLTPWrapper;
-import co.dhan.helper.ExchangeSegmentSecuritiesLTPDeserializer;
 import co.dhan.helper.HTTPUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Getter;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;

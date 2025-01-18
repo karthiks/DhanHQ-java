@@ -1,8 +1,8 @@
 package co.dhan.helper;
 
 import co.dhan.constant.ExchangeSegment;
-import co.dhan.dto.ExchangeSegmentSecuritiesLTPWrapper;
-import co.dhan.dto.SecurityLTP;
+import co.dhan.dto.ExchangeSegmentCandlestickWrapper;
+import co.dhan.dto.Candlestick;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -16,45 +16,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static co.dhan.dto.SecurityLTP.*;
+import static co.dhan.dto.Candlestick.*;
 
-public class ExchangeSegmentSecuritiesLTPDeserializer
-        extends JsonDeserializer<ExchangeSegmentSecuritiesLTPWrapper> {
+public class ExchangeSegmentCandlestickDeserializer
+        extends JsonDeserializer<ExchangeSegmentCandlestickWrapper> {
     @Override
-    public ExchangeSegmentSecuritiesLTPWrapper deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+    public ExchangeSegmentCandlestickWrapper deserialize(JsonParser jsonParser, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         JsonNode jsonNode = jsonParser.getCodec().readTree(jsonParser);
-        JsonNode dataNode = jsonNode.get(ExchangeSegmentSecuritiesLTPWrapper.JSONPropertyData);
+        JsonNode dataNode = jsonNode.get(ExchangeSegmentCandlestickWrapper.JSONPropertyData);
 
-        Map<ExchangeSegment, List<SecurityLTP>> map = new HashMap<>();
+        Map<ExchangeSegment, List<Candlestick>> map = new HashMap<>();
         dataNode.fields().forEachRemaining(field -> {
             ExchangeSegment segment = ExchangeSegment.valueOf(field.getKey());
-            List<SecurityLTP> list = buildListOfSecurityLTP(field);
+            List<Candlestick> list = buildListOfSecurityLTP(field);
             map.put(segment, list);
         });
 
-        return new ExchangeSegmentSecuritiesLTPWrapper(map);
+        return new ExchangeSegmentCandlestickWrapper(map);
     }
 
     @NotNull
-    private static List<SecurityLTP> buildListOfSecurityLTP(Map.Entry<String, JsonNode> field) {
-        List<SecurityLTP> list = new ArrayList<>();
+    private static List<Candlestick> buildListOfSecurityLTP(Map.Entry<String, JsonNode> field) {
+        List<Candlestick> list = new ArrayList<>();
         field.getValue().fields().forEachRemaining(securityField -> {
             String securityid = securityField.getKey();
             String ltp = securityField.getValue().get(JSONPropertyLastPrice).asText();
-            SecurityLTP securityLTP = new SecurityLTP(securityid,ltp);
+            Candlestick candleStick = new Candlestick(securityid,ltp);
             JsonNode ohlcJsonNode = securityField.getValue().get(JSONPropertyOHLC);
             if (ohlcJsonNode != null) {
                 String open = ohlcJsonNode.get(JSONPropertyOpen).asText();
                 String close = ohlcJsonNode.get(JSONPropertyClose).asText();
                 String high = ohlcJsonNode.get(JSONPropertyHigh).asText();
                 String low = ohlcJsonNode.get(JSONPropertyLow).asText();
-                securityLTP.setOpen(open);
-                securityLTP.setClose(close);
-                securityLTP.setHigh(high);
-                securityLTP.setLow(low);
+                candleStick.setOpen(open);
+                candleStick.setClose(close);
+                candleStick.setHigh(high);
+                candleStick.setLow(low);
             }
-            list.add(securityLTP);
+            list.add(candleStick);
         });
         return list;
     }
