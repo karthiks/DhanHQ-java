@@ -9,8 +9,8 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class ExchangeSegmentCandlestickWrapper {
+public class ExchangeSegmentCandlesticksWrapper {
     public static String JSONPropertyData = "data";
 
-    private Map<ExchangeSegment, List<Candlestick>> exchangeSegmentSecuritiesLTPMap;
+    private Map<ExchangeSegment, List<Candlestick>> exchangeSegmentCandlesticksMap;
 }

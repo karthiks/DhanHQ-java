@@ -1,6 +1,7 @@
 package co.dhan.helper;
 
-import co.dhan.dto.ExchangeSegmentCandlestickWrapper;
+import co.dhan.dto.ExchangeSegmentCandlesticksWrapper;
+import co.dhan.dto.ExchangeSegmentQuotesWrapper;
 import co.dhan.http.DhanHTTP;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -17,8 +18,8 @@ public class HTTPUtils {
     static {
         DhanObjectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(ExchangeSegmentCandlestickWrapper.class,
-                new ExchangeSegmentCandlestickDeserializer());
+        module.addDeserializer(ExchangeSegmentCandlesticksWrapper.class,new ExchangeSegmentCandlesticksDeserializer());
+        module.addDeserializer(ExchangeSegmentQuotesWrapper.class, new ExchangeSegmentQuotesDeserializer());
         DhanObjectMapper.registerModule(module);
     }
 

@@ -22,7 +22,7 @@ public class E2EMarketFeedEndpointTest extends E2EDhanTestRoot {
         Map<ExchangeSegment, List<Candlestick>> map = dhanCore
                 .getMarketFeedEndpoint()
                 .getLTPFor(exchangeSegmentSecurities)
-                .getExchangeSegmentSecuritiesLTPMap();
+                .getExchangeSegmentCandlesticksMap();
         System.out.println("--Map<ExchangeSegment, List<SecurityLTP>> map--");
         map.forEach((exchangeSegment, securityLTPS) -> {
             System.out.println("exchangeSegment: " + exchangeSegment + ", securities :");

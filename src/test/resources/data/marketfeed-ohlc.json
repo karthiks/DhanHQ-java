@@ -1,0 +1,21 @@
+{
+  "data": {
+    "NSE_EQ": {
+      "11536": {
+        "last_price": 4525.55,
+        "ohlc": { "open": 4521.45, "close": 4507.85, "high": 4530, "low": 4500 }
+      }
+    },
+    "NSE_FNO": {
+      "49081": {
+        "last_price": 368.15,
+        "ohlc": { "open": 0, "close": 368.15, "high": 0, "low": 0 }
+      },
+      "49082": {
+        "last_price": 694.35,
+        "ohlc": { "open": 0, "close": 694.35, "high": 0, "low": 0 }
+      }
+    }
+  },
+  "status": "success"
+}

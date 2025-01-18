@@ -1,8 +1,9 @@
 package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
+import co.dhan.dto.ExchangeSegmentCandlesticksWrapper;
+import co.dhan.dto.ExchangeSegmentQuotesWrapper;
 import co.dhan.dto.ExchangeSegmentSecurities;
-import co.dhan.dto.ExchangeSegmentCandlestickWrapper;
 import co.dhan.http.DhanAPIException;
 
 import java.util.Map;
@@ -26,19 +27,26 @@ public class MarketFeedEndpoint {
         this.dhanConnection = dhanConnection;
     }
 
-    public ExchangeSegmentCandlestickWrapper getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)
+    public ExchangeSegmentCandlesticksWrapper getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)
             throws DhanAPIException {
         Map<String,String> payload = exchangeSegmentSecurities.toMapOfStrings();
         return dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.GetLTPForSecurities, payload)
-                .convertToType(ExchangeSegmentCandlestickWrapper.class);
+                .convertToType(ExchangeSegmentCandlesticksWrapper.class);
     }
 
-    public ExchangeSegmentCandlestickWrapper getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)
+    public ExchangeSegmentCandlesticksWrapper getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)
             throws DhanAPIException {
         Map<String,String> payload = exchangeSegmentSecurities.toMapOfStrings();
         return dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.GetOHLCForSecurities, payload)
-                .convertToType(ExchangeSegmentCandlestickWrapper.class);
+                .convertToType(ExchangeSegmentCandlesticksWrapper.class);
+    }
+
+    public ExchangeSegmentQuotesWrapper getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities) throws DhanAPIException {
+        Map<String,String> payload = exchangeSegmentSecurities.toMapOfStrings();
+        return dhanConnection.getDhanHTTP()
+                .doHttpPostRequest(APIEndpoint.GetQuoteForSecurities, payload)
+                .convertToType(ExchangeSegmentQuotesWrapper.class);
     }
 }

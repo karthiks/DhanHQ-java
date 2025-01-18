@@ -1,7 +1,7 @@
 package co.dhan.helper;
 
 import co.dhan.constant.ExchangeSegment;
-import co.dhan.dto.ExchangeSegmentCandlestickWrapper;
+import co.dhan.dto.ExchangeSegmentCandlesticksWrapper;
 import co.dhan.dto.Candlestick;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,26 +18,26 @@ import java.util.Map;
 
 import static co.dhan.dto.Candlestick.*;
 
-public class ExchangeSegmentCandlestickDeserializer
-        extends JsonDeserializer<ExchangeSegmentCandlestickWrapper> {
+public class ExchangeSegmentCandlesticksDeserializer
+        extends JsonDeserializer<ExchangeSegmentCandlesticksWrapper> {
     @Override
-    public ExchangeSegmentCandlestickWrapper deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+    public ExchangeSegmentCandlesticksWrapper deserialize(JsonParser jsonParser, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         JsonNode jsonNode = jsonParser.getCodec().readTree(jsonParser);
-        JsonNode dataNode = jsonNode.get(ExchangeSegmentCandlestickWrapper.JSONPropertyData);
+        JsonNode dataNode = jsonNode.get(ExchangeSegmentCandlesticksWrapper.JSONPropertyData);
 
         Map<ExchangeSegment, List<Candlestick>> map = new HashMap<>();
         dataNode.fields().forEachRemaining(field -> {
             ExchangeSegment segment = ExchangeSegment.valueOf(field.getKey());
-            List<Candlestick> list = buildListOfSecurityLTP(field);
+            List<Candlestick> list = buildListOfCandlesticks(field);
             map.put(segment, list);
         });
 
-        return new ExchangeSegmentCandlestickWrapper(map);
+        return new ExchangeSegmentCandlesticksWrapper(map);
     }
 
     @NotNull
-    private static List<Candlestick> buildListOfSecurityLTP(Map.Entry<String, JsonNode> field) {
+    private static List<Candlestick> buildListOfCandlesticks(Map.Entry<String, JsonNode> field) {
         List<Candlestick> list = new ArrayList<>();
         field.getValue().fields().forEachRemaining(securityField -> {
             String securityid = securityField.getKey();
