@@ -8,12 +8,7 @@ import co.dhan.http.DhanAPIException;
 
 import java.util.Map;
 
-public class MarketFeedEndpoint {
-
-    interface APIParam {
-        String ExchangeSegment = "exchange_segment";
-        String SecurityID = "security_id";
-    }
+public class MarketQuotesEndpoint {
 
     interface APIEndpoint {
         String GetLTPForSecurities = "/marketfeed/ltp";
@@ -23,7 +18,7 @@ public class MarketFeedEndpoint {
 
     private final DhanConnection dhanConnection;
 
-    public MarketFeedEndpoint(DhanConnection dhanConnection) {
+    public MarketQuotesEndpoint(DhanConnection dhanConnection) {
         this.dhanConnection = dhanConnection;
     }
 

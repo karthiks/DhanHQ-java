@@ -13,7 +13,7 @@ public class DhanCore {
     private final TraderControlEndpoint traderControlEndpoint;
     private final StatementEndpoint statementEndpoint;
     private final SecurityEndpoint securityEndpoint;
-    private final MarketFeedEndpoint marketFeedEndpoint;
+    private final MarketQuotesEndpoint marketQuotesEndpoint;
 
     public DhanCore(DhanConnection dhanConnection) {
         orderEndpoint = new OrderEndpoint(dhanConnection);
@@ -23,6 +23,6 @@ public class DhanCore {
         traderControlEndpoint = new TraderControlEndpoint(dhanConnection);
         statementEndpoint = new StatementEndpoint(dhanConnection);
         securityEndpoint = new SecurityEndpoint(dhanConnection);
-        marketFeedEndpoint = new MarketFeedEndpoint(dhanConnection);
+        marketQuotesEndpoint = new MarketQuotesEndpoint(dhanConnection);
     }
 }

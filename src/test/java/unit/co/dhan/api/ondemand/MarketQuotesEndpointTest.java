@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static co.dhan.api.ondemand.MarketFeedEndpoint.APIEndpoint.*;
+import static co.dhan.api.ondemand.MarketQuotesEndpoint.APIEndpoint.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class MarketFeedEndpointTest extends UnitTestRoot {
+public class MarketQuotesEndpointTest extends UnitTestRoot {
 
     @Mock
     private DhanConnection mockDhanConnection;
@@ -33,11 +33,11 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
     private DhanHTTP mockDhanHTTP;
 
     @InjectMocks
-    private MarketFeedEndpoint marketFeedEndpoint;
+    private MarketQuotesEndpoint marketQuotesEndpoint;
 
     @Test
     public void testGetLTPForSecuritiesOnSuccessResponse() throws DhanAPIException, IOException, URISyntaxException {
-        String expectedResponse = getExpectedResponseFromResource("/data/marketfeed-ltp.json");
+        String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-ltp.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 
         ExchangeSegmentSecurities exchangeSegmentSecurities = new ExchangeSegmentSecurities();
@@ -49,7 +49,7 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
                 .doHttpPostRequest(GetLTPForSecurities, exchangeSegmentSecurities.toMapOfStrings()))
                 .thenReturn(stubDhanResponse);
 
-        Map<ExchangeSegment, List<Candlestick>> map = marketFeedEndpoint
+        Map<ExchangeSegment, List<Candlestick>> map = marketQuotesEndpoint
                 .getLTPFor(exchangeSegmentSecurities)
                 .getExchangeSegmentCandlesticksMap();
 
@@ -63,7 +63,7 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
 
     @Test
     public void testGetOHLCForSecuritiesOnSuccessResponse() throws DhanAPIException, URISyntaxException, IOException {
-        String expectedResponse = getExpectedResponseFromResource("/data/marketfeed-ohlc.json");
+        String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-ohlc.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 
         ExchangeSegmentSecurities exchangeSegmentSecurities = new ExchangeSegmentSecurities();
@@ -75,7 +75,7 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
                 .doHttpPostRequest(GetOHLCForSecurities,exchangeSegmentSecurities.toMapOfStrings()))
                 .thenReturn(stubDhanResponse);
 
-        Map<ExchangeSegment, List<Candlestick>> map = marketFeedEndpoint
+        Map<ExchangeSegment, List<Candlestick>> map = marketQuotesEndpoint
                 .getOHLCFor(exchangeSegmentSecurities)
                 .getExchangeSegmentCandlesticksMap();
 
@@ -90,7 +90,7 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
 
     @Test
     public void testGetQuoteForSecuritiesOnSuccessResponse() throws DhanAPIException, IOException, URISyntaxException {
-        String expectedResponse = getExpectedResponseFromResource("/data/marketfeed-quote.json");
+        String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-quote.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 
         ExchangeSegmentSecurities exchangeSegmentSecurities = new ExchangeSegmentSecurities();
@@ -98,7 +98,7 @@ public class MarketFeedEndpointTest extends UnitTestRoot {
 
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(eq(GetQuoteForSecurities), anyMap())).thenReturn(stubDhanResponse);
-        Map<ExchangeSegment, List<Quote>> map = marketFeedEndpoint
+        Map<ExchangeSegment, List<Quote>> map = marketQuotesEndpoint
                 .getQuoteFor(exchangeSegmentSecurities)
                 .getExchangeSegmentQuotesMap();
         assertThat(map.get(ExchangeSegment.NSE_FNO)).hasSize(1);
