@@ -2,10 +2,10 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
+import co.dhan.helper.HTTPUtils;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -32,10 +32,9 @@ public class TraderControlEndpoint {
         String endpoint = String.format(APIEndopint.ManageKillSwitch, killSwitchStatus.toString());
         DhanResponse dhanResponse = dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(endpoint, new HashMap<>());
-        ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> map = null;
         try {
-            map = objectMapper.readValue(dhanResponse.toString(), Map.class);
+            map = HTTPUtils.DhanObjectMapper.readValue(dhanResponse.toString(), Map.class);
             return map.get(APIParam.KillSwitchStatus);
         } catch (JsonProcessingException e) {
             String msg = String.format("Error parsting HTTP Response: %s",dhanResponse.toString());

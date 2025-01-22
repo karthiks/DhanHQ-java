@@ -1,13 +1,10 @@
 package co.dhan.dto;
 
-import lombok.Data;
-
-@Data
-public class EDISStatus {
-    private String clientId;
-    private String isin;
-    private String totalQty;
-    private String aprvdQty;
-    private String status;
-    private String remarks;
-}
+public record EDISStatus (
+    String clientId,
+    String isin,
+    String totalQty,
+    String aprvdQty,
+    String status,
+    String remarks
+) {}
