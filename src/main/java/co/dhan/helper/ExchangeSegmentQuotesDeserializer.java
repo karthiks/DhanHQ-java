@@ -1,10 +1,7 @@
 package co.dhan.helper;
 
 import co.dhan.constant.ExchangeSegment;
-import co.dhan.dto.Depth;
-import co.dhan.dto.ExchangeSegmentQuotesWrapper;
-import co.dhan.dto.Quote;
-import co.dhan.dto.Trade;
+import co.dhan.dto.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -22,7 +19,6 @@ import static co.dhan.dto.Depth.JSONPropertyBuy;
 import static co.dhan.dto.Depth.JSONPropertySell;
 import static co.dhan.dto.ExchangeSegmentQuotesWrapper.JSONPropertyData;
 import static co.dhan.dto.Quote.*;
-import static co.dhan.dto.Trade.*;
 
 public class ExchangeSegmentQuotesDeserializer
         extends JsonDeserializer<ExchangeSegmentQuotesWrapper> {
@@ -73,26 +69,26 @@ public class ExchangeSegmentQuotesDeserializer
             Depth depth = new Depth();
 
             JsonNode buyJsonNode = depthJsonNode.get(JSONPropertyBuy);
-            List<Trade> buyTrades = new ArrayList<>();
+            List<Bid> bids = new ArrayList<>();
             buyJsonNode.forEach( buy -> {
-                Trade trade = new Trade();
-                trade.setOrders(buy.get(JSONPropertyOrders).asText());
-                trade.setQuantity(buy.get(JSONPropertyQuantity).asText());
-                trade.setPrice(buy.get(JSONPropertyPrice).asText());
-                buyTrades.add(trade);
+                Bid bid = new Bid();
+                bid.setOrders(buy.get(Bid.JSONPropertyOrders).asText());
+                bid.setQuantity(buy.get(Bid.JSONPropertyQuantity).asText());
+                bid.setPrice(buy.get(Bid.JSONPropertyPrice).asText());
+                bids.add(bid);
             });
-            depth.setBuy(buyTrades);
+            depth.setBuy(bids);
 
             JsonNode sellJsonNode = depthJsonNode.get(JSONPropertySell);
-            List<Trade> sellTrades = new ArrayList<>();
+            List<Ask> asks = new ArrayList<>();
             sellJsonNode.forEach( sell -> {
-                Trade trade = new Trade();
-                trade.setOrders(sell.get(JSONPropertyOrders).asText());
-                trade.setQuantity(sell.get(JSONPropertyQuantity).asText());
-                trade.setPrice(sell.get(JSONPropertyPrice).asText());
-                sellTrades.add(trade);
+                Ask ask = new Ask();
+                ask.setOrders(sell.get(Ask.JSONPropertyOrders).asText());
+                ask.setQuantity(sell.get(Ask.JSONPropertyQuantity).asText());
+                ask.setPrice(sell.get(Ask.JSONPropertyPrice).asText());
+                asks.add(ask);
             });
-            depth.setSell(sellTrades);
+            depth.setSell(asks);
 
             quote.setDepth(depth);
             list.add(quote);

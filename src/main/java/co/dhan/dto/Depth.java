@@ -9,6 +9,6 @@ public class Depth {
     public static String JSONPropertyBuy = "buy";
     public static String JSONPropertySell = "sell";
 
-    private List<Trade> buy;
-    private List<Trade> sell;
+    private List<Bid> buy;
+    private List<Ask> sell;
 }
