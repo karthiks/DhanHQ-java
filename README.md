@@ -5,7 +5,7 @@ The **unofficial** Java SDK for communicating with the [Dhan API](https://api.dh
 DhanHQ-py Rest API is used to automate investing and trading. Execute orders in real time along with position management, live and historical data, tradebook and more with simple API collection.
 
 > The implementation is nearing completion to what is in the API Docs. 
-> The API for streaming/real-time data isn't yet incorporated and you shall have it sooner. 
+> The API for streaming/real-time data isn't yet fully incorporated and you shall have it sooner. 
 
 ## Documentation
 
@@ -53,7 +53,7 @@ How does this affect you? Your code implementation is ridiculously brain friendl
 4. Last but not the least, no developer should be asked to go through burnout hell at work by infringing in their personal lives.
    What developers do in their personal lives - staring, sharing or caring - is best left for them to decide. 
    The SDK is built consciously to make the life of a developer - productive instead of being just busy. 
-   May you work well, live healthier and nurture others around you. We grow better together! 
+   May you work well, live healthier and nurture others around you. We grow better together!
 
 ## Cookbook
 
@@ -65,12 +65,18 @@ import co.dhan.api.DhanCore;
 DhanConnection dhanConnection = new DhanConnection("clientid","accessToken");
 DhanCore dhanCore = new DhanCore(dhanConnection);
 ```
-### Ondemand data recipie
-### Ondemand data recipie
+
+### On-demand data recipie
+
 ```java
 //Pre-requisite: See section "The common starting point".
 //Pattern: dhanCore.getYourEndpoint().action();
-var result = dhanCore.getPortfolioEndpoint().getCurrentHoldings();
+FundSummary fundSummary = dhanCore.getFundsEndpoint().getFundLimitDetails();
+List<Order> foreverOrders = dhanCore.getforeverOrderEndpoint().getAllForeverOrders();
+List<Holding> currrentHoldings = dhanCore.getPortfolioEndpoint().getCurrentHoldings();
+List<Position> currentPositions = dhanCore.getPortfolioEndpoint().getCurrentPositions();
+DhanResponse dhanResponse = dhanCore.getPortfolioEndpoint().convertPosition(..);
+
 ```
 
 ### Live Market Feed Usage
