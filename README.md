@@ -1,4 +1,4 @@
-# DhanHQ-java: v0.1.0-SNAPSHOT
+# DhanHQ-java: v0.5.0-SNAPSHOT
 
 The **unofficial** Java SDK for communicating with the [Dhan API](https://api.dhan.co/v2/).
 
@@ -12,7 +12,18 @@ DhanHQ-py Rest API is used to automate investing and trading. Execute orders in 
 - [DhanHQ Developer Kit](https://api.dhan.co/v2/)
 - [DhanHQ API Documentation](https://dhanhq.co/docs/v2/)
 
-## Motivation
+## The Challenge
+
+Stocking Market in India has been burgeoning on and on for over a decade now as part of India Growth story.
+As consequence, we see a lot of Stock Broking companies cropping up as well.
+
+Unfortunately but understandably (at least for me), most of stock broking platforms aren't stable, and performant on the server-side - the social media reeks of such reviews.
+Many stock broking platforms including legacy banks don't even have SDKs and yet compete in screaming of being customer-obsessed.
+And those that do have an SDK supporting one or two platforms, have a lot of room for improvement.  
+
+This project is about filling one such gap in leveraging Dhan Stock broking platform APIs, by building SDKs for avid algorothimic traders.
+
+## Motivation (The Challenge is the motivation!)
 
 1. The primary goal of this SDK is to build an SDK that its users love to use 
 by reducing the friction between the API documentation and code. This goal is achieved by adopting WYSIWYG (What You See Is What You Get) principle,
@@ -39,10 +50,10 @@ How does this affect you? Your code implementation is ridiculously brain friendl
 3. Build Fluent APIs that hides technical complexities under the wraps of brings Domain Specific Language. 
    Even if you aren't a domain expert, you should become comfortable with the usage of this SDK.
 
-4. ***Last but not the least, no developer should be asked to go through burnout hell at work by infringing in their personal lives.
+4. Last but not the least, no developer should be asked to go through burnout hell at work by infringing in their personal lives.
    What developers do in their personal lives - staring, sharing or caring - is best left for them to decide. 
    The SDK is built consciously to make the life of a developer - productive instead of being just busy. 
-   May you work well, live healthier and nurture others around you, for a better tomorrow.*** 
+   May you work well, live healthier and nurture others around you. We grow better together! 
 
 ## Cookbook
 
@@ -125,4 +136,11 @@ liveMarketfeed.disconnect();
 
 ## Want to contribute?
 
-Feel free to file your issues or send in your PRs for active collaboration to make this even sweeter for its users.
+If you are an Stock Trader doing Algorithmic Trading or wanting to do one, this is your go to SDK for your productivity at work.
+
+There are a number of ways you can contribute to this project:
+- As end-user file [issues](https://github.com/karthiks/DhanHQ-java/issues), sharing bugs, if any, you encounter in using this SDK.
+- As end-user file [issues](https://github.com/karthiks/DhanHQ-java/issues), seeking new features you'd wish to see. 
+  But remember, this SDK is your vehicle to simplify the complexity of the vanilla server-side API. 
+  If you are in doubt, check out what it takes to use Live feed from the API using the Websockets from most Stock Broking APIs in India.
+- This ain't a perfect piece and so would love to see you contributing [PRs](https://github.com/karthiks/DhanHQ-java/pulls) as collaborative endeavor to make the lives of Algorithimic traders better and better. 
