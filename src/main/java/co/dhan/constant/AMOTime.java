@@ -3,6 +3,9 @@ package co.dhan.constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * AMO Time is After Market Order Time.
+ */
 @Getter
 @AllArgsConstructor
 public enum AMOTime {

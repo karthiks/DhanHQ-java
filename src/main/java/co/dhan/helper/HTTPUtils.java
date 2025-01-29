@@ -3,6 +3,8 @@ package co.dhan.helper;
 import co.dhan.dto.ExchangeSegmentCandlesticksWrapper;
 import co.dhan.dto.ExchangeSegmentQuotesWrapper;
 import co.dhan.http.DhanHTTP;
+import co.dhan.http.ExchangeSegmentCandlesticksDeserializer;
+import co.dhan.http.ExchangeSegmentQuotesDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import okhttp3.HttpUrl;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public class DhanAPIException extends Throwable {
+public class DhanAPIException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     @Getter
@@ -15,6 +15,6 @@ public class DhanAPIException extends Throwable {
 
     @Override
     public String toString() {
-        return String.format("DhanAPIException (HTTP STATUS CODE %s): %s",code,message);
+        return String.format("DhanAPIException (CODE %s): %s",code,message);
     }
 }

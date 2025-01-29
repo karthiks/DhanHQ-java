@@ -3,15 +3,19 @@ package co.dhan.helper;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class BigDecimalUtils {
-    public static final int DEFAULT_SCALE = 2;
-    public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_UP;
+public interface BigDecimalUtils {
+    int DEFAULT_SCALE = 2;
+    RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_UP;
 
-    public static BigDecimal toBigDecimal(String value) {
+    static BigDecimal toBigDecimal(double value) {
+        return toBigDecimal(String.valueOf(value));
+    }
+
+    static BigDecimal toBigDecimal(String value) {
         return toBigDecimal(value, DEFAULT_SCALE, DEFAULT_ROUNDING_MODE);
     }
 
-    public static BigDecimal toBigDecimal(String value, int scale, RoundingMode roundingMode) {
+    static BigDecimal toBigDecimal(String value, int scale, RoundingMode roundingMode) {
         if (value == null || value.isEmpty()) {
             value = "0.0";
         }
@@ -23,19 +27,19 @@ public class BigDecimalUtils {
         }
     }
 
-    public static BigDecimal add(BigDecimal a, BigDecimal b) {
+    static BigDecimal add(BigDecimal a, BigDecimal b) {
         return toBigDecimal(a.add(b).toString());
     }
 
-    public static BigDecimal subtract(BigDecimal a, BigDecimal b) {
+    static BigDecimal subtract(BigDecimal a, BigDecimal b) {
         return toBigDecimal(a.subtract(b).toString());
     }
 
-    public static BigDecimal multiply(BigDecimal a, BigDecimal b) {
+    static BigDecimal multiply(BigDecimal a, BigDecimal b) {
         return toBigDecimal(a.multiply(b).toString());
     }
 
-    public static BigDecimal divide(BigDecimal a, BigDecimal b) {
+    static BigDecimal divide(BigDecimal a, BigDecimal b) {
         return toBigDecimal(a.divide(b, DEFAULT_SCALE, DEFAULT_ROUNDING_MODE).toString());
     }
 }

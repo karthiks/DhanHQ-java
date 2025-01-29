@@ -28,12 +28,23 @@ public class Quote {
     private String lastPrice;
     private String lastQuantity;
     private String lastTradeTime;
+    /**
+     * Average Trade Price (ATP)
+     */
+    private String averagePrice;
+    private String volume;
+    /**
+     * Total Buy Quantity
+     */
+    private String buyQuantity;
+    /**
+     * Total Sell Quantity
+     */
+    private String sellQuantity;
     private String open;
     private String close;
     private String high;
     private String low;
-    private String averagePrice;
-    private String buyQuantity;
     private String lowerCircuitLimit;
     private String upperCircuitLimit;
     private String netChange;
@@ -49,7 +60,5 @@ public class Quote {
      * Lowest Open Interest for the day (only for NSE_FNO)
      */
     private String oiDayLow;
-    private String sellQuantity;
-    private String volume;
     private Depth depth;
 }

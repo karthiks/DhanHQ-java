@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 @NoArgsConstructor
-public class ExchangeSegmentSecurities {
+public class ExchangeSegmentSecurities { //Rename as MapOfExchangeSegmentToSecurities
     private Map<ExchangeSegment, Set<String>> data = new HashMap<>();
 
     public ExchangeSegmentSecurities add(ExchangeSegment exchangeSegment,Set<String> securities) {

@@ -1,6 +1,7 @@
 package co.dhan.api;
 
 import co.dhan.api.ondemand.*;
+import co.dhan.api.stream.LiveMarketFeed;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +15,7 @@ public class DhanCore {
     private final StatementEndpoint statementEndpoint;
     private final SecurityEndpoint securityEndpoint;
     private final MarketQuotesEndpoint marketQuotesEndpoint;
+    private final LiveMarketFeed liveMarketFeed;
 
     public DhanCore(DhanConnection dhanConnection) {
         orderEndpoint = new OrderEndpoint(dhanConnection);
@@ -24,5 +26,6 @@ public class DhanCore {
         statementEndpoint = new StatementEndpoint(dhanConnection);
         securityEndpoint = new SecurityEndpoint(dhanConnection);
         marketQuotesEndpoint = new MarketQuotesEndpoint(dhanConnection);
+        liveMarketFeed = new LiveMarketFeed(dhanConnection);
     }
 }

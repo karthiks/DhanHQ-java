@@ -1,4 +1,4 @@
-package co.dhan.helper;
+package co.dhan.http;
 
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.dto.*;
