@@ -16,7 +16,6 @@ import static co.dhan.helper.BigDecimalUtils.toBigDecimal;
 @EqualsAndHashCode
 public class LiveTicker {
 
-//    @Getter(AccessLevel.NONE)
     private ExchangeSegment exchangeSegment;
     private String securityID; //ISIN = 12-char alpha-numeric
     private BigDecimal lastTradingPrice;
@@ -30,18 +29,6 @@ public class LiveTicker {
     }
 
     public LiveTicker(ByteBuffer buffer) {
-//        if (buffer.remaining() < 16) {
-//            System.out.println("Incomplete ticker data received.");
-//            return;
-//        }
-        /*
-        buffer.position(0); // Reset buffer position
-        buffer.get(); // Skip the first byte (message type
-        short messageLength = buffer.getShort();
-        byte exchangeSegmentCode = buffer.get();
-        int securityid = buffer.getInt();
-        float ltp = buffer.getFloat();
-        int ltt = buffer.getInt(); */
         //Extracting values based on format param to struct.unpack(format, bytestream) in python SDK - marketfeed.process_ticker()
         byte exchangeSegmentCode = buffer.get(3);
         int securityid = buffer.getInt(4);
@@ -51,13 +38,5 @@ public class LiveTicker {
         securityID = String.valueOf(securityid); //?? Or Join getChar() N times based on length of security
         lastTradingPrice = toBigDecimal(ltp);
         lastTradingTime = Instant.ofEpochSecond(ltt);
-    }
-
-    public static int sizeInBytes() {
-        int sizeOfExchangeSegment = Byte.SIZE,
-                sizeOfSecurityId = Integer.SIZE, // Should it be 2 time number of chars + 38 for its metadata??
-                sizeOfLastTradingPrice = Float.SIZE,
-                sizeOfTradingTime = Integer.SIZE;
-        return sizeOfExchangeSegment + sizeOfSecurityId + sizeOfLastTradingPrice + sizeOfTradingTime;
     }
 }

@@ -15,7 +15,7 @@ import static co.dhan.helper.BigDecimalUtils.toBigDecimal;
 @EqualsAndHashCode
 public class LivePrevClose {
     private ExchangeSegment exchangeSegment;
-    private String securityID; //ISIN = 12-char alpha-numeric
+    private String securityID;
     private BigDecimal prev_close;
     private int prev_OI;
 
