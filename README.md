@@ -1,4 +1,4 @@
-# DhanHQ-java: v0.5.0-SNAPSHOT
+# DhanHQ-java: v0.7.0-SNAPSHOT
 
 The **unofficial** Java SDK for communicating with the [Dhan API](https://api.dhan.co/v2/).
 
@@ -196,6 +196,11 @@ liveMarketfeed.command(new Instrument(ExchangeSegment.NSE_EQ, "456789"), FeedReq
 liveMarketDepth.command();
 liveMarketDepth.disconnect();
 ```
+
+## Publish Checklist
+
+[ ] Zero Errors in Automated Tests
+[ ] Version Update (`pom.xml` and `Readme.md`)
 
 ## Want to contribute?
 
