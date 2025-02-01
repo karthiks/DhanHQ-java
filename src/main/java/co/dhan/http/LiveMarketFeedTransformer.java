@@ -4,7 +4,6 @@ import co.dhan.api.stream.LiveMarketFeedListener;
 import co.dhan.constant.DataAPIError;
 import co.dhan.constant.FeedResponseCode;
 import co.dhan.dto.*;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -21,9 +20,6 @@ public class LiveMarketFeedTransformer extends WebSocketListener {
 
     private final LiveMarketFeedListener feedListener;
 
-    @Getter
-    private boolean connected;
-
     public LiveMarketFeedTransformer(LiveMarketFeedListener feedListener) {
         this.feedListener = feedListener;
     }
@@ -31,9 +27,31 @@ public class LiveMarketFeedTransformer extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         log.info("WebSocket connection opened");
-        System.out.println("LiveMarketFeedTransformer.onOpen()");
-        this.connected = true;
         feedListener.onConnection();
+    }
+
+    @Override
+    public void onClosed(WebSocket webSocket, int code, String reason) {
+        log.info("WebSocket connection closed: " + reason);
+        feedListener.onTermination(new DhanAPIException(String.valueOf(code), "Client terminated the connection. " + reason));
+    }
+
+    @Override
+    public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+        if (response != null) {
+            try (ResponseBody body = response.body()) {
+                DhanAPIException e = new DhanAPIException(String.valueOf(response.code()), response.body().string());
+                feedListener.onError(e);
+                log.error("WebSocket connection failure: ", e);
+            } catch (IOException ioException) {
+                DhanAPIException e = new DhanAPIException("", response.toString());
+                feedListener.onError(e);
+                log.error("WebSocket connection failure: ", e);
+            }
+        } else {
+            log.error("WebSocket connection for LiveMarketFeed Failed. Throwable: ",t);
+            feedListener.onError(new DhanAPIException("",t.getMessage()));
+        }
     }
 
     @Override
@@ -47,7 +65,6 @@ public class LiveMarketFeedTransformer extends WebSocketListener {
 
             byte firstByte = byteArray[0]; //buffer.get();
             FeedResponseCode code = FeedResponseCode.findByCode(firstByte);
-            System.out.println("FeedResponseCode = " + code);
             if(code == null) {
                 String message = String.format("Undefined FeedResponseCode %s sent by API Server!", firstByte);
                 log.error(message);
@@ -71,31 +88,4 @@ public class LiveMarketFeedTransformer extends WebSocketListener {
         }
     }
 
-    @Override
-    public void onClosed(WebSocket webSocket, int code, String reason) {
-        log.info("WebSocket connection closed: " + reason);
-        System.out.println("LiveMarketFeedTransformer.onClosed() : " + reason);
-        this.connected = false;
-        feedListener.onTermination(new DhanAPIException(String.valueOf(code), "Client terminated the connection. " + reason));
-    }
-
-    @Override
-    public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-        System.out.println("LiveMarketFeedTransformer.onFailure()");
-        this.connected = false;
-        if (response != null) {
-            try (ResponseBody body = response.body()) {
-                DhanAPIException e = new DhanAPIException(String.valueOf(response.code()), response.body().string());
-                feedListener.onError(e);
-                log.error("WebSocket connection failure: ", e);
-            } catch (IOException ioException) {
-                DhanAPIException e = new DhanAPIException("", response.toString());
-                feedListener.onError(e);
-                log.error("WebSocket connection failure: ", e);
-            }
-        } else {
-            log.error("WebSocket connection for LiveMarketFeed Failed. Throwable: ",t);
-            feedListener.onError(new DhanAPIException("",t.getMessage()));
-        }
-    }
 }

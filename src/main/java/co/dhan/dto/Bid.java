@@ -11,7 +11,7 @@ public class Bid {
     public static String JSONPropertyOrders = "orders";
     public static String JSONPropertyPrice = "price";
 
+    private String price;
     private String quantity;
     private String orders;
-    private String price;
 }

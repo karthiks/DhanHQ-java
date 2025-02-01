@@ -5,7 +5,7 @@ import co.dhan.constant.FeedRequestCode;
 import co.dhan.dto.Instrument;
 import co.dhan.dto.InstrumentsFeedRequestWrapper;
 import co.dhan.http.DhanAPIException;
-import co.dhan.http.LiveMarketFeedTransformer;
+import co.dhan.http.LiveMarketDepthTransformer;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class LiveMarketFeed {
+public class LiveMarketDepth {
     public static final int DEFAULT_HTTP_CONNECTION_TIMEOUT = 10;
     private static boolean ENABLE_LOGGING = true;
     private final String WebSocketURL;
@@ -28,12 +28,12 @@ public class LiveMarketFeed {
 
     private final ExecutorService executor;
 
-    public LiveMarketFeed(DhanConnection dhanConnection) {
+    public LiveMarketDepth(DhanConnection dhanConnection) {
         this(dhanConnection, null);
     }
 
-    public LiveMarketFeed(DhanConnection dhanConnection, String webSocketURL) {
-        String defaultWebsocketURL = "wss://api-feed.dhan.co?version=2&authType=2"
+    public LiveMarketDepth(DhanConnection dhanConnection, String webSocketURL) {
+        String defaultWebsocketURL = "wss://depth-api-feed.dhan.co/twentydepth?version=2&authType=2"
                 + "&token=" + dhanConnection.getAccessToken()
                 + "&clientId=" + dhanConnection.getClientID();
         WebSocketURL = (webSocketURL != null) ? webSocketURL : defaultWebsocketURL;
@@ -57,7 +57,7 @@ public class LiveMarketFeed {
                 .setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 
-    public void connect(LiveMarketFeedListener feedListener) {
+    public void connect(LiveMarketDepthListener feedListener) {
         System.out.println("LiveMarketFeed: connecting to websocket");
         if (feedListener == null) {
             throw new IllegalArgumentException("Feed listener cannot be null");
@@ -65,7 +65,7 @@ public class LiveMarketFeed {
         executor.submit(() -> { // Run connection in a separate thread
             System.out.println("Executor running now..");
             Request request = new Request.Builder().url(WebSocketURL).build();
-            webSocket = okHttpClient.newWebSocket(request, new LiveMarketFeedTransformer(feedListener));
+            webSocket = okHttpClient.newWebSocket(request, new LiveMarketDepthTransformer(feedListener));
         });
     }
 

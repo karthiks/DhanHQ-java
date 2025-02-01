@@ -13,6 +13,8 @@ public enum FeedResponseCode {
     PREV_CLOSE_PACKET(6),
     MARKET_STATUS_PACKET(7),
     FULL_PACKET(8),
+    TWENTY_DEPTH_BIDS_PACKET(41),
+    TWENTY_DEPTH_ASKS_PACKET(51),
     FEED_DISCONNECT(50);
 
     private final int code;
