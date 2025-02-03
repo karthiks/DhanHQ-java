@@ -56,7 +56,8 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
 
     @Override
     public void onMessage(WebSocket webSocket, ByteString bytes) {
-        System.out.println("LiveMarketDepthTransformer.onMessage(..)");
+        log.debug("LiveMarketDepthTransformer.onMessage(..)");
+        log.debug("bytes size = " + bytes.size());
         byte[] byteArray = bytes.toByteArray();
         ByteBuffer buffer = ByteBuffer
                 .wrap(byteArray)
@@ -68,7 +69,7 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
         byte exchangeSegmentCode = buffer.get();//byteArray[3];
         int securityID = buffer.getInt();
         var ignoreSegment = buffer.getInt();
-        System.out.println("byteResponseCode = " + byteResponseCode
+        log.debug("byteResponseCode = " + byteResponseCode
                 + ", exchangeSegmentCode = " + exchangeSegmentCode
                 + ", securityID = " + securityID
                 + ", messageLength = " + messageLength);

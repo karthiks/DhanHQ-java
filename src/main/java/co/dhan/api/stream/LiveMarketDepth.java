@@ -58,12 +58,12 @@ public class LiveMarketDepth {
     }
 
     public void connect(LiveMarketDepthListener feedListener) {
-        System.out.println("LiveMarketFeed: connecting to websocket");
+        log.debug("LiveMarketFeed: connecting to websocket");
         if (feedListener == null) {
             throw new IllegalArgumentException("Feed listener cannot be null");
         }
         executor.submit(() -> { // Run connection in a separate thread
-            System.out.println("Executor running now..");
+            log.debug("Executor running now..");
             Request request = new Request.Builder().url(WebSocketURL).build();
             webSocket = okHttpClient.newWebSocket(request, new LiveMarketDepthTransformer(feedListener));
         });

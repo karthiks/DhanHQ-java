@@ -31,7 +31,7 @@ public class InstrumentsFeedRequestWrapper {
     public String toJSON() {
         try {
             String json = HTTPUtils.DhanObjectMapper.writeValueAsString(this);
-            System.out.println("Subscription request: " + json);
+            log.debug("API request: InstrumentsFeedRequestWrapper: " + json);
             return json;
         } catch (JsonProcessingException e) {
             log.error("Error converting object of type " + getClass().getName() + " to JSON string.", e);

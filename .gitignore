@@ -38,6 +38,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
+### Application Logs ###
+*.log
+
 ### Property Files ###
 *test.properties
 .todo
