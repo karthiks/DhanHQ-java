@@ -58,7 +58,17 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         log.debug("LiveMarketDepthTransformer.onMessage(..)");
         log.debug("bytes size = " + bytes.size());
+//        log.debug(bytes.hex());
+//        log.debug("---hex-ed---");
+        int chunkSize = 332; // Message Length as per API Doc: https://dhanhq.co/docs/v2/20-market-depth/
         byte[] byteArray = bytes.toByteArray();
+        byte[][] subArrays = splitByteArray(byteArray, chunkSize);
+        for (byte[] subArray : subArrays) {
+            processMessage(subArray);
+        }
+    }
+
+    private void processMessage(byte[] byteArray) {
         ByteBuffer buffer = ByteBuffer
                 .wrap(byteArray)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -66,12 +76,14 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
         // https://dhanhq.co/docs/v2/20-market-depth/#response-header
         short messageLength = buffer.getShort(); //1 short = 16 bits = 2 bytes
         byte byteResponseCode = buffer.get();//byteArray[2]; //buffer.get();
+
         byte exchangeSegmentCode = buffer.get();//byteArray[3];
         int securityID = buffer.getInt();
         var ignoreSegment = buffer.getInt();
         log.debug("byteResponseCode = " + byteResponseCode
                 + ", exchangeSegmentCode = " + exchangeSegmentCode
                 + ", securityID = " + securityID
+                + ", ignoreSegment = " + ignoreSegment
                 + ", messageLength = " + messageLength);
         FeedResponseCode feedResponseCode = FeedResponseCode.findByCode(byteResponseCode);
         ExchangeSegment exchangeSegment = ExchangeSegment.findByCode(exchangeSegmentCode);
@@ -90,6 +102,25 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
                 depthListener.onError(new Exception("Unknown packet received with feedResponseCode " + byteResponseCode));
             }
         }
+    }
+
+    public static byte[][] splitByteArray(byte[] originalArray, int chunkSize) {
+        int totalLength = originalArray.length;
+        int numOfSubArrays = (totalLength + chunkSize - 1) / chunkSize;
+//        int numOfSubArrays = totalLength / chunkSize;
+
+        byte[][] subArrays = new byte[numOfSubArrays][];
+
+        for (int i = 0; i < numOfSubArrays; i++) {
+            int start = i * chunkSize;
+            int end = Math.min(start + chunkSize, totalLength);
+            int length = end - start;
+
+            subArrays[i] = new byte[length];
+            System.arraycopy(originalArray, start, subArrays[i], 0, length);
+        }
+
+        return subArrays;
     }
 
 }

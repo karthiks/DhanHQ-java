@@ -11,13 +11,14 @@ import co.dhan.http.DhanAPIException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
 @Slf4j
 public class ManualTest_LiveDepthFeed {
 //    private static final String SERVER_URL = "wss://stockmarket.example.com/ws"; // Replace with your server URL
-    private static Instrument instrument = new Instrument(ExchangeSegment.NSE_EQ, "1");
+    private static Instrument instrument = new Instrument(ExchangeSegment.NSE_EQ, "27176");
 
     public static void main(String[] args) {
         Properties properties = new Properties();
@@ -77,13 +78,13 @@ public class ManualTest_LiveDepthFeed {
 
         };
         liveMarketDepth.connect(liveMarketDepthListener);
-/*        try {
-            Thread.sleep(Duration.ofSeconds(10));
-            liveMarketDepth.command(List.of(instrument),FeedRequestCode.UNSUBSCRIBE_20_LEVEL_DEPTH);
+        try {
             Thread.sleep(Duration.ofSeconds(3));
+            liveMarketDepth.command(List.of(instrument),FeedRequestCode.UNSUBSCRIBE_20_LEVEL_DEPTH);
+            Thread.sleep(Duration.ofSeconds(2));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        liveMarketDepth.disconnect();*/
+        liveMarketDepth.disconnect();
     }
 }
