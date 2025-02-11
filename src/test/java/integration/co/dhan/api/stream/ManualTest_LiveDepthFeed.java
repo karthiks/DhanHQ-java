@@ -18,7 +18,7 @@ import java.util.Properties;
 @Slf4j
 public class ManualTest_LiveDepthFeed {
 //    private static final String SERVER_URL = "wss://stockmarket.example.com/ws"; // Replace with your server URL
-    private static Instrument instrument = new Instrument(ExchangeSegment.NSE_EQ, "27176");
+    private static Instrument instrument = new Instrument(ExchangeSegment.NSE_EQ, "1"); //27176
 
     public static void main(String[] args) {
         Properties properties = new Properties();

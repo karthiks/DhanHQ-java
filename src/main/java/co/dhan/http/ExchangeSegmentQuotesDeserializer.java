@@ -2,6 +2,7 @@ package co.dhan.http;
 
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.dto.*;
+import co.dhan.helper.BigDecimalUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -72,9 +73,9 @@ public class ExchangeSegmentQuotesDeserializer
             List<Bid> bids = new ArrayList<>();
             buyJsonNode.forEach( buy -> {
                 Bid bid = new Bid();
-                bid.setOrders(buy.get(Bid.JSONPropertyOrders).asText());
-                bid.setQuantity(buy.get(Bid.JSONPropertyQuantity).asText());
-                bid.setPrice(buy.get(Bid.JSONPropertyPrice).asText());
+                bid.setOrders(buy.get(Bid.JSONPropertyOrders).asInt());
+                bid.setQuantity(buy.get(Bid.JSONPropertyQuantity).asInt());
+                bid.setPrice(BigDecimalUtils.toBigDecimal(buy.get(Bid.JSONPropertyPrice).asText()));
                 bids.add(bid);
             });
             depth.setBuy(bids);
@@ -83,9 +84,9 @@ public class ExchangeSegmentQuotesDeserializer
             List<Ask> asks = new ArrayList<>();
             sellJsonNode.forEach( sell -> {
                 Ask ask = new Ask();
-                ask.setOrders(sell.get(Ask.JSONPropertyOrders).asText());
-                ask.setQuantity(sell.get(Ask.JSONPropertyQuantity).asText());
-                ask.setPrice(sell.get(Ask.JSONPropertyPrice).asText());
+                ask.setOrders(sell.get(Ask.JSONPropertyOrders).asInt());
+                ask.setQuantity(sell.get(Ask.JSONPropertyQuantity).asInt());
+                ask.setPrice(BigDecimalUtils.toBigDecimal(sell.get(Ask.JSONPropertyPrice).asText()));
                 asks.add(ask);
             });
             depth.setSell(asks);

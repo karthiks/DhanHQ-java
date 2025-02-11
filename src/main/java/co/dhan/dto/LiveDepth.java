@@ -1,6 +1,7 @@
 package co.dhan.dto;
 
 import co.dhan.constant.ExchangeSegment;
+import co.dhan.helper.BigDecimalUtils;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,9 +36,9 @@ public class LiveDepth {
         List<Bid> bids = new ArrayList<>();
         while (buffer.remaining() >= TUPLE_SIZE) {
             Bid b = new Bid();
-            b.setPrice(getDoubleAsStringFrom(buffer));
-            b.setQuantity(getIntAsStringFrom(buffer));
-            b.setOrders(getIntAsStringFrom(buffer));
+            b.setPrice(BigDecimalUtils.toBigDecimal(getDoubleAsStringFrom(buffer)));
+            b.setQuantity(buffer.getInt());
+            b.setOrders(buffer.getInt());
             bids.add(b);
         }
         return bids;
@@ -48,17 +49,12 @@ public class LiveDepth {
         List<Ask> asks = new ArrayList<>();
         while (buffer.remaining() >= TUPLE_SIZE) {
             Ask a = new Ask();
-            a.setPrice(getDoubleAsStringFrom(buffer));
-            a.setQuantity(getIntAsStringFrom(buffer));
-            a.setOrders(getIntAsStringFrom(buffer));
+            a.setPrice(BigDecimalUtils.toBigDecimal(getDoubleAsStringFrom(buffer)));
+            a.setQuantity(buffer.getInt());
+            a.setOrders(buffer.getInt());
             asks.add(a);
         }
         return asks;
-    }
-
-    @NotNull
-    private static String getIntAsStringFrom(ByteBuffer buffer) {
-        return String.valueOf(buffer.getInt());
     }
 
     @NotNull

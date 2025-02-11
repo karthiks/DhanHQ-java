@@ -1,22 +1,23 @@
 package co.dhan.dto;
 
-import co.dhan.helper.BigDecimalUtils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 /**
  * The highest price a buyer is willing to pay for a security.
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bid {
     public static String JSONPropertyQuantity = "quantity";
     public static String JSONPropertyOrders = "orders";
     public static String JSONPropertyPrice = "price";
 
-    private String price;
-    private String quantity;
-    private String orders;
-
-    public void setPrice(String price) {
-        this.price = BigDecimalUtils.toBigDecimal(price).stripTrailingZeros().toString();
-    }
+    private BigDecimal price;
+    private int quantity;
+    private int orders;
 }

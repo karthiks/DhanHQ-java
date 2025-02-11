@@ -18,6 +18,8 @@ import java.nio.ByteOrder;
 @Slf4j
 public class LiveMarketDepthTransformer extends WebSocketListener {
 
+    // Message Length (320b depth + 12b header) as per API Doc: https://dhanhq.co/docs/v2/20-market-depth/
+    public static final int CHUNK_SIZE = 332;
     private LiveMarketDepthListener depthListener;
 
     public LiveMarketDepthTransformer(LiveMarketDepthListener depthListener) {
@@ -60,15 +62,14 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
         log.debug("bytes size = " + bytes.size());
 //        log.debug(bytes.hex());
 //        log.debug("---hex-ed---");
-        int chunkSize = 332; // Message Length as per API Doc: https://dhanhq.co/docs/v2/20-market-depth/
         byte[] byteArray = bytes.toByteArray();
-        byte[][] subArrays = splitByteArray(byteArray, chunkSize);
+        byte[][] subArrays = splitByteArray(byteArray, CHUNK_SIZE);
         for (byte[] subArray : subArrays) {
             processMessage(subArray);
         }
     }
 
-    private void processMessage(byte[] byteArray) {
+    void processMessage(byte[] byteArray) {
         ByteBuffer buffer = ByteBuffer
                 .wrap(byteArray)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -80,11 +81,11 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
         byte exchangeSegmentCode = buffer.get();//byteArray[3];
         int securityID = buffer.getInt();
         var ignoreSegment = buffer.getInt();
-        log.debug("byteResponseCode = " + byteResponseCode
+        log.debug("messageLength = " + messageLength
+                + ", byteResponseCode = " + byteResponseCode
                 + ", exchangeSegmentCode = " + exchangeSegmentCode
                 + ", securityID = " + securityID
-                + ", ignoreSegment = " + ignoreSegment
-                + ", messageLength = " + messageLength);
+                + ", ignoreSegment = " + ignoreSegment);
         FeedResponseCode feedResponseCode = FeedResponseCode.findByCode(byteResponseCode);
         ExchangeSegment exchangeSegment = ExchangeSegment.findByCode(exchangeSegmentCode);
         switch (feedResponseCode) { //FeedResponseCode.findByCode(41) == ??
@@ -104,10 +105,10 @@ public class LiveMarketDepthTransformer extends WebSocketListener {
         }
     }
 
-    public static byte[][] splitByteArray(byte[] originalArray, int chunkSize) {
+    static byte[][] splitByteArray(byte[] originalArray, int chunkSize) {
         int totalLength = originalArray.length;
-        int numOfSubArrays = (totalLength + chunkSize - 1) / chunkSize;
-//        int numOfSubArrays = totalLength / chunkSize;
+//        int numOfSubArrays = (totalLength + chunkSize - 1) / chunkSize; // To return sub-array less than chunk-size
+        int numOfSubArrays = totalLength / chunkSize; // reject sub-array less than chunk-size
 
         byte[][] subArrays = new byte[numOfSubArrays][];
 
