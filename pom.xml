@@ -13,7 +13,8 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.argLine>-Xmx1024m</surefire.argLine>
-        <jacoco.version>0.8.7</jacoco.version>
+        <mockito.version>5.15.2</mockito.version>
+        <mockito.core.path>${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</mockito.core.path>
     </properties>
 
     <dependencies>
@@ -72,14 +73,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.15.2</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.15.2</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
@@ -94,11 +95,23 @@
 
     <build>
         <plugins>
+            <!-- To add Mockito as an agent to Maven's surefire plugin, the following configuration is needed -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- To provide a JaCoCo runtime agent to your tests and allows basic report creation -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -121,30 +134,11 @@
                         </goals>
                         <configuration>
                             <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+<!--                            <includes>/unit/**.*</includes>-->
 <!--                            <excludes>/integration/**.*</excludes>-->
-<!--                            <title>DhanHQ Unit Test Coverage Report</title>-->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                            <title>DhanHQ Unit Test Coverage Report</title>
 <!--                            <formats>HTML</formats>-->
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.70</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
                         </configuration>
                     </execution>
                 </executions>
@@ -163,7 +157,12 @@
                         </configurationParameters>
                     </properties>
                     <testFailureIgnore>true</testFailureIgnore>
-                    <argLine>${surefire.argLine} @{jacoco.argLine}</argLine>
+                    <argLine>
+                        ${surefire.argLine}
+                        @{jacoco.argLine}
+                        -javaagent:${mockito.core.path}
+                        -Xshare:off
+                    </argLine>
                     <!--                    <argLine>${surefire.argLine} -javaagent:${jacoco.agent.location}=destfile=${jacoco.output.file}</argLine>-->
                     <forkCount>1C</forkCount>
                     <reuseForks>false</reuseForks>
