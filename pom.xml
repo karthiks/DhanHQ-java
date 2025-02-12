@@ -6,7 +6,7 @@
 
     <groupId>co.dhan</groupId>
     <artifactId>DhanHQ-java</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -15,14 +15,7 @@
         <surefire.argLine>-Xmx1024m</surefire.argLine>
         <mockito.version>5.15.2</mockito.version>
         <mockito.core.path>${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</mockito.core.path>
-        <jacoco.version>0.8.12</jacoco.version>
-        <jacoco.args>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/coverage-reports/jacoco.exec,excludes=/integration/**.*</jacoco.args>
-        <argLine>
-            ${jacoco.args}
-            ${surefire.argLine}
-            -javaagent:${mockito.core.path}
-            -Xshare:off
-        </argLine>
+        <mockito.argLine>-javaagent:${mockito.core.path} -Xshare:off</mockito.argLine>
     </properties>
 
     <dependencies>
@@ -122,7 +115,9 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>/integration/**.*</exclude>
+                        <exclude>**/constant/*</exclude>
+                        <exclude>**/dto/*</exclude>
+                        <exclude>**/integration/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -148,10 +143,20 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
+                    <argLine>
+                        ${surefire.argLine}
+                        ${mockito.argLine}
+                        @{argLine}
+                    </argLine>
+                    <includes>
+                        <include>**/*Test</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/E2E*</exclude>
+                        <exclude>**/ManualTest*</exclude>
+                    </excludes>
                     <forkCount>1C</forkCount>
                     <reuseForks>false</reuseForks>
-                    <testClassesDirectory>src/test/java/</testClassesDirectory>
-                    <testSourceDirectory>src/test/java/</testSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>
