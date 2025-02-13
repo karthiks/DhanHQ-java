@@ -1,8 +1,10 @@
-package co.dhan.api.stream;
+package manual;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.api.DhanCore;
-import co.dhan.api.ondemand.E2EOrderEndpointTest;
+import co.dhan.api.ondemand.ITest_OrderEndpoint;
+import co.dhan.api.stream.LiveMarketDepth;
+import co.dhan.api.stream.LiveMarketDepthListener;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.constant.FeedRequestCode;
 import co.dhan.dto.Instrument;
@@ -23,7 +25,7 @@ public class ManualTest_LiveDepthFeed {
     public static void main(String[] args) {
         Properties properties = new Properties();
         try {
-            properties.load(E2EOrderEndpointTest.class
+            properties.load(ITest_OrderEndpoint.class
                     .getClassLoader()
                     .getResourceAsStream("integration-test.properties")
             );

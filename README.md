@@ -139,7 +139,7 @@ liveMarketfeed.command(new Instrument(ExchangeSegment.NSE_EQ, "345678"), FeedReq
 liveMarketfeed.disconnect();
 ```
 
-### Live Market Depth Usage
+### Live 20-Level Market Depth Usage
 
 ```java
 import co.dhan.api.stream.LiveMarketDepth;

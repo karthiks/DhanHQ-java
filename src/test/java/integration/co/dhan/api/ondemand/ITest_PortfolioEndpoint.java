@@ -1,18 +1,19 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.E2EDhanTestRoot;
-import co.dhan.http.DhanAPIException;
+import co.dhan.api.ITest_DhanTestRoot;
 import co.dhan.dto.Holding;
+import co.dhan.http.DhanAPIException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class E2EPortfolioEndpointTest extends E2EDhanTestRoot {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+public class ITest_PortfolioEndpoint extends ITest_DhanTestRoot {
 
     @Test
     public void getCurrentHoldingsSuccessfully() throws DhanAPIException {
         List<Holding> currentHoldings = dhanCore.getPortfolioEndpoint().getCurrentHoldings();
-        System.out.println("--Order List--");
-        currentHoldings.forEach(System.out::println);
+        assertThat(currentHoldings).isNotNull();
     }
 }

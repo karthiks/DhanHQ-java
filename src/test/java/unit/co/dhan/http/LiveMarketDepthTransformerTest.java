@@ -99,7 +99,6 @@ class LiveMarketDepthTransformerTest extends UnitTestRoot {
         LiveDepth expectedLiveDepthForAsks = new LiveDepth(expectedSecurityID, ExchangeSegment.NSE_EQ);
         expectedLiveDepthForAsks.setSell(asks);
         LiveMarketDepthTransformer transformer = new LiveMarketDepthTransformer(mockDepthListener);
-        System.out.println(liveDepth);
         byte[] littleEndianByteArray = liveDepthToByteArray(liveDepth);
         ByteString bytes = ByteString.of(littleEndianByteArray);
         transformer.onMessage(null, bytes);

@@ -1,6 +1,6 @@
 package co.dhan.api.ondemand;
 
-import co.dhan.api.E2EDhanTestRoot;
+import co.dhan.api.ITest_DhanTestRoot;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.dto.Candlestick;
 import co.dhan.dto.ExchangeSegmentSecurities;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class E2EMarketQuotesEndpointTest extends E2EDhanTestRoot {
+public class ITest_MarketQuotesEndpoint extends ITest_DhanTestRoot {
 
     @Test
     public void getLTPForSecurities() throws DhanAPIException {
@@ -23,11 +23,6 @@ public class E2EMarketQuotesEndpointTest extends E2EDhanTestRoot {
                 .getMarketQuotesEndpoint()
                 .getLTPFor(exchangeSegmentSecurities)
                 .getExchangeSegmentCandlesticksMap();
-        System.out.println("--Map<ExchangeSegment, List<SecurityLTP>> map--");
-        map.forEach((exchangeSegment, securityLTPS) -> {
-            System.out.println("exchangeSegment: " + exchangeSegment + ", securities :");
-            securityLTPS.forEach(System.out::println);
-        });
         assertThat(map).isNotNull();
     }
 }
