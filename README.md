@@ -197,6 +197,14 @@ liveMarketDepth.command();
 liveMarketDepth.disconnect();
 ```
 
+
+## Dev Setup Instructions for Code Contribution
+
+- Create `config.properties` in project root for it to be sibling of `pom.xml` 
+   and define a property like `dev.env=true` to ensure `dev` profile of maven is activated by default.
+- If you are using IntelliJ IDE, choose Maven Icon on the right pane, 
+  select `dev` profile optionally and execute clean and test lifecycle methods.
+
 ## Publish Checklist
 
 [ ] Zero Errors in Automated Tests
