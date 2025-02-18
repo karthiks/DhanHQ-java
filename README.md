@@ -207,8 +207,8 @@ liveMarketDepth.disconnect();
 
 ## Publish Checklist
 
-[ ] Zero Errors in Automated Tests
-[ ] Version Update (`pom.xml` and `Readme.md`)
+    [] Zero Errors in Automated Tests 
+    [] Version Update (`pom.xml` and `Readme.md`)
 
 ## Want to contribute?
 
