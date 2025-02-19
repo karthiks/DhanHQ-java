@@ -50,10 +50,40 @@ How does this affect you? Your code implementation is ridiculously brain friendl
 3. Build Fluent APIs that hides technical complexities under the wraps of brings Domain Specific Language. 
    Even if you aren't a domain expert, you should become comfortable with the usage of this SDK.
 
-4. Last but not the least, no developer should be asked to go through burnout hell at work by infringing in their personal lives.
-   What developers do in their personal lives - staring, sharing or caring - is best left for them to decide. 
-   The SDK is built consciously to make the life of a developer - productive instead of being just busy. 
-   May you work well, live healthier and nurture others around you. We grow better together!
+## SDK API Cheatsheet
+
+| Endpoint                     | Action                                                                                                                                                                             | Returns                              |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| `getOrderEndpoint()`         | `placeOrder(Order order)`                                                                                                                                                          | `OrderStatusDTO`                     |
+|                              | `placeOrder(Order order, String tag)`                                                                                                                                              | `OrderStatusDTO`                     |
+|                              | `placeOrder(Order order, String tag, boolean slice)`                                                                                                                               | `OrderStatusDTO`                     |
+|                              | `placeSliceOrder(Order order)`                                                                                                                                                     | `OrderStatusDTO`                     |
+|                              | `placeSliceOrder(Order order, String tag)`                                                                                                                                         | `OrderStatusDTO`                     |
+|                              | `getCurrentOrders()`                                                                                                                                                               | `List<Order>`                        |
+|                              | `getOrderByID(String orderID)`                                                                                                                                                     | `Order`                              |
+|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                    | `Order`                              |
+|                              | `modifyOrder(Order order)`                                                                                                                                                         | `OrderStatusDTO`                     |
+|                              | `cancelOrder(String orderID)`                                                                                                                                                      | `OrderStatusDTO`                     |
+| `getForeverOrderEndpoint()`  | `placeForeverOrder(Order order)`                                                                                                                                                   | `OrderStatusDTO`                     |
+|                              | `getAllForeverOrders()`                                                                                                                                                            | `List<Order>`                        |
+|                              | `modifyForeverOrder(Order order)`                                                                                                                                                  | `OrderStatusDTO`                     |
+|                              | `cancelForeverOrder(String orderID)`                                                                                                                                               | `OrderStatusDTO`                     |
+| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                             | `List<Holding>`                      |
+|                              | `getCurrentPositions()`                                                                                                                                                            | `List<Position>`                     |
+|                              | ```convertPosition(String securityId, ExchangeSegment exchangeSegment, PositionType positionType, ProductType fromProductType, ProductType toProductType, int convertQuantity)```  | `DhanResponse`                       |
+| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                            | `FundSummary`                        |
+|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, String price)```                      | `Margin`                             |
+|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, String price, String triggerPrice)``` | `Margin`                             |
+| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                              | `String`                             |
+| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                            | `Ledger`                             |
+| `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
+| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)` | `EDISStatus`                         |
+| | `generateTPIN()` | `String`                             |
+| | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)` |                                      |
+| | `createTempHtmlFile(String formHtml)` | `File`                               |
+| | `openInBrowser(File tempFile)` | |
 
 ## Cookbook
 
