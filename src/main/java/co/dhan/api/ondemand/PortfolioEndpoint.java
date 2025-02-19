@@ -1,13 +1,10 @@
 package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
-import co.dhan.constant.ExchangeSegment;
-import co.dhan.constant.PositionType;
 import co.dhan.constant.ProductType;
-import co.dhan.http.DhanAPIException;
-import co.dhan.http.DhanResponse;
 import co.dhan.dto.Holding;
 import co.dhan.dto.Position;
+import co.dhan.http.DhanAPIException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.HashMap;
@@ -50,18 +47,24 @@ public class PortfolioEndpoint {
         return positions;
     }
 
-    public DhanResponse convertPosition(String securityId, ExchangeSegment exchangeSegment, PositionType positionType,
-                                        ProductType fromProductType, ProductType toProductType, int convertQuantity)
+    /**
+     *
+     * @param currentPosition values that are considered are securityID, exchangeSegment, positionType, productType
+     * @param toProductType
+     * @param quantityToConvert
+     * @throws DhanAPIException
+     */
+    public void convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)
             throws DhanAPIException {
         Map<String, String> payload = new HashMap<>();
-        payload.put(APIParam.SecurityID,securityId);
-        payload.put(APIParam.ExchangeSegment, exchangeSegment.toString());
-        payload.put(APIParam.PositionType, positionType.toString());
-        payload.put(APIParam.FromProductType, fromProductType.toString());
+        payload.put(APIParam.SecurityID,currentPosition.getSecurityId());
+        payload.put(APIParam.ExchangeSegment, currentPosition.getExchangeSegment().toString());
+        payload.put(APIParam.PositionType, currentPosition.getPositionType().toString());
+        payload.put(APIParam.FromProductType, currentPosition.getProductType().toString());
         payload.put(APIParam.ToProductType, toProductType.toString());
-        payload.put(APIParam.ConvertQuantity, String.valueOf(convertQuantity));
+        payload.put(APIParam.ConvertQuantity, String.valueOf(quantityToConvert));
 
-        return dhanConnection.getDhanHTTP()
+        dhanConnection.getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.ConvertPosition, payload);
     }
 }

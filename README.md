@@ -1,4 +1,4 @@
-# DhanHQ-java: v1.0.0
+# DhanHQ-java: v1.0.1
 
 The **unofficial** Java SDK for communicating with the [Dhan API](https://api.dhan.co/v2/).
 
@@ -52,37 +52,37 @@ How does this affect you? Your code implementation is ridiculously brain friendl
 
 ## SDK API Cheatsheet
 
-| Endpoint                     | Action                                                                                                                                                                             | Returns                              |
-|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| `getOrderEndpoint()`         | `placeOrder(Order order)`                                                                                                                                                          | `OrderStatusDTO`                     |
-|                              | `placeOrder(Order order, String tag)`                                                                                                                                              | `OrderStatusDTO`                     |
-|                              | `placeOrder(Order order, String tag, boolean slice)`                                                                                                                               | `OrderStatusDTO`                     |
-|                              | `placeSliceOrder(Order order)`                                                                                                                                                     | `OrderStatusDTO`                     |
-|                              | `placeSliceOrder(Order order, String tag)`                                                                                                                                         | `OrderStatusDTO`                     |
-|                              | `getCurrentOrders()`                                                                                                                                                               | `List<Order>`                        |
-|                              | `getOrderByID(String orderID)`                                                                                                                                                     | `Order`                              |
-|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                    | `Order`                              |
-|                              | `modifyOrder(Order order)`                                                                                                                                                         | `OrderStatusDTO`                     |
-|                              | `cancelOrder(String orderID)`                                                                                                                                                      | `OrderStatusDTO`                     |
-| `getForeverOrderEndpoint()`  | `placeForeverOrder(Order order)`                                                                                                                                                   | `OrderStatusDTO`                     |
-|                              | `getAllForeverOrders()`                                                                                                                                                            | `List<Order>`                        |
-|                              | `modifyForeverOrder(Order order)`                                                                                                                                                  | `OrderStatusDTO`                     |
-|                              | `cancelForeverOrder(String orderID)`                                                                                                                                               | `OrderStatusDTO`                     |
-| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                             | `List<Holding>`                      |
-|                              | `getCurrentPositions()`                                                                                                                                                            | `List<Position>`                     |
-|                              | ```convertPosition(String securityId, ExchangeSegment exchangeSegment, PositionType positionType, ProductType fromProductType, ProductType toProductType, int convertQuantity)```  | `DhanResponse`                       |
-| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                            | `FundSummary`                        |
-|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, String price)```                      | `Margin`                             |
-|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, String price, String triggerPrice)``` | `Margin`                             |
-| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                              | `String`                             |
-| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                            | `Ledger`                             |
+| Endpoint                     | Action                                                                                                                                                                             | Returns  |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `getOrderEndpoint()`         | `placeOrder(Order order)`                                                                                                                                                          | `OrderStatusDTO` |
+|                              | `placeOrder(Order order, String tag)`                                                                                                                                              | `OrderStatusDTO` |
+|                              | `placeOrder(Order order, String tag, boolean slice)`                                                                                                                               | `OrderStatusDTO` |
+|                              | `placeSliceOrder(Order order)`                                                                                                                                                     | `OrderStatusDTO` |
+|                              | `placeSliceOrder(Order order, String tag)`                                                                                                                                         | `OrderStatusDTO` |
+|                              | `getCurrentOrders()`                                                                                                                                                               | `List<Order>` |
+|                              | `getOrderByID(String orderID)`                                                                                                                                                     | `Order`  |
+|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                    | `Order`  |
+|                              | `modifyOrder(Order order)`                                                                                                                                                         | `OrderStatusDTO` |
+|                              | `cancelOrder(String orderID)`                                                                                                                                                      | `OrderStatusDTO` |
+| `getForeverOrderEndpoint()`  | `placeForeverOrder(Order order)`                                                                                                                                                   | `OrderStatusDTO` |
+|                              | `getAllForeverOrders()`                                                                                                                                                            | `List<Order>` |
+|                              | `modifyForeverOrder(Order order)`                                                                                                                                                  | `OrderStatusDTO` |
+|                              | `cancelForeverOrder(String orderID)`                                                                                                                                               | `OrderStatusDTO` |
+| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                             | `List<Holding>` |
+|                              | `getCurrentPositions()`                                                                                                                                                            | `List<Position>` |
+|                              | ```convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)```  | `DhanResponse` |
+| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                            | `FundSummary` |
+|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price)```                  | `Margin` |
+|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice)``` | `Margin` |
+| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                              | `String` |
+| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                            | `Ledger` |
 | `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
 |                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
 |                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)` | `ExchangeSegmentCandlesticksWrapper` |
-| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)` | `EDISStatus`                         |
-| | `generateTPIN()` | `String`                             |
-| | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)` |                                      |
-| | `createTempHtmlFile(String formHtml)` | `File`                               |
+| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)` | `EDISStatus` |
+| | `generateTPIN()` | `String` |
+| | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)` |          |
+| | `createTempHtmlFile(String formHtml)` | `File`   |
 | | `openInBrowser(File tempFile)` | |
 
 ## Cookbook
@@ -99,14 +99,31 @@ DhanCore dhanCore = new DhanCore(dhanConnection);
 ### On-demand data recipie
 
 ```java
+import co.dhan.constant.ExchangeSegment;
+import co.dhan.constant.ProductType;
+import co.dhan.constant.TransactionType;
+
 //Pre-requisite: See section "The common starting point".
 //Pattern: dhanCore.getYourEndpoint().action();
 FundSummary fundSummary = dhanCore.getFundsEndpoint().getFundLimitDetails();
+
 List<Order> foreverOrders = dhanCore.getforeverOrderEndpoint().getAllForeverOrders();
 List<Holding> currrentHoldings = dhanCore.getPortfolioEndpoint().getCurrentHoldings();
 List<Position> currentPositions = dhanCore.getPortfolioEndpoint().getCurrentPositions();
-DhanResponse dhanResponse = dhanCore.getPortfolioEndpoint().convertPosition(..);
 
+// Convert select quantity of delivery order to intraday
+List<Position> positions = dhanCore.getFundsEndpoint().getCurrentPositions();
+dhanCore.getPortfolioEndpoint()
+        .convertPosition(positions.get(0), ProductType.INTRADAY, 10);
+
+Margin margin = dhanCore.getFundsEndpoint()
+        .computeMargin("securityId",
+                        ExchangeSegment.NSE_EQ,
+                        TransactionType.BUY,
+                        100,
+                        ProductType.CNC,
+                        BigDecimalUtils.toBigDecimal(price),
+                        BigDecimalUtils.toBigDecimal(triggerPrice));
 ```
 
 ### Live Market Feed Usage
