@@ -1,7 +1,6 @@
 package co.dhan.dto;
 
 import co.dhan.constant.*;
-import co.dhan.helper.BigDecimalUtils;
 import lombok.Data;
 import lombok.Getter;
 
@@ -69,38 +68,6 @@ public class Order {
     public Order() {
         this.validity = Validity.DAY;
         this.amoTime = AMOTime.OPEN;
-    }
-
-    public void setPrice(String price) {
-        this.price = BigDecimalUtils.toBigDecimal(price);
-    }
-
-    public void setPrice1(String price) {
-        this.price1 = BigDecimalUtils.toBigDecimal(price);
-    }
-
-    public void setTriggerPrice(String triggerPrice) {
-        this.triggerPrice = BigDecimalUtils.toBigDecimal(triggerPrice);
-    }
-
-    public void setTriggerPrice1(String triggerPrice1) {
-        this.triggerPrice1 = BigDecimalUtils.toBigDecimal(triggerPrice1);
-    }
-
-    public void setBoProfitValue(String boProfitValue) {
-        this.boProfitValue = BigDecimalUtils.toBigDecimal(boProfitValue);
-    }
-
-    public void setBoStopLossValue(String boStopLossValue) {
-        this.boStopLossValue = BigDecimalUtils.toBigDecimal(boStopLossValue);
-    }
-
-    public void setDrvStrikePrice(String drvStrikePrice) {
-        this.drvStrikePrice = BigDecimalUtils.toBigDecimal(drvStrikePrice);
-    }
-
-    public void setAverageTradedPrice(String averageTradedPrice) {
-        this.averageTradedPrice = BigDecimalUtils.toBigDecimal(averageTradedPrice);
     }
 
 }

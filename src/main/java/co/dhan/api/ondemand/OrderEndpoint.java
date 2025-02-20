@@ -2,9 +2,9 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.AMOTime;
+import co.dhan.dto.Order;
 import co.dhan.dto.OrderStatusDTO;
 import co.dhan.http.DhanAPIException;
-import co.dhan.dto.Order;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class OrderEndpoint {
      * @throws DhanAPIException
      */
     public OrderStatusDTO modifyOrder(Order order)
-            throws IOException, DhanAPIException {
+            throws DhanAPIException {
         if (order==null || order.getOrderId()==null || order.getOrderId().isEmpty()
                 || order.getOrderType()==null || order.getLegName()==null || order.getValidity()==null
                 || order.getQuantity()==0) {
@@ -142,7 +142,7 @@ public class OrderEndpoint {
         return orderStatus;
     }
 
-    public OrderStatusDTO cancelOrder(String orderID) throws IOException, DhanAPIException {
+    public OrderStatusDTO cancelOrder(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.CancelOrder,orderID);
         OrderStatusDTO orderStatus = dhanConnection
                 .getDhanHTTP()
@@ -151,7 +151,7 @@ public class OrderEndpoint {
         return orderStatus;
     }
 
-    public List<Order> getCurrentOrders() throws IOException, DhanAPIException {
+    public List<Order> getCurrentOrders() throws DhanAPIException {
         List<Order> orders = dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetOrders)
@@ -159,7 +159,7 @@ public class OrderEndpoint {
         return orders;
     }
 
-    public Order getOrderByID(String orderID) throws IOException, DhanAPIException {
+    public Order getOrderByID(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByID,orderID);
         Order order = dhanConnection
                 .getDhanHTTP()
@@ -168,7 +168,7 @@ public class OrderEndpoint {
         return order;
     }
 
-    public Order getOrderByCorrelationID(String correlationID) throws IOException, DhanAPIException {
+    public Order getOrderByCorrelationID(String correlationID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByCorrelationID,correlationID);
         Order order = dhanConnection
                 .getDhanHTTP()

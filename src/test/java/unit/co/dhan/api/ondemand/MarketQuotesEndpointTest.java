@@ -36,7 +36,7 @@ public class MarketQuotesEndpointTest extends UnitTestRoot {
     private MarketQuotesEndpoint marketQuotesEndpoint;
 
     @Test
-    public void testGetLTPForSecuritiesOnSuccessResponse() throws DhanAPIException, IOException, URISyntaxException {
+    public void getLTPFor_ShouldReturnResult() throws DhanAPIException, IOException, URISyntaxException {
         String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-ltp.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 
@@ -62,7 +62,7 @@ public class MarketQuotesEndpointTest extends UnitTestRoot {
     }
 
     @Test
-    public void testGetOHLCForSecuritiesOnSuccessResponse() throws DhanAPIException, URISyntaxException, IOException {
+    public void getOHLCFor_ShouldReturnResult() throws DhanAPIException, URISyntaxException, IOException {
         String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-ohlc.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 
@@ -89,7 +89,7 @@ public class MarketQuotesEndpointTest extends UnitTestRoot {
     }
 
     @Test
-    public void testGetQuoteForSecuritiesOnSuccessResponse() throws DhanAPIException, IOException, URISyntaxException {
+    public void getQuoteFor_ShouldReturnResult() throws DhanAPIException, IOException, URISyntaxException {
         String expectedResponse = getExpectedResponseFromResource("/data/marketquotes-quote.json");
         DhanResponse stubDhanResponse = new DhanResponse(expectedResponse);
 

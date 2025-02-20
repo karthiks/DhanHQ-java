@@ -1,9 +1,9 @@
 package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
+import co.dhan.dto.Order;
 import co.dhan.dto.OrderStatusDTO;
 import co.dhan.http.DhanAPIException;
-import co.dhan.dto.Order;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ForeverOrderEndpoint {
 
-    interface APIParam {
+    public interface APIParam {
         String OrderID = "orderId";
         String CorrelationID = "correlationId";
         String OrderFlag = "orderFlag";
@@ -22,7 +22,6 @@ public class ForeverOrderEndpoint {
         String ProductType = "productType";
         String OrderType = "orderType";
         String Validity = "validity";
-        String TradingSymbol = "tradingSymbol";
         String SecurityID = "securityId";
         String Quantity = "quantity";
         String DisclosedQuantity = "disclosedQuantity";
@@ -33,7 +32,7 @@ public class ForeverOrderEndpoint {
         String Quantity1 = "Quantity1";
     }
 
-    interface APIEndpoint {
+    public interface APIEndpoint {
         String GetAllExistingForeverOrders = "/forever/orders";
         String CreateForeverOrder = "/forever/orders";
         String ModifyForeverOrder = "/forever/orders/%s";
