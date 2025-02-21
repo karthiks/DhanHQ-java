@@ -4,18 +4,18 @@ import java.nio.ByteBuffer;
 
 public class ByteUtils {
 
-    private static byte[] stringToBytes(String value) {
+    public static byte[] stringToBytes(String value) {
         return value.getBytes();
     }
 
-    private static byte[] shortToBytes(short value) {
+    public static byte[] shortToBytes(short value) {
         return ByteBuffer
                 .allocate(2)
                 .putShort(value)
                 .array();
     }
 
-    private static byte[] intToBytes(int value) {
+    public static byte[] intToBytes(int value) {
         return ByteBuffer
                 .allocate(4)
                 .putInt(value)
