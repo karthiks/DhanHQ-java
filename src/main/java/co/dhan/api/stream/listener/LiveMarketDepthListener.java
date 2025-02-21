@@ -1,4 +1,4 @@
-package co.dhan.api.stream;
+package co.dhan.api.stream.listener;
 
 import co.dhan.dto.LiveDepth;
 import co.dhan.http.DhanAPIException;

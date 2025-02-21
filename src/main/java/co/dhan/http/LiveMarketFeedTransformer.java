@@ -1,6 +1,6 @@
 package co.dhan.http;
 
-import co.dhan.api.stream.LiveMarketFeedListener;
+import co.dhan.api.stream.listener.LiveMarketFeedListener;
 import co.dhan.constant.DataAPIError;
 import co.dhan.constant.FeedResponseCode;
 import co.dhan.dto.*;

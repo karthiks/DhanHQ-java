@@ -190,9 +190,8 @@ liveMarketfeed.disconnect();
 
 ```java
 import co.dhan.api.stream.LiveMarketDepth;
-import co.dhan.api.stream.LiveMarketDepthListener;
+import co.dhan.api.stream.listener.LiveMarketDepthListener;
 import co.dhan.constant.FeedRequestCode;
-import co.dhan.dto.Depth;
 import co.dhan.http.DhanAPIException;
 
 LiveMarketDepth liveMarketDepth = dhanCore.getLiveMarketDepth();
@@ -207,41 +206,49 @@ add(new Instrument(ExchangeSegment.NSE_EQ, "2222"));
 
 
 LiveMarketDepthListener depthListener = new LiveMarketDepthListener() {
-   @Override
-   public void onConnection() {
-      System.out.println("LiveMarketDepthListener.onConnection() : ");
-      liveMarketDepth.command(subscriptionsToTicks, FeedRequestCode.SUBSCRIBE_20_LEVEL_DEPTH);
-   }
+    @Override
+    public void onConnection() {
+        System.out.println("LiveMarketDepthListener.onConnection() : ");
+        liveMarketDepth.command(subscriptionsToTicks, FeedRequestCode.SUBSCRIBE_20_LEVEL_DEPTH);
+    }
 
-   @Override
-   public void onTermination(DhanAPIException e) {
-      System.out.println("LiveMarketDepthListener.onTermination() : " + e);
-   }
+    @Override
+    public void onTermination(DhanAPIException e) {
+        System.out.println("LiveMarketDepthListener.onTermination() : " + e);
+    }
 
-   @Override
-   public void onError(Exception e) {
-      System.out.println("LiveMarketDepthListener.onError() : " + e);
-   }
+    @Override
+    public void onError(Exception e) {
+        System.out.println("LiveMarketDepthListener.onError() : " + e);
+    }
 
-   @Override
-   public void onBidsArrival(LiveDepth liveDepth) {
-      System.out.println("LiveMarketDepthListener.onBidsArrival(..), size " + liveDepth.getBuy().size()
-              + " for securityID " + liveDepth.getSecurityID());
-      System.out.println(liveDepth.getBuy());
-   }
+    @Override
+    public void onBidsArrival(LiveDepth liveDepth) {
+        System.out.println("LiveMarketDepthListener.onBidsArrival(..), size " + liveDepth.getBuy().size()
+                + " for securityID " + liveDepth.getSecurityID());
+        System.out.println(liveDepth.getBuy());
+    }
 
-   @Override
-   public void onAsksArrival(LiveDepth liveDepth) {
-      System.out.println("LiveMarketDepthListener.onAsksArrival(..), size " + liveDepth.getSell().size()
-              + " for securityID " + liveDepth.getSecurityID());
-      System.out.println(liveDepth.getSell());
-   }
+    @Override
+    public void onAsksArrival(LiveDepth liveDepth) {
+        System.out.println("LiveMarketDepthListener.onAsksArrival(..), size " + liveDepth.getSell().size()
+                + " for securityID " + liveDepth.getSecurityID());
+        System.out.println(liveDepth.getSell());
+    }
 };
 
-liveMarketDepth.connect();
-liveMarketfeed.command(new Instrument(ExchangeSegment.NSE_EQ, "456789"), FeedRequestCode.SUBSCRIBE_20_LEVEL_DEPTH);
-liveMarketDepth.command();
-liveMarketDepth.disconnect();
+liveMarketDepth.
+
+connect();
+liveMarketfeed.
+
+command(new Instrument(ExchangeSegment.NSE_EQ, "456789"),FeedRequestCode.SUBSCRIBE_20_LEVEL_DEPTH);
+        liveMarketDepth.
+
+command();
+liveMarketDepth.
+
+disconnect();
 ```
 
 

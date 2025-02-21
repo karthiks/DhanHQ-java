@@ -4,7 +4,7 @@ import co.dhan.api.DhanConnection;
 import co.dhan.api.DhanCore;
 import co.dhan.api.ondemand.ITest_OrderEndpoint;
 import co.dhan.api.stream.LiveMarketDepth;
-import co.dhan.api.stream.LiveMarketDepthListener;
+import co.dhan.api.stream.listener.LiveMarketDepthListener;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.constant.FeedRequestCode;
 import co.dhan.dto.Instrument;

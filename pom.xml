@@ -37,7 +37,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.11</version>
         </dependency>
         <!-- END: Logging Dependencies -->
 
@@ -115,8 +115,10 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
+                        <exclude>**/api/*</exclude>
                         <exclude>**/constant/*</exclude>
                         <exclude>**/dto/*</exclude>
+                        <exclude>**/stream/listener/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

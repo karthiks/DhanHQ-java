@@ -1,7 +1,7 @@
 package co.dhan.http;
 
 import co.dhan.UnitTestRoot;
-import co.dhan.api.stream.LiveMarketDepthListener;
+import co.dhan.api.stream.listener.LiveMarketDepthListener;
 import co.dhan.constant.ExchangeSegment;
 import co.dhan.constant.FeedResponseCode;
 import co.dhan.dto.Ask;
