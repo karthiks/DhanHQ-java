@@ -1,8 +1,8 @@
 package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
-import co.dhan.http.DhanAPIException;
 import co.dhan.dto.Ledger;
+import co.dhan.http.DhanAPIException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +14,7 @@ public class StatementEndpoint {
         String ToDate = "to-date";
     }
 
-    interface APIEndopint {
+    interface APIEndpoint {
         String LedgerReport = "/ledger?from-date=%s&to-date=%s";
     }
 
@@ -33,7 +33,7 @@ public class StatementEndpoint {
      */
     public Ledger getLedgerReport(LocalDate fromDate, LocalDate toDate) throws DhanAPIException {
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String endpoint = String.format(APIEndopint.LedgerReport,
+        String endpoint = String.format(APIEndpoint.LedgerReport,
                 fromDate.format(pattern),
                 toDate.format(pattern));
         return dhanConnection.getDhanHTTP()

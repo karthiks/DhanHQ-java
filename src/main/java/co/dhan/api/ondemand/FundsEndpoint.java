@@ -41,7 +41,8 @@ public class FundsEndpoint {
     }
 
     public Margin computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType,
-                                int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice) throws DhanAPIException {
+                                int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice)
+            throws DhanAPIException {
         Map<String, String> payload = new HashMap<>();
         payload.put(APIParam.SecurityID, securityID);
         payload.put(APIParam.ExchangeSegment, String.valueOf(exchangeSegment));
@@ -57,7 +58,8 @@ public class FundsEndpoint {
     }
 
     public Margin computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType,
-                                int quantity, ProductType productType, BigDecimal price) throws DhanAPIException {
+                                int quantity, ProductType productType, BigDecimal price)
+            throws DhanAPIException {
         return computeMargin(securityID,exchangeSegment,transactionType,quantity,productType,price,new BigDecimal(0));
     }
 }
