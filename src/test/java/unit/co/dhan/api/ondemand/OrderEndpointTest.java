@@ -6,7 +6,7 @@ import co.dhan.api.ondemand.OrderEndpoint.APIEndpoint;
 import co.dhan.api.ondemand.OrderEndpoint.APIParam;
 import co.dhan.constant.*;
 import co.dhan.dto.Order;
-import co.dhan.dto.OrderStatusDTO;
+import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -89,7 +89,7 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void placeOrder_WithTagAndSliceValues_ShouldReturnResult() {
         String orderId = "1";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderId, OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
 
         Order order = getSampleOrder();
         Set<String> expectedParamKeys = Set.of(APIParam.SecurityID, APIParam.TransactionType, APIParam.ExchangeSegment,
@@ -99,7 +99,7 @@ class OrderEndpointTest extends UnitTestRoot {
 
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
         assertThat(orderEndpoint.placeOrder(order, order.getCorrelationId(), false)).isEqualTo(expectedOrderStatus);
         verify(mockDhanHTTP).doHttpPostRequest(eq(APIEndpoint.PlaceOrder), argThat(payoad -> {
@@ -111,11 +111,11 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void placeOrder_WithoutTag_ShouldExcludeCorrelationIdParam() {
         String orderId = "1";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderId, OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
         Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
         orderEndpoint.placeOrder(order);
         verify(mockDhanHTTP).doHttpPostRequest(eq(APIEndpoint.PlaceOrder), argThat(payoad -> {
@@ -127,11 +127,11 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void placeOrder_WithoutTagAndSlice_ShouldPassDefaultValuesToOverloadedMethod() {
         String orderId = "1";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderId, OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
         Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
         orderEndpoint.placeOrder(order);
         verify(orderEndpoint, times(1)).placeOrder(order,null,false);
@@ -140,11 +140,11 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void placeSliceOrder_calls_placeOrder() {
         String orderId = "1";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderId, OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
         Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
         orderEndpoint.placeSliceOrder(order);
         verify(orderEndpoint, times(1)).placeOrder(order,null,true);
@@ -153,7 +153,7 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void modifyOrder_ReturnsStatus() {
         String orderId = "1";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderId, OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
 
         Order order = getSampleOrder();
         order.setOrderId(orderId);
@@ -164,7 +164,7 @@ class OrderEndpointTest extends UnitTestRoot {
 
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPutRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
         assertThat(orderEndpoint.modifyOrder(order)).isEqualTo(expectedOrderStatus);
         verify(mockDhanHTTP).doHttpPutRequest(eq("/orders/"+orderId), argThat(payoad -> {
@@ -176,13 +176,13 @@ class OrderEndpointTest extends UnitTestRoot {
     @Test
     void cancelOrder_ReturnStatus() {
         String orderID = "123";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderID, OrderStatus.CANCELLED);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderID, OrderStatus.CANCELLED);
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpDeleteRequest(anyString())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        OrderStatusDTO orderStatusDTO = orderEndpoint.cancelOrder(orderID);
-        assertThat(orderStatusDTO).isEqualTo(expectedOrderStatus);
+        OrderResponse orderResponse = orderEndpoint.cancelOrder(orderID);
+        assertThat(orderResponse).isEqualTo(expectedOrderStatus);
         verify(mockDhanConnection).getDhanHTTP();
         verify(mockDhanHTTP).doHttpDeleteRequest(eq("/orders/" +orderID));
     }

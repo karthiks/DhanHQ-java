@@ -2,7 +2,7 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.dto.Order;
-import co.dhan.dto.OrderStatusDTO;
+import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanAPIException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -45,7 +45,7 @@ public class ForeverOrderEndpoint {
         this.dhanConnection = dhanConnection;
     }
 
-    public OrderStatusDTO placeForeverOrder(Order order, String tag) throws DhanAPIException {
+    public OrderResponse placeForeverOrder(Order order, String tag) throws DhanAPIException {
         Map<String, String> payload = new HashMap<>();
         payload.put(APIParam.OrderFlag, order.getOrderFlag().toString());
         payload.put(APIParam.TransactionType, order.getTransactionType().toString());
@@ -53,7 +53,7 @@ public class ForeverOrderEndpoint {
         payload.put(APIParam.ProductType, order.getProductType().toString());
         payload.put(APIParam.OrderType, order.getOrderType().toString());
         payload.put(APIParam.Validity, order.getValidity().toString());
-        payload.put(APIParam.SecurityID, order.getSecurityId().toString());
+        payload.put(APIParam.SecurityID, order.getSecurityId());
         payload.put(APIParam.Quantity, String.valueOf(order.getQuantity()));
         payload.put(APIParam.DisclosedQuantity, String.valueOf(order.getDisclosedQuantity()));
         payload.put(APIParam.Price, String.valueOf(order.getPrice()));
@@ -65,18 +65,17 @@ public class ForeverOrderEndpoint {
             payload.put(APIParam.CorrelationID,tag.trim());
         }
 
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpPostRequest(APIEndpoint.CreateForeverOrder, payload)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
-    public OrderStatusDTO placeForeverOrder(Order order) throws DhanAPIException {
+    public OrderResponse placeForeverOrder(Order order) throws DhanAPIException {
         return placeForeverOrder(order, null);
     }
 
-    public OrderStatusDTO modifyForeverOrder(Order order) throws DhanAPIException {
+    public OrderResponse modifyForeverOrder(Order order) throws DhanAPIException {
         Map<String, String> payload = new HashMap<>();
         payload.put(APIParam.OrderID, order.getOrderId());
         payload.put(APIParam.OrderFlag, order.getOrderFlag().toString());
@@ -89,27 +88,24 @@ public class ForeverOrderEndpoint {
         payload.put(APIParam.Validity, order.getValidity().toString());
 
         String endpoint = String.format(APIEndpoint.ModifyForeverOrder,order.getOrderId());
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpPutRequest(endpoint, payload)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
-    public OrderStatusDTO cancelForeverOrder(String orderID) throws DhanAPIException {
+    public OrderResponse cancelForeverOrder(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.CancelForeverOrder,orderID);
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpDeleteRequest(endpoint)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
     public List<Order> getAllForeverOrders() throws DhanAPIException {
-        List<Order> orders = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetAllExistingForeverOrders)
                 .convertToType(new TypeReference<List<Order>>() {});
-        return orders;
     }
 }

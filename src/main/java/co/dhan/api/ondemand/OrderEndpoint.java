@@ -3,11 +3,10 @@ package co.dhan.api.ondemand;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.AMOTime;
 import co.dhan.dto.Order;
-import co.dhan.dto.OrderStatusDTO;
+import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanAPIException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -56,10 +55,10 @@ public class OrderEndpoint {
      * The order request API allows you to place new order.
      * @param order: order that is to be placed
      * @param slice: boolean value true makes this a slice-order
-     * @return OrderStatusDTO
+     * @return OrderResponse
      * @throws DhanAPIException
      */
-    public OrderStatusDTO placeOrder(Order order, String tag, boolean slice) throws DhanAPIException {
+    public OrderResponse placeOrder(Order order, String tag, boolean slice) throws DhanAPIException {
 
         EnumSet<AMOTime> afterMarketOrderTimes = EnumSet.of(AMOTime.OPEN, AMOTime.OPEN_30, AMOTime.OPEN_60);
         if(order.isAfterMarketOrder()
@@ -68,7 +67,7 @@ public class OrderEndpoint {
         }
 
         Map<String, String> payload = new HashMap<>();
-        payload.put(APIParam.SecurityID, order.getSecurityId().toString());
+        payload.put(APIParam.SecurityID, order.getSecurityId());
         payload.put(APIParam.TransactionType, order.getTransactionType().toString());
         payload.put(APIParam.ExchangeSegment, order.getExchangeSegment().toString());
         payload.put(APIParam.ProductType, order.getProductType().toString());
@@ -86,38 +85,36 @@ public class OrderEndpoint {
         }
 
         String endpoint = slice? APIEndpoint.PlaceSliceOrder : APIEndpoint.PlaceOrder;
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpPostRequest(endpoint, payload)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
-    public OrderStatusDTO placeOrder(Order order, String tag) throws DhanAPIException {
+    public OrderResponse placeOrder(Order order, String tag) throws DhanAPIException {
         return placeOrder(order, tag,false);
     }
 
-    public OrderStatusDTO placeOrder(Order order) throws DhanAPIException {
+    public OrderResponse placeOrder(Order order) throws DhanAPIException {
         return placeOrder(order, null,false);
     }
 
-    public OrderStatusDTO placeSliceOrder(Order order, String tag) throws DhanAPIException {
+    public OrderResponse placeSliceOrder(Order order, String tag) throws DhanAPIException {
         return placeOrder(order, tag, true);
     }
 
-    public OrderStatusDTO placeSliceOrder(Order order) throws DhanAPIException {
+    public OrderResponse placeSliceOrder(Order order) throws DhanAPIException {
         return placeOrder(order, null, true);
     }
 
     /**
-     * The api allows you modify pending order in orderbook.
+     * The api allows you to modify pending order in orderbook.
      * The fields that can be modified are price, quantity, order type & validity.
      * @param order
      * @return
-     * @throws IOException
      * @throws DhanAPIException
      */
-    public OrderStatusDTO modifyOrder(Order order)
+    public OrderResponse modifyOrder(Order order)
             throws DhanAPIException {
         if (order==null || order.getOrderId()==null || order.getOrderId().isEmpty()
                 || order.getOrderType()==null || order.getLegName()==null || order.getValidity()==null
@@ -135,45 +132,40 @@ public class OrderEndpoint {
         payload.put(APIParam.TriggerPrice, String.valueOf(order.getTriggerPrice()));
 
         String endpoint = String.format(APIEndpoint.ModifyOrder,order.getOrderId());
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpPutRequest(endpoint, payload)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
-    public OrderStatusDTO cancelOrder(String orderID) throws DhanAPIException {
+    public OrderResponse cancelOrder(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.CancelOrder,orderID);
-        OrderStatusDTO orderStatus = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpDeleteRequest(endpoint)
-                .convertToType(OrderStatusDTO.class);
-        return orderStatus;
+                .convertToType(OrderResponse.class);
     }
 
     public List<Order> getCurrentOrders() throws DhanAPIException {
-        List<Order> orders = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetOrders)
                 .convertToType(new TypeReference<List<Order>>() {});
-        return orders;
     }
 
     public Order getOrderByID(String orderID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByID,orderID);
-        Order order = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(Order.class);
-        return order;
     }
 
     public Order getOrderByCorrelationID(String correlationID) throws DhanAPIException {
         String endpoint = String.format(APIEndpoint.GetOrderByCorrelationID,correlationID);
-        Order order = dhanConnection
+        return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)
                 .convertToType(Order.class);
-        return order;
     }
 }

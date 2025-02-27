@@ -2,7 +2,7 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.ITest_DhanTestRoot;
 import co.dhan.dto.Order;
-import co.dhan.dto.OrderStatusDTO;
+import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanAPIException;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ public class ITest_OrderEndpoint extends ITest_DhanTestRoot {
 
     @Test
     void cancelOrderSuccessfully() throws DhanAPIException, IOException {
-        OrderStatusDTO orderStatus = dhanCore.getOrderEndpoint().cancelOrder("orderid");
+        OrderResponse orderStatus = dhanCore.getOrderEndpoint().cancelOrder("orderid");
         assertThat(orderStatus).isNotNull();
     }
 }

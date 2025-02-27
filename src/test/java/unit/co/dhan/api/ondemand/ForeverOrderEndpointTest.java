@@ -6,7 +6,7 @@ import co.dhan.api.ondemand.ForeverOrderEndpoint.APIEndpoint;
 import co.dhan.api.ondemand.ForeverOrderEndpoint.APIParam;
 import co.dhan.constant.*;
 import co.dhan.dto.Order;
-import co.dhan.dto.OrderStatusDTO;
+import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
@@ -51,13 +51,13 @@ class ForeverOrderEndpointTest extends UnitTestRoot {
                         APIParam.Quantity, APIParam.DisclosedQuantity, APIParam.Price, APIParam.TriggerPrice,
                         APIParam.Price1, APIParam.TriggerPrice1, APIParam.Quantity1, APIParam.CorrelationID);
         expectedParams.keySet().retainAll(expectedKeys);
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(order.getOrderId(), OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(order.getOrderId(), OrderStatus.PENDING);
 
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(eq(APIEndpoint.CreateForeverOrder), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        OrderStatusDTO orderStatus = foreverOrderEndpoint.placeForeverOrder(order, expectedParams.get(APIParam.CorrelationID));
+        OrderResponse orderStatus = foreverOrderEndpoint.placeForeverOrder(order, expectedParams.get(APIParam.CorrelationID));
         assertThat(orderStatus).isEqualTo(expectedOrderStatus);
 
         verify(mockDhanConnection).getDhanHTTP();
@@ -94,13 +94,13 @@ class ForeverOrderEndpointTest extends UnitTestRoot {
                 APIParam.Quantity, APIParam.DisclosedQuantity, APIParam.Price, APIParam.TriggerPrice, APIParam.Validity);
         expectedParams.keySet().retainAll(expectedKeys);
 
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(order.getOrderId(), OrderStatus.PENDING);
+        OrderResponse expectedOrderStatus = new OrderResponse(order.getOrderId(), OrderStatus.PENDING);
 
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPutRequest(contains(order.getOrderId()), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        OrderStatusDTO orderStatus = foreverOrderEndpoint.modifyForeverOrder(order);
+        OrderResponse orderStatus = foreverOrderEndpoint.modifyForeverOrder(order);
         assertThat(orderStatus).isEqualTo(expectedOrderStatus);
 
         verify(mockDhanConnection).getDhanHTTP();
@@ -125,13 +125,13 @@ class ForeverOrderEndpointTest extends UnitTestRoot {
     @Test
     void cancelForeverOrder_ShouldReturnResult() throws DhanAPIException {
         String orderID = "123";
-        OrderStatusDTO expectedOrderStatus = new OrderStatusDTO(orderID, OrderStatus.CANCELLED);
+        OrderResponse expectedOrderStatus = new OrderResponse(orderID, OrderStatus.CANCELLED);
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpDeleteRequest(anyString())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.convertToType(OrderStatusDTO.class)).thenReturn(expectedOrderStatus);
+        when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        OrderStatusDTO orderStatusDTO = foreverOrderEndpoint.cancelForeverOrder(orderID);
-        assertThat(orderStatusDTO).isEqualTo(expectedOrderStatus);
+        OrderResponse orderResponse = foreverOrderEndpoint.cancelForeverOrder(orderID);
+        assertThat(orderResponse).isEqualTo(expectedOrderStatus);
         verify(mockDhanConnection).getDhanHTTP();
         verify(mockDhanHTTP).doHttpDeleteRequest(contains(orderID));
     }
