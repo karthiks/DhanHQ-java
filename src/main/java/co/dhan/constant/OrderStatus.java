@@ -12,6 +12,7 @@ public enum OrderStatus {
     CANCELLED("Cancelled by user"),
     PART_TRADED("Partially Executed"),
     TRADED("Executed"),
+    CONFIRM("Confirm"), // Why not TRADED?? https://dhanhq.co/docs/v2/forever/#all-forever-order-detail
     EXPIRED("Validity of order is expired");
 
     private String description;
