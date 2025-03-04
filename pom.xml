@@ -6,7 +6,7 @@
 
     <groupId>co.dhan</groupId>
     <artifactId>DhanHQ-java</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -14,7 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.argLine>-Xmx1024m</surefire.argLine>
         <mockito.version>5.15.2</mockito.version>
-        <mockito.core.path>${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</mockito.core.path>
+        <mockito.core.path>
+            ${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+        </mockito.core.path>
         <mockito.argLine>-javaagent:${mockito.core.path} -Xshare:off</mockito.argLine>
     </properties>
 

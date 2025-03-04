@@ -1,4 +1,4 @@
-# DhanHQ-java: v1.0.1
+# DhanHQ-java: v1.0.3
 
 The **unofficial** Java SDK for communicating with the [Dhan API](https://api.dhan.co/v2/).
 
