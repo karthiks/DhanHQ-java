@@ -2,6 +2,8 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.AMOTime;
+import co.dhan.dto.ModifyOrderRequest;
+import co.dhan.dto.NewOrderRequest;
 import co.dhan.dto.Order;
 import co.dhan.dto.OrderResponse;
 import co.dhan.http.DhanAPIException;
@@ -39,7 +41,7 @@ public class OrderEndpoint {
         String GetOrders = "/orders";
         String GetOrderByID = "/orders/%s";
         String GetOrderByCorrelationID = "/orders/external/%s";
-        String CancelOrder ="/orders/%s";
+        String CancelOrder = "/orders/%s";
         String ModifyOrder = "/orders/%s";
         String PlaceOrder = "/orders";
         String PlaceSliceOrder = "/orders/slicing";
@@ -53,85 +55,87 @@ public class OrderEndpoint {
 
     /**
      * The order request API allows you to place new order.
-     * @param order: order that is to be placed
-     * @param slice: boolean value true makes this a slice-order
+     *
+     * @param nordRequest: order that is to be placed
+     * @param slice:       boolean value true makes this a slice-order
      * @return OrderResponse
      * @throws DhanAPIException
      */
-    public OrderResponse placeOrder(Order order, String tag, boolean slice) throws DhanAPIException {
+    public OrderResponse placeOrder(NewOrderRequest nordRequest, String tag, boolean slice) throws DhanAPIException {
 
         EnumSet<AMOTime> afterMarketOrderTimes = EnumSet.of(AMOTime.OPEN, AMOTime.OPEN_30, AMOTime.OPEN_60);
-        if(order.isAfterMarketOrder()
-                && !afterMarketOrderTimes.contains(order.getAmoTime()) ) {
+        if (nordRequest.isAfterMarketOrder()
+                && !afterMarketOrderTimes.contains(nordRequest.getAmoTime())) {
             throw new DhanAPIException("Input Error", "After Market Order has to be one of the values OPEN, OPEN_30, OPEN_60");
         }
 
         Map<String, String> payload = new HashMap<>();
-        payload.put(APIParam.SecurityID, order.getSecurityId());
-        payload.put(APIParam.TransactionType, order.getTransactionType().toString());
-        payload.put(APIParam.ExchangeSegment, order.getExchangeSegment().toString());
-        payload.put(APIParam.ProductType, order.getProductType().toString());
-        payload.put(APIParam.OrderType, order.getOrderType().toString());
-        payload.put(APIParam.Validity, order.getValidity().toString());
-        payload.put(APIParam.Quantity, String.valueOf(order.getQuantity()));
-        payload.put(APIParam.DisclosedQuantity, String.valueOf(order.getDisclosedQuantity()));
-        payload.put(APIParam.Price, String.valueOf(order.getPrice()));
-        payload.put(APIParam.AfterMarketOrder, String.valueOf(order.isAfterMarketOrder()));
-        payload.put(APIParam.AMOTime, String.valueOf(order.getAmoTime()));
-        payload.put(APIParam.BOProfitValue, String.valueOf(order.getBoProfitValue()));
-        payload.put(APIParam.BOStopLossValue, String.valueOf(order.getBoStopLossValue()));
-        if(tag!=null && !tag.isEmpty()) {
-            payload.put(APIParam.CorrelationID,tag);
+        payload.put(APIParam.SecurityID, nordRequest.getSecurityId());
+        payload.put(APIParam.TransactionType, nordRequest.getTransactionType().toString());
+        payload.put(APIParam.ExchangeSegment, nordRequest.getExchangeSegment().toString());
+        payload.put(APIParam.ProductType, nordRequest.getProductType().toString());
+        payload.put(APIParam.OrderType, nordRequest.getOrderType().toString());
+        payload.put(APIParam.Validity, nordRequest.getValidity().toString());
+        payload.put(APIParam.Quantity, String.valueOf(nordRequest.getQuantity()));
+        payload.put(APIParam.DisclosedQuantity, String.valueOf(nordRequest.getDisclosedQuantity()));
+        payload.put(APIParam.Price, String.valueOf(nordRequest.getPrice()));
+        payload.put(APIParam.AfterMarketOrder, String.valueOf(nordRequest.isAfterMarketOrder()));
+        payload.put(APIParam.AMOTime, String.valueOf(nordRequest.getAmoTime()));
+        payload.put(APIParam.BOProfitValue, String.valueOf(nordRequest.getBoProfitValue()));
+        payload.put(APIParam.BOStopLossValue, String.valueOf(nordRequest.getBoStopLossValue()));
+        if (tag != null && !tag.isEmpty()) {
+            payload.put(APIParam.CorrelationID, tag);
         }
 
-        String endpoint = slice? APIEndpoint.PlaceSliceOrder : APIEndpoint.PlaceOrder;
+        String endpoint = slice ? APIEndpoint.PlaceSliceOrder : APIEndpoint.PlaceOrder;
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpPostRequest(endpoint, payload)
                 .convertToType(OrderResponse.class);
     }
 
-    public OrderResponse placeOrder(Order order, String tag) throws DhanAPIException {
-        return placeOrder(order, tag,false);
+    public OrderResponse placeOrder(NewOrderRequest nordRequest, String tag) throws DhanAPIException {
+        return placeOrder(nordRequest, tag, false);
     }
 
-    public OrderResponse placeOrder(Order order) throws DhanAPIException {
-        return placeOrder(order, null,false);
+    public OrderResponse placeOrder(NewOrderRequest nordRequest) throws DhanAPIException {
+        return placeOrder(nordRequest, null, false);
     }
 
-    public OrderResponse placeSliceOrder(Order order, String tag) throws DhanAPIException {
-        return placeOrder(order, tag, true);
+    public OrderResponse placeSliceOrder(NewOrderRequest nordRequest, String tag) throws DhanAPIException {
+        return placeOrder(nordRequest, tag, true);
     }
 
-    public OrderResponse placeSliceOrder(Order order) throws DhanAPIException {
-        return placeOrder(order, null, true);
+    public OrderResponse placeSliceOrder(NewOrderRequest nordRequest) throws DhanAPIException {
+        return placeOrder(nordRequest, null, true);
     }
 
     /**
      * The api allows you to modify pending order in orderbook.
      * The fields that can be modified are price, quantity, order type & validity.
-     * @param order
+     *
+     * @param mor
      * @return
      * @throws DhanAPIException
      */
-    public OrderResponse modifyOrder(Order order)
+    public OrderResponse modifyOrder(ModifyOrderRequest mor)
             throws DhanAPIException {
-        if (order==null || order.getOrderId()==null || order.getOrderId().isEmpty()
-                || order.getOrderType()==null || order.getLegName()==null || order.getValidity()==null
-                || order.getQuantity()==0) {
+        if (mor == null || mor.getOrderId() == null || mor.getOrderId().isEmpty()
+                || mor.getOrderType() == null || mor.getLegName() == null || mor.getValidity() == null
+                || mor.getQuantity() == 0) {
             throw new DhanAPIException("Input Error", "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
         }
         Map<String, String> payload = new HashMap<>();
-        payload.put(APIParam.OrderID, order.getOrderId());
-        payload.put(APIParam.OrderType, order.getOrderType().toString());
-        payload.put(APIParam.LegName, order.getLegName().toString());
-        payload.put(APIParam.Validity, order.getValidity().toString());
-        payload.put(APIParam.Quantity, String.valueOf(order.getQuantity()));
-        payload.put(APIParam.DisclosedQuantity, String.valueOf(order.getDisclosedQuantity()));
-        payload.put(APIParam.Price, String.valueOf(order.getPrice()));
-        payload.put(APIParam.TriggerPrice, String.valueOf(order.getTriggerPrice()));
+        payload.put(APIParam.OrderID, mor.getOrderId());
+        payload.put(APIParam.OrderType, mor.getOrderType().toString());
+        payload.put(APIParam.LegName, mor.getLegName().toString());
+        payload.put(APIParam.Validity, mor.getValidity().toString());
+        payload.put(APIParam.Quantity, String.valueOf(mor.getQuantity()));
+        payload.put(APIParam.DisclosedQuantity, String.valueOf(mor.getDisclosedQuantity()));
+        payload.put(APIParam.Price, String.valueOf(mor.getPrice()));
+        payload.put(APIParam.TriggerPrice, String.valueOf(mor.getTriggerPrice()));
 
-        String endpoint = String.format(APIEndpoint.ModifyOrder,order.getOrderId());
+        String endpoint = String.format(APIEndpoint.ModifyOrder, mor.getOrderId());
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpPutRequest(endpoint, payload)
@@ -139,7 +143,7 @@ public class OrderEndpoint {
     }
 
     public OrderResponse cancelOrder(String orderID) throws DhanAPIException {
-        String endpoint = String.format(APIEndpoint.CancelOrder,orderID);
+        String endpoint = String.format(APIEndpoint.CancelOrder, orderID);
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpDeleteRequest(endpoint)
@@ -150,11 +154,12 @@ public class OrderEndpoint {
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(APIEndpoint.GetOrders)
-                .convertToType(new TypeReference<List<Order>>() {});
+                .convertToType(new TypeReference<List<Order>>() {
+                });
     }
 
     public Order getOrderByID(String orderID) throws DhanAPIException {
-        String endpoint = String.format(APIEndpoint.GetOrderByID,orderID);
+        String endpoint = String.format(APIEndpoint.GetOrderByID, orderID);
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)
@@ -162,7 +167,7 @@ public class OrderEndpoint {
     }
 
     public Order getOrderByCorrelationID(String correlationID) throws DhanAPIException {
-        String endpoint = String.format(APIEndpoint.GetOrderByCorrelationID,correlationID);
+        String endpoint = String.format(APIEndpoint.GetOrderByCorrelationID, correlationID);
         return dhanConnection
                 .getDhanHTTP()
                 .doHttpGetRequest(endpoint)

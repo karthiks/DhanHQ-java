@@ -5,8 +5,11 @@ import co.dhan.api.DhanConnection;
 import co.dhan.api.ondemand.OrderEndpoint.APIEndpoint;
 import co.dhan.api.ondemand.OrderEndpoint.APIParam;
 import co.dhan.constant.*;
+import co.dhan.dto.ModifyOrderRequest;
+import co.dhan.dto.NewOrderRequest;
 import co.dhan.dto.Order;
 import co.dhan.dto.OrderResponse;
+import co.dhan.helper.BigDecimalUtils;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -91,7 +94,6 @@ class OrderEndpointTest extends UnitTestRoot {
         String orderId = "1";
         OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
 
-        Order order = getSampleOrder();
         Set<String> expectedParamKeys = Set.of(APIParam.SecurityID, APIParam.TransactionType, APIParam.ExchangeSegment,
                 APIParam.ProductType, APIParam.OrderType, APIParam.Validity, APIParam.Quantity, APIParam.DisclosedQuantity,
                 APIParam.Price, APIParam.AfterMarketOrder, APIParam.AMOTime, APIParam.BOProfitValue, APIParam.BOStopLossValue,
@@ -101,7 +103,16 @@ class OrderEndpointTest extends UnitTestRoot {
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
         when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        assertThat(orderEndpoint.placeOrder(order, order.getCorrelationId(), false)).isEqualTo(expectedOrderStatus);
+        NewOrderRequest nordRequest = NewOrderRequest.builder()
+                .securityId("1").exchangeSegment(ExchangeSegment.NSE_EQ).transactionType(TransactionType.BUY)
+                .orderType(OrderType.LIMIT).productType(ProductType.CNC).validity(Validity.DAY)
+                .price(BigDecimalUtils.toBigDecimal(99.99)).triggerPrice(BigDecimalUtils.toBigDecimal(99))
+                .quantity(100).disclosedQuantity(10)
+                .afterMarketOrder(true).amoTime(AMOTime.OPEN)
+//                .boProfitValue(BigDecimalUtils.toBigDecimal(0)).boStopLossValue(BigDecimalUtils.toBigDecimal(0))
+                .correlationId("tag1")
+                .build();
+        assertThat(orderEndpoint.placeOrder(nordRequest, "tag1", false)).isEqualTo(expectedOrderStatus);
         verify(mockDhanHTTP).doHttpPostRequest(eq(APIEndpoint.PlaceOrder), argThat(payoad -> {
             assertThat(payoad.keySet()).isEqualTo(expectedParamKeys);
             return true;
@@ -112,12 +123,20 @@ class OrderEndpointTest extends UnitTestRoot {
     void placeOrder_WithoutTag_ShouldExcludeCorrelationIdParam() {
         String orderId = "1";
         OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
-        Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
         when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        orderEndpoint.placeOrder(order);
+        NewOrderRequest nordRequest = NewOrderRequest.builder()
+                .securityId("1").exchangeSegment(ExchangeSegment.NSE_EQ).transactionType(TransactionType.BUY)
+                .orderType(OrderType.LIMIT).productType(ProductType.CNC).validity(Validity.DAY)
+                .price(BigDecimalUtils.toBigDecimal(99.99)).triggerPrice(BigDecimalUtils.toBigDecimal(99))
+                .quantity(100).disclosedQuantity(10)
+                .afterMarketOrder(true).amoTime(AMOTime.OPEN)
+//                .boProfitValue(BigDecimalUtils.toBigDecimal(0)).boStopLossValue(BigDecimalUtils.toBigDecimal(0))
+                .correlationId("tag1")
+                .build();
+        orderEndpoint.placeOrder(nordRequest);
         verify(mockDhanHTTP).doHttpPostRequest(eq(APIEndpoint.PlaceOrder), argThat(payoad -> {
             assertThat(payoad.keySet()).doesNotContain(APIParam.CorrelationID);
             return true;
@@ -128,26 +147,42 @@ class OrderEndpointTest extends UnitTestRoot {
     void placeOrder_WithoutTagAndSlice_ShouldPassDefaultValuesToOverloadedMethod() {
         String orderId = "1";
         OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
-        Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
         when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        orderEndpoint.placeOrder(order);
-        verify(orderEndpoint, times(1)).placeOrder(order,null,false);
+        NewOrderRequest nordRequest = NewOrderRequest.builder()
+                .securityId("1").exchangeSegment(ExchangeSegment.NSE_EQ).transactionType(TransactionType.BUY)
+                .orderType(OrderType.LIMIT).productType(ProductType.CNC).validity(Validity.DAY)
+                .price(BigDecimalUtils.toBigDecimal(99.99)).triggerPrice(BigDecimalUtils.toBigDecimal(99))
+                .quantity(100).disclosedQuantity(10)
+                .afterMarketOrder(true).amoTime(AMOTime.OPEN)
+//                .boProfitValue(BigDecimalUtils.toBigDecimal(0)).boStopLossValue(BigDecimalUtils.toBigDecimal(0))
+                .correlationId("tag1")
+                .build();
+        orderEndpoint.placeOrder(nordRequest);
+        verify(orderEndpoint, times(1)).placeOrder(nordRequest, null, false);
     }
 
     @Test
     void placeSliceOrder_calls_placeOrder() {
         String orderId = "1";
         OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
-        Order order = getSampleOrder();
         when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
         when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
         when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        orderEndpoint.placeSliceOrder(order);
-        verify(orderEndpoint, times(1)).placeOrder(order,null,true);
+        NewOrderRequest nordRequest = NewOrderRequest.builder()
+                .securityId("1").exchangeSegment(ExchangeSegment.NSE_EQ).transactionType(TransactionType.BUY)
+                .orderType(OrderType.LIMIT).productType(ProductType.CNC).validity(Validity.DAY)
+                .price(BigDecimalUtils.toBigDecimal(99.99)).triggerPrice(BigDecimalUtils.toBigDecimal(99))
+                .quantity(100).disclosedQuantity(10)
+                .afterMarketOrder(true).amoTime(AMOTime.OPEN)
+//                .boProfitValue(BigDecimalUtils.toBigDecimal(0)).boStopLossValue(BigDecimalUtils.toBigDecimal(0))
+                .correlationId("tag1")
+                .build();
+        orderEndpoint.placeSliceOrder(nordRequest);
+        verify(orderEndpoint, times(1)).placeOrder(nordRequest, null, true);
     }
 
     @Test
@@ -155,9 +190,6 @@ class OrderEndpointTest extends UnitTestRoot {
         String orderId = "1";
         OrderResponse expectedOrderStatus = new OrderResponse(orderId, OrderStatus.PENDING);
 
-        Order order = getSampleOrder();
-        order.setOrderId(orderId);
-        order.setLegName(LegName.ENTRY_LEG);
         Set<String> expectedParamKeys = Set.of(APIParam.OrderID, APIParam.OrderType, APIParam.LegName,
                 APIParam.Validity, APIParam.Quantity, APIParam.DisclosedQuantity,
                 APIParam.Price, APIParam.TriggerPrice);
@@ -166,8 +198,14 @@ class OrderEndpointTest extends UnitTestRoot {
         when(mockDhanHTTP.doHttpPutRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
         when(mockDhanResponse.convertToType(OrderResponse.class)).thenReturn(expectedOrderStatus);
 
-        assertThat(orderEndpoint.modifyOrder(order)).isEqualTo(expectedOrderStatus);
-        verify(mockDhanHTTP).doHttpPutRequest(eq("/orders/"+orderId), argThat(payoad -> {
+        ModifyOrderRequest mor = ModifyOrderRequest.builder()
+                .orderId("1").orderType(OrderType.LIMIT)
+                .legName(LegName.ENTRY_LEG).validity(Validity.DAY)
+                .price(BigDecimalUtils.toBigDecimal(99.99)).triggerPrice(BigDecimalUtils.toBigDecimal(99))
+                .quantity(100).disclosedQuantity(10)
+                .build();
+        assertThat(orderEndpoint.modifyOrder(mor)).isEqualTo(expectedOrderStatus);
+        verify(mockDhanHTTP).doHttpPutRequest(eq("/orders/" + orderId), argThat(payoad -> {
             assertThat(payoad.keySet()).isEqualTo(expectedParamKeys);
             return true;
         }));
@@ -184,7 +222,7 @@ class OrderEndpointTest extends UnitTestRoot {
         OrderResponse orderResponse = orderEndpoint.cancelOrder(orderID);
         assertThat(orderResponse).isEqualTo(expectedOrderStatus);
         verify(mockDhanConnection).getDhanHTTP();
-        verify(mockDhanHTTP).doHttpDeleteRequest(eq("/orders/" +orderID));
+        verify(mockDhanHTTP).doHttpDeleteRequest(eq("/orders/" + orderID));
     }
 
     @NotNull
@@ -200,7 +238,6 @@ class OrderEndpointTest extends UnitTestRoot {
         order.setDisclosedQuantity(10);
         order.setPrice(BigDecimal.valueOf(99.99));
         order.setAfterMarketOrder(false);
-        order.setAmoTime(AMOTime.OPEN);
         order.setBoProfitValue(BigDecimal.valueOf(111.0));
         order.setBoStopLossValue(BigDecimal.valueOf(115.0));
         order.setCorrelationId("c1");
