@@ -1,0 +1,39 @@
+FROM node:20-slim
+
+# 1. Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
+    curl \
+    git \
+    vim \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Setup user and paths before installing
+RUN useradd -m developer
+WORKDIR /workspace
+
+# Create the directory where the installer puts the binary
+RUN mkdir -p /home/developer/.local/bin && chown -R developer:developer /home/developer
+
+# 3. Install Claude as the developer user
+USER developer
+# RUN curl -fsSL https://claude.ai/install.sh | bash -s -- 2.1.19
+RUN curl -fsSL https://claude.ai/install.sh | bash -s -- 2.1.29
+# RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# To respond as safe to Git's Dubious Ownership check when running in Docker for files shared from the host
+RUN git config --global --add safe.directory /workspace
+
+# 4. CRITICAL: Add the install directory to the PATH
+ENV PATH="/home/developer/.local/bin:${PATH}"
+
+# 5. Environment Configuration for Ollama
+# ENV ANTHROPIC_BASE_URL="http://host.docker.internal:11434/v1" \
+#     ANTHROPIC_AUTH_TOKEN="ollama" \
+#     ANTHROPIC_API_KEY="sk-no-key-required" \
+#     ANTHROPIC_MODEL="qwen2.5-coder:7b" \
+#     TERM=xterm-256color
+ENV TERM=xterm-256color
+
+ENTRYPOINT ["bash"]

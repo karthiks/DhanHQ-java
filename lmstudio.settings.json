@@ -1,0 +1,14 @@
+{
+    "env": {
+        "ANTHROPIC_BASE_URL": "http://host.docker.internal:1234/",
+        "ANTHROPIC_AUTH_TOKEN": "dummy",
+        "ANTHROPIC_API_KEY": "sk-no-key-required",
+        "API_TIMEOUT_MS": 3000000,
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1,
+        "ANTHROPIC_MODEL": "default_model",
+        "ANTHROPIC_SMALL_FAST_MODEL": "default_model",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "default_model",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "default_model",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "default_model"
+    }
+}

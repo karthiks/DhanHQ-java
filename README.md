@@ -39,17 +39,18 @@ algorothimic traders.
    `API Docs > Portfolio > GET Holdings`.
    The code implementation in SDK follows the same hierarchy like `DhanCore > Portfolio Endpoint > List<Holding>`.
    How does this affect you? Your code implementation is ridiculously brain friendly with fluent APIs like below:
-    ```java
-    List<Holding> currentHoldings = dhanCore // Think DhanCore akin to API Docs Page
-            .getPortfolioEndpoint() // The Endpoint you see on the left-pane of the API docs
-            .getCurrentHoldings(); // The intuitive method naming to make you productive
-    ```
+
+   ```java
+   List<Holding> currentHoldings = dhanCore // Think DhanCore akin to API Docs Page
+           .getPortfolioEndpoint() // The Endpoint you see on the left-pane of the API docs
+           .getCurrentHoldings(); // The intuitive method naming to make you productive
+   ```
 
    The cheatsheet is as below:
-    - DhanCore = Your API Doc Page
-    - <YourResource>Endpoint = Resource (you find on the left pane of your API doc-page) under which various actions are
-      defined
-    - <YourResource>Action = Action defined on the main section of your API document.
+   - DhanCore = Your API Doc Page
+   - <YourResource>Endpoint = Resource (you find on the left pane of your API doc-page) under which various actions are
+     defined
+   - <YourResource>Action = Action defined on the main section of your API document.
 
 2. I want to design developer-first API design, that eases the life of an algorithmic developer.
    You will find the API design of SDK refreshingly simple instead of being simplistic like that of other SDKs.
@@ -59,38 +60,38 @@ algorothimic traders.
 
 ## SDK API Cheatsheet
 
-| Endpoint                     | Action                                                                                                                                                                                     | Returns                              |
-|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| `getOrderEndpoint()`         | `placeOrder(NewOrderRequest nordRequest)`                                                                                                                                                  | `OrderResponse`                      |
-|                              | `placeOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                                      | `OrderResponse`                      |
-|                              | `placeOrder(NewOrderRequest nordRequest, String tag, boolean slice)`                                                                                                                       | `OrderResponse`                      |
-|                              | `placeSliceOrder(NewOrderRequest nordRequest)`                                                                                                                                             | `OrderResponse`                      |
-|                              | `placeSliceOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                                 | `OrderResponse`                      |
-|                              | `getCurrentOrders()`                                                                                                                                                                       | `List<Order>`                        |
-|                              | `getOrderByID(String orderID)`                                                                                                                                                             | `Order`                              |
-|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                            | `Order`                              |
-|                              | `modifyOrder(ModifyOrderRequest mor)`                                                                                                                                                      | `OrderResponse`                      |
-|                              | `cancelOrder(String orderID)`                                                                                                                                                              | `OrderResponse`                      |
-| `getForeverOrderEndpoint()`  | `placeForeverOrder(NewForeverOrderRequest foRequest)`                                                                                                                                      | `ForeverOrderResponse`               |
-|                              | `getAllForeverOrders()`                                                                                                                                                                    | `List<ForeverOrder>`                 |
-|                              | `modifyForeverOrder(ModifyForeverOrderRequest mfoRequest)`                                                                                                                                 | `ForeverOrderResponse`               |
-|                              | `cancelForeverOrder(String orderID)`                                                                                                                                                       | `ForeverOrderResponse`               |
-| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                                     | `List<Holding>`                      |
-|                              | `getCurrentPositions()`                                                                                                                                                                    | `List<Position>`                     |
-|                              | ```convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)```                                                                                          | `DhanResponse`                       |
-| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                                    | `FundSummary`                        |
-|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price)```                          | `Margin`                             |
-|                              | ```computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice)``` | `Margin`                             |
-| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                                      | `String`                             |
-| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                                    | `Ledger`                             |
-| `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                           | `ExchangeSegmentCandlesticksWrapper` |
-|                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                          | `ExchangeSegmentCandlesticksWrapper` |
-|                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                         | `ExchangeSegmentCandlesticksWrapper` |
-| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)`                                                                                                                                                             | `EDISStatus`                         |
-|                              | `generateTPIN()`                                                                                                                                                                           | `String`                             |
-|                              | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)`                                                                                          |                                      |
-|                              | `createTempHtmlFile(String formHtml)`                                                                                                                                                      | `File`                               |
-|                              | `openInBrowser(File tempFile)`                                                                                                                                                             |                                      |
+| Endpoint                     | Action                                                                                                                                                                                 | Returns                              |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `getOrderEndpoint()`         | `placeOrder(NewOrderRequest nordRequest)`                                                                                                                                              | `OrderResponse`                      |
+|                              | `placeOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                                  | `OrderResponse`                      |
+|                              | `placeOrder(NewOrderRequest nordRequest, String tag, boolean slice)`                                                                                                                   | `OrderResponse`                      |
+|                              | `placeSliceOrder(NewOrderRequest nordRequest)`                                                                                                                                         | `OrderResponse`                      |
+|                              | `placeSliceOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                             | `OrderResponse`                      |
+|                              | `getCurrentOrders()`                                                                                                                                                                   | `List<Order>`                        |
+|                              | `getOrderByID(String orderID)`                                                                                                                                                         | `Order`                              |
+|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                        | `Order`                              |
+|                              | `modifyOrder(ModifyOrderRequest mor)`                                                                                                                                                  | `OrderResponse`                      |
+|                              | `cancelOrder(String orderID)`                                                                                                                                                          | `OrderResponse`                      |
+| `getForeverOrderEndpoint()`  | `placeForeverOrder(NewForeverOrderRequest foRequest)`                                                                                                                                  | `ForeverOrderResponse`               |
+|                              | `getAllForeverOrders()`                                                                                                                                                                | `List<ForeverOrder>`                 |
+|                              | `modifyForeverOrder(ModifyForeverOrderRequest mfoRequest)`                                                                                                                             | `ForeverOrderResponse`               |
+|                              | `cancelForeverOrder(String orderID)`                                                                                                                                                   | `ForeverOrderResponse`               |
+| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                                 | `List<Holding>`                      |
+|                              | `getCurrentPositions()`                                                                                                                                                                | `List<Position>`                     |
+|                              | `convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)`                                                                                          | `DhanResponse`                       |
+| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                                | `FundSummary`                        |
+|                              | `computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price)`                          | `Margin`                             |
+|                              | `computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice)` | `Margin`                             |
+| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                                  | `String`                             |
+| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                                | `Ledger`                             |
+| `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                       | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                      | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                     | `ExchangeSegmentCandlesticksWrapper` |
+| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)`                                                                                                                                                         | `EDISStatus`                         |
+|                              | `generateTPIN()`                                                                                                                                                                       | `String`                             |
+|                              | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)`                                                                                      |                                      |
+|                              | `createTempHtmlFile(String formHtml)`                                                                                                                                                  | `File`                               |
+|                              | `openInBrowser(File tempFile)`                                                                                                                                                         |                                      |
 
 ## Cookbook
 
@@ -281,6 +282,99 @@ liveMarketDepth.
 disconnect();
 ```
 
+## Leveraging Claude Code with Dockerfile using LM Studio
+
+Run this in PowerShell from your project root:
+
+```powershell
+docker build -t claude-dhanj -f Dockerfile.claude2 .
+
+docker run -it --rm `
+  --name claude-dhanj `
+  --memory="2g" `
+  --add-host=host.docker.internal:host-gateway `
+  -e CLAUDE_CODE_MODEL="qwen2.5-coder:7b" `
+  -v "${PWD}:/workspace" `
+  claude-dhanj
+```
+
+Within docker-container run below commands:
+
+```bash
+# Run claude with ENV variables and some settings
+ANTHROPIC_BASE_URL="http://host.docker.internal:1234/" `
+ANTHROPIC_AUTH_TOKEN="dummy" `
+ANTHROPIC_API_KEY="sk-no-key-required" `
+claude --settings lmstudio.settings.json
+```
+
+## Leveraging Claude Code with Dockerfile [!!Failed to recognize Ollama service. Vendor-Locked!!]
+
+To ensure this works with your 16GB limit, use the --memory flag to prevent Docker from starving Windows/Ollama of RAM.
+
+Run this in PowerShell from your project root:
+
+```powershell
+docker build -t claude-dhanj -f Dockerfile.claude .
+
+docker run -it --rm `
+  --name claude-dhanj `
+  --memory="2g" `
+  --add-host=host.docker.internal:host-gateway `
+  -e CLAUDE_CODE_MODEL="qwen2.5-coder:7b" `
+  -v "${PWD}:/workspace" `
+  claude-dhanj
+```
+
+Within docker-container run below commands:
+
+```bash
+# lists all exported environment variables
+printenv
+
+# Check if it can conect to Ollama running on Windows host
+curl -I http://host.docker.internal:11434/api/tags
+
+claude
+```
+
+## Leveraging Claude Code with Docker Sandbox [!!Fail!!]
+
+### With Docker Sandbox and Ollama on Windows
+
+- Set Environment Variables below in Windows for permanant change or in powershell using export command:
+  | Variable Name | Variable Value | Purpose |
+  | -- | -- | -- |
+  | OLLAMA_HOST | 0.0.0.0 | Allows Docker (and other devices) to connect to Ollama. |
+  | OLLAMA_ORIGINS | \* | Permits the "Cross-Origin" requests from the Docker Sandbox. |
+
+> You must Quit Ollama completely from the system tray and restart it for these to take effect.
+
+- Open project using Visual Studio Code. Ensure it has `.env file with below contents`:
+
+```properties
+ANTHROPIC_BASE_URL=http://host.docker.internal:11434/v1
+ANTHROPIC_API_KEY=ollama
+```
+
+- In Powershell
+
+  ```ps
+  cd <project directory on windows>
+
+  # Docker Instruction: Take this Windows folder and project it into the container at /app.
+  docker sandbox run --name devbox claude .
+  ```
+
+  - What this command does?:
+    - `docker sandbox run claude .`: Starts a hardened MicroVM and mounts your current folder.
+    - `host.docker.internal`: This is the magic URL that lets the container "reach out" to Ollama running on your Windows host.
+    - `ANTHROPIC_API_KEY="ollama"`: Required to bypass the login check (Ollama ignores the actual value).
+    - `--memory="4g"`: Limits the container to 4GB RAM to ensure your Windows host has enough left for Ollama and the OS.
+
+- Configuring Claude Inside the Container: Once the container starts and you see the claude > prompt, you must tell it to use your local model instead of the default:
+  `/config set model qwen2.5-coder:7b`
+
 ## Dev Setup Instructions for Code Contribution
 
 - Create `config.properties` in project root for it to be sibling of `pom.xml`
@@ -290,7 +384,7 @@ disconnect();
 
 ## Publish Checklist
 
-    [] Zero Errors in Automated Tests 
+    [] Zero Errors in Automated Tests
     [] Version Update (`pom.xml` and `Readme.md`)
 
 ## Want to contribute?
@@ -308,4 +402,4 @@ There are a number of ways you can contribute to this project:
   Broking APIs in India.
 - This ain't a perfect piece and so would love to see you
   contributing [PRs](https://github.com/karthiks/DhanHQ-java/pulls) as collaborative endeavor to make the lives of
-  Algorithimic traders better and better. 
+  Algorithimic traders better and better.
