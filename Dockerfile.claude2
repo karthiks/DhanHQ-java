@@ -29,11 +29,6 @@ RUN git config --global --add safe.directory /workspace
 ENV PATH="/home/developer/.local/bin:${PATH}"
 
 # 5. Environment Configuration for Ollama
-# ENV ANTHROPIC_BASE_URL="http://host.docker.internal:11434/v1" \
-#     ANTHROPIC_AUTH_TOKEN="ollama" \
-#     ANTHROPIC_API_KEY="sk-no-key-required" \
-#     ANTHROPIC_MODEL="qwen2.5-coder:7b" \
-#     TERM=xterm-256color
 ENV TERM=xterm-256color
 
 ENTRYPOINT ["bash"]

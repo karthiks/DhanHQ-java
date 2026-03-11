@@ -44,3 +44,6 @@ build/
 ### Property Files ###
 *test.properties
 .todo
+
+## AI Coding  Agent Configs ###
+.claude/
