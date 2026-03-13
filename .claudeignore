@@ -1,7 +1,38 @@
+# Files to ignore
 lmstudio.settings.json
 Dockerfile.*
 DhanHQ-java.iml
 .todo
 config.properties
-target/
+*.tmp
+*.log
+.env
+.DS_Store
+Thumbs.db
+
+# Folders to ignore
 .idea/
+
+
+# Node.js
+package-lock.json
+yarn.lock
+npm-debug.log
+coverage/
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/  # Python virtual env
+.venv/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/

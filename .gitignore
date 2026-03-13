@@ -46,4 +46,6 @@ build/
 .todo
 
 ## AI Coding  Agent Configs ###
-.claude/
+# .claude/settings.json is the project level config file for the agent that is tracked
+.claude/settings.local.json
+.claude/worktrees/

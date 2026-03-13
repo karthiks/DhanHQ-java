@@ -22,10 +22,25 @@ USER developer
 # RUN curl -fsSL https://claude.ai/install.sh | bash -s -- 2.1.29
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
+RUN mkdir -p ~/.claude && cat >> ~/.claude/CLAUDE.md << 'EOF'
+## Agent Instructions
+
+- Project hosted in WSL2 environment on Windows. Use 'service' not 'systemctl' for managing services.
+- Always create a new feature branch for any code changes. Before starting work, run `git checkout -b <branch-name>` using a descriptive name based on the task. Never commit directly to main or master.
+- Style: terse but complete and correct. Minimize tokens usage.
+- When I report a bug, don't start by trying to fix it. Instead, start by writing a test that reproduces the bug. Then, let a subagent fix the bug and prove it by passing the test you wrote for this purpose.
+
+### Plan Mode
+
+- Make your plan extremely concise and as specific/explicit as possible.
+- At the end of each plan, give me list of unresolved questions if any, for me to answer.
+EOF
+
 # To respond as safe to Git's Dubious Ownership check when running in Docker for files shared from the host
 RUN git config --global --add safe.directory /workspace && \
     git config --global core.fileMode false && \
-    git config --global core.autocrlf true
+    git config --global core.autocrlf true && \
+    alias cld="claude -w"
 
 # 4. CRITICAL: Add the install directory to the PATH
 ENV PATH="/home/developer/.local/bin:${PATH}"

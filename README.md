@@ -282,6 +282,32 @@ liveMarketDepth.
 disconnect();
 ```
 
+## Leveraging Claude Code with OpenRouter
+
+Run this in PowerShell from your project root:
+
+```powershell
+docker build -t claude-dhanj -f Dockerfile.claude .
+
+docker run -it --rm `
+  --name claude-dhanj `
+  --memory="2g" `
+  -v "${PWD}:/workspace" `
+  claude-dhanj
+```
+
+Within docker container run `claude --workree`
+
+Within docker-container run below commands:
+
+```bash
+# Run claude with ENV variables and some settings
+ANTHROPIC_BASE_URL="http://host.docker.internal:1234/" `
+ANTHROPIC_AUTH_TOKEN="dummy" `
+ANTHROPIC_API_KEY="sk-no-key-required" `
+claude --settings lmstudio.settings.json
+```
+
 ## Leveraging Claude Code with Dockerfile using LM Studio
 
 Run this in PowerShell from your project root:
