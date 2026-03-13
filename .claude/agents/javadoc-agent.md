@@ -1,5 +1,5 @@
 ---
-name: javadoc
+name: javadoc-agent
 description: Writes / improves high-quality Javadoc with usage examples
 isolation: worktree
 tools:

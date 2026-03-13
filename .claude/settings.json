@@ -7,5 +7,22 @@
         "ANTHROPIC_DEFAULT_HAIKU_MODEL":"openrouter/free",
         "CLAUDE_CODE_DEFAULT_MODEL":"openrouter/free",
         "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC":"1"
+    },
+    "permissions": {
+        "filesystem": {
+            "read": ["src/", "pom.xml", "README.md"],
+            "write": ["src/", "pom.xml", "README.md"]
+        },
+        "shell": {
+            "execute": ["mvn", "git"]
+        },
+        "git": {
+            "enabled": true,
+            "repositories": ["."],
+            "allowed_commands": [
+                "status", "diff", "add", "commit", "push", "pull",
+                "checkout", "branch", "log", "merge", "rebase"
+            ]
+        }
     }
 }
