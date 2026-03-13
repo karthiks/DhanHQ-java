@@ -1,68 +1,60 @@
 package co.dhan.dto;
 
 import co.dhan.helper.BigDecimalUtils;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.Getter;
 
-import java.math.BigDecimal;
-
 @Data
 public class FundSummary {
-    private String dhanClientId;
-    /**
-     * Available balance to trade
-     */
-    @Getter private BigDecimal availabelBalance;
-    /**
-     * Start of the day amount
-     */
-    @Getter private BigDecimal sodLimit;
-    /**
-     * Amount received against collateral
-     */
-    @Getter private BigDecimal collateralAmount;
-    /**
-     * Amount available against selling deliveries
-     */
-    @Getter private BigDecimal receiveableAmount;
-    /**
-     * Amount utilised in the day
-     */
-    @Getter private BigDecimal utilizedAmount;
-    /**
-     * Amount blocked against payout request
-     */
-    @Getter private BigDecimal blockedPayoutAmount;
-    /**
-     * Amount available to withdraw to bank
-     */
-    @Getter private BigDecimal withdrawableBalance;
+  private String dhanClientId;
 
-    public void setAvailabelBalance(String decimalValue) {
-        this.availabelBalance = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Available balance to trade */
+  @Getter private BigDecimal availabelBalance;
 
-    public void setSodLimit(String decimalValue) {
-        this.sodLimit = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Start of the day amount */
+  @Getter private BigDecimal sodLimit;
 
-    public void setCollateralAmount(String decimalValue) {
-        this.collateralAmount = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Amount received against collateral */
+  @Getter private BigDecimal collateralAmount;
 
-    public void setReceiveableAmount(String decimalValue) {
-        this.receiveableAmount = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Amount available against selling deliveries */
+  @Getter private BigDecimal receiveableAmount;
 
-    public void setUtilizedAmount(String decimalValue) {
-        this.utilizedAmount = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Amount utilised in the day */
+  @Getter private BigDecimal utilizedAmount;
 
-    public void setBlockedPayoutAmount(String decimalValue) {
-        this.blockedPayoutAmount = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Amount blocked against payout request */
+  @Getter private BigDecimal blockedPayoutAmount;
 
-    public void setWithdrawableBalance(String decimalValue) {
-        this.withdrawableBalance = BigDecimalUtils.toBigDecimal(decimalValue);
-    }
+  /** Amount available to withdraw to bank */
+  @Getter private BigDecimal withdrawableBalance;
+
+  public void setAvailabelBalance(String decimalValue) {
+    this.availabelBalance = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setSodLimit(String decimalValue) {
+    this.sodLimit = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setCollateralAmount(String decimalValue) {
+    this.collateralAmount = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setReceiveableAmount(String decimalValue) {
+    this.receiveableAmount = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setUtilizedAmount(String decimalValue) {
+    this.utilizedAmount = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setBlockedPayoutAmount(String decimalValue) {
+    this.blockedPayoutAmount = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
+
+  public void setWithdrawableBalance(String decimalValue) {
+    this.withdrawableBalance = BigDecimalUtils.toBigDecimal(decimalValue);
+  }
 }

@@ -1,5 +1,10 @@
 package co.dhan.api.ondemand;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
@@ -10,37 +15,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 class TraderControlEndpointTest extends UnitTestRoot {
 
-    @Mock
-    DhanConnection mockDhanConnection;
+  @Mock DhanConnection mockDhanConnection;
 
-    @Mock
-    DhanHTTP mockDhanHTTP;
+  @Mock DhanHTTP mockDhanHTTP;
 
-    @Mock
-    DhanResponse mockDhanResponse;
+  @Mock DhanResponse mockDhanResponse;
 
-    @Spy
-    @InjectMocks
-    TraderControlEndpoint traderControlEndpoint;
+  @Spy @InjectMocks TraderControlEndpoint traderControlEndpoint;
 
-    @Test
-    void manageKillSwitch_ReturnResultSuccessfully() {
-        String expectedResponse = """
+  @Test
+  void manageKillSwitch_ReturnResultSuccessfully() {
+    String expectedResponse =
+        """
                 {
                     "dhanClientId":"123",
                     "killSwitchStatus": "Kill Switch has been successfully activated"
                 }""";
-        when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
-        when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
-        when(mockDhanResponse.toString()).thenReturn(expectedResponse);
-        assertThat(traderControlEndpoint.manageKillSwitch(KillSwitchStatus.ACTIVATE)).contains("activated");
-        verify(mockDhanHTTP).doHttpPostRequest(eq("/killswitch?killSwitchStatus=ACTIVATE"), anyMap());
-    }
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.toString()).thenReturn(expectedResponse);
+    assertThat(traderControlEndpoint.manageKillSwitch(KillSwitchStatus.ACTIVATE))
+        .contains("activated");
+    verify(mockDhanHTTP).doHttpPostRequest(eq("/killswitch?killSwitchStatus=ACTIVATE"), anyMap());
+  }
 }

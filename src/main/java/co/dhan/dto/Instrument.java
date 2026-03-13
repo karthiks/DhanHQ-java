@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Instrument {
-    @JsonProperty("ExchangeSegment")
-    private final ExchangeSegment exchangeSegment;
+  @JsonProperty("ExchangeSegment")
+  private final ExchangeSegment exchangeSegment;
 
-    @JsonProperty("SecurityId")
-    private final String securityId;
+  @JsonProperty("SecurityId")
+  private final String securityId;
 }

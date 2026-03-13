@@ -4,12 +4,13 @@ import co.dhan.dto.LiveDepth;
 import co.dhan.http.DhanAPIException;
 
 public interface LiveMarketDepthListener {
-    void onConnection();
+  void onConnection();
 
-    void onTermination(DhanAPIException e);
+  void onTermination(DhanAPIException e);
 
-    void onError(Exception e);
+  void onError(Exception e);
 
-    void onBidsArrival(LiveDepth liveDepth);
-    void onAsksArrival(LiveDepth liveDepth);
+  void onBidsArrival(LiveDepth liveDepth);
+
+  void onAsksArrival(LiveDepth liveDepth);
 }

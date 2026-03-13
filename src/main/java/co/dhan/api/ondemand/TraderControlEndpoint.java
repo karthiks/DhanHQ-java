@@ -6,40 +6,39 @@ import co.dhan.helper.HTTPUtils;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TraderControlEndpoint {
 
-    interface APIParam {
-        String KillSwitchStatus = "killSwitchStatus";
-    }
+  interface APIParam {
+    String KillSwitchStatus = "killSwitchStatus";
+  }
 
-    interface APIEndopint {
-        String ManageKillSwitch = "/killswitch?killSwitchStatus=%s";
-    }
+  interface APIEndopint {
+    String ManageKillSwitch = "/killswitch?killSwitchStatus=%s";
+  }
 
-    private final DhanConnection dhanConnection;
+  private final DhanConnection dhanConnection;
 
-    public TraderControlEndpoint(DhanConnection dhanConnection) {
-        this.dhanConnection = dhanConnection;
-    }
+  public TraderControlEndpoint(DhanConnection dhanConnection) {
+    this.dhanConnection = dhanConnection;
+  }
 
-    public String manageKillSwitch(KillSwitchStatus killSwitchStatus) throws DhanAPIException {
-        String endpoint = String.format(APIEndopint.ManageKillSwitch, killSwitchStatus.toString());
-        DhanResponse dhanResponse = dhanConnection.getDhanHTTP()
-                .doHttpPostRequest(endpoint, new HashMap<>());
-        Map<String, String> map = null;
-        try {
-            map = HTTPUtils.DhanObjectMapper.readValue(dhanResponse.toString(), Map.class);
-            return map.get(APIParam.KillSwitchStatus);
-        } catch (JsonProcessingException e) {
-            String msg = String.format("Error parsting HTTP Response: %s",dhanResponse.toString());
-            log.error(msg);
-            throw new RuntimeException(e);
-        }
+  public String manageKillSwitch(KillSwitchStatus killSwitchStatus) throws DhanAPIException {
+    String endpoint = String.format(APIEndopint.ManageKillSwitch, killSwitchStatus.toString());
+    DhanResponse dhanResponse =
+        dhanConnection.getDhanHTTP().doHttpPostRequest(endpoint, new HashMap<>());
+    Map<String, String> map = null;
+    try {
+      map = HTTPUtils.DhanObjectMapper.readValue(dhanResponse.toString(), Map.class);
+      return map.get(APIParam.KillSwitchStatus);
+    } catch (JsonProcessingException e) {
+      String msg = String.format("Error parsting HTTP Response: %s", dhanResponse.toString());
+      log.error(msg);
+      throw new RuntimeException(e);
     }
+  }
 }

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderResponse {
-    String orderId;
-    OrderStatus orderStatus;
+  String orderId;
+  OrderStatus orderStatus;
 }

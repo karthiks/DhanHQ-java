@@ -1,14 +1,13 @@
 package co.dhan.dto;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class Depth {
-    public static String JSONPropertyBuy = "buy";
-    public static String JSONPropertySell = "sell";
+  public static String JSONPropertyBuy = "buy";
+  public static String JSONPropertySell = "sell";
 
-    private List<Bid> buy;
-    private List<Ask> sell;
+  private List<Bid> buy;
+  private List<Ask> sell;
 }
