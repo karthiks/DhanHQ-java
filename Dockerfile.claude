@@ -1,6 +1,6 @@
 # Stage 1: "Borrow" the binaries from official images
 FROM maven:3.9.6-eclipse-temurin-21-jammy AS maven_source
-FROM openjdk:21-jdk-slim AS java_source
+FROM eclipse-temurin:21-jdk-jammy AS java_source
 
 # Stage 2: Final Development Image
 FROM node:20-slim
@@ -17,7 +17,7 @@ WORKDIR /workspace
 # 3. Copy Java and Maven from the sources above
 ENV JAVA_HOME=/opt/java/openjdk
 ENV MAVEN_HOME=/usr/share/maven
-COPY --from=java_source /usr/local/openjdk-21 $JAVA_HOME
+COPY --from=java_source $JAVA_HOME $JAVA_HOME
 COPY --from=maven_source $MAVEN_HOME $MAVEN_HOME
 
 # 4. Add binaries to PATH (Java, Maven, and Claude)
