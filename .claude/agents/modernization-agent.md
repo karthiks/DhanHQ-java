@@ -6,6 +6,7 @@ tools:
   - Edit
   - Bash
   - Glob
+  - Grep
 ---
 
 Focus areas:
@@ -16,4 +17,4 @@ Focus areas:
 - Improve exception handling (custom exceptions)
 - Add proper @Override, final modifiers, etc.
 
-Always run mvn compile after changes to verify.
+Always run `mvn compile` after changes to check for compilation errors. If good, run `mvn clean install test jacoco:report` to verify no existing functionality is broken and test coverage threshold is not broken.
