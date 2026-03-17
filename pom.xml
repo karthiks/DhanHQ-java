@@ -9,7 +9,9 @@
     <version>1.0.3</version>
 
     <properties>
+        <!-- Which Java Language Features you can use in your Java Source Code? -->
         <maven.compiler.source>21</maven.compiler.source>
+        <!-- What Oldest Java Version your compiled code (generated Java bytecode) will be compatible with? -->
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.argLine>-Xmx1024m</surefire.argLine>
@@ -18,6 +20,11 @@
             ${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
         </mockito.core.path>
         <mockito.argLine>-javaagent:${mockito.core.path} -Xshare:off</mockito.argLine>
+
+        <!-- Test execution control properties -->
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
+        <skip.manual.tests>true</skip.manual.tests>
     </properties>
 
     <dependencies>
@@ -110,12 +117,80 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Build Helper Plugin to add test source directories -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <!-- Add integration test source directory -->
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test-integration/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add integration test resources -->
+                    <execution>
+                        <id>add-integration-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/test-integration/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!-- Add manual test source directory -->
+                    <execution>
+                        <id>add-manual-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test-manual/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add manual test resources -->
+                    <execution>
+                        <id>add-manual-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/test-manual/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- To provide a JaCoCo runtime agent to your tests and allows basic report creation -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.14</version>
                 <configuration>
+                    <!-- Use different data file for Docker -->
+                    <dataFile>${project.build.directory}/coverage-reports/jacoco-${env.LOCATION}.exec</dataFile>
                     <excludes>
                         <exclude>**/api/*</exclude>
                         <exclude>**/constant/*</exclude>
@@ -140,6 +215,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Surefire Plugin for Unit Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -150,6 +227,7 @@
                         ${mockito.argLine}
                         @{argLine}
                     </argLine>
+                    <skipTests>${skip.unit.tests}</skipTests>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -161,111 +239,89 @@
                     <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
-        <!-- Spotless plugin for code formatting -->
-        <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>2.44.0</version>
-            <configuration>
-                <target>**/*.java</target>
-                <java>
-                    <googleJavaFormat/>
-                </java>
-            </configuration>
-        </plugin>
-        </plugins>
-    </build>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <property>
-                    <name>dev.env</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>3.5.0</version>
-                        <executions>
-                            <execution>
-                                <id>add-resource</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>add-resource</goal>
-                                </goals>
-                                <configuration>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/resources</directory>
-                                            <filtering>false</filtering>
-                                        </resource>
-                                        <resource>
-                                            <directory>src/main/resources/dev</directory>
-                                            <filtering>false</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.5.1</version>
+            <!-- Failsafe Plugin for Integration Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
                         <configuration>
-                            <argLine>
-                                ${surefire.argLine}
-                                ${mockito.argLine}
-                                @{argLine}
-                            </argLine>
-                            <includes>
-                                <include>**/*Test.java</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/ITest_*.java</exclude>
-                                <exclude>**/ManualTest_*.java</exclude>
-                            </excludes>
-                            <forkCount>1C</forkCount>
-                            <reuseForks>false</reuseForks>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>test</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <argLine>
-                                ${surefire.argLine}
-                                ${mockito.argLine}
-                                @{argLine}
-                            </argLine>
+                            <skipTests>${skip.integration.tests}</skipTests>
                             <includes>
                                 <include>**/ITest_*.java</include>
                             </includes>
                             <excludes>
                                 <exclude>**/*Test.java</exclude>
-                                <exclude>**/ManualTest_*.java</exclude>
+                                <exclude>**/ManualTest*.java</exclude>
                             </excludes>
+                            <argLine>
+                                ${surefire.argLine}
+                                ${mockito.argLine}
+                                @{argLine}
+                            </argLine>
                             <forkCount>1C</forkCount>
                             <reuseForks>false</reuseForks>
                         </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Spotless plugin for code formatting -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.44.0</version>
+                <configuration>
+                    <target>**/*.java</target>
+                    <java>
+                        <googleJavaFormat/>
+                    </java>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Default profile: run only unit tests -->
+        <profile>
+            <id>unit-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <skip.unit.tests>false</skip.unit.tests>
+                <skip.integration.tests>true</skip.integration.tests>
+                <skip.manual.tests>true</skip.manual.tests>
+            </properties>
         </profile>
+
+        <!-- Run integration tests -->
+        <profile>
+            <id>integration-tests</id>
+            <properties>
+                <skip.unit.tests>true</skip.unit.tests>
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.manual.tests>true</skip.manual.tests>
+            </properties>
+        </profile>
+
+        <!-- Run all tests -->
+        <profile>
+            <id>all-tests</id>
+            <properties>
+                <skip.unit.tests>false</skip.unit.tests>
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.manual.tests>true</skip.manual.tests>
+            </properties>
+        </profile>
+
     </profiles>
 </project>

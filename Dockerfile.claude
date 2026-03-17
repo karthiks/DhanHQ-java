@@ -37,6 +37,7 @@ RUN git config --global --add safe.directory /workspace && \
 
 # 7. Environment Configuration
 ENV TERM=xterm-256color \
-    COLORTERM=truecolor
+    COLORTERM=truecolor \
+    CONTAINER=docker
 
 ENTRYPOINT ["bash"]
