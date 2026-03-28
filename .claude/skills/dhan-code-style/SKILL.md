@@ -16,6 +16,7 @@ When Reading, Reviewing, Editing and Writing code, be aware of Dhan Coding Style
 - Javadoc: complete for every public class/method, include usage examples
 - Semantic Versioning — bump major on breaking changes only
 - No new external dependencies without discussion
+- Fix all critical and high-severity CVE vulnerabilities in this project by invoking #validate_cves_for_java
 - Security: never log credentials, use secure random where needed
 - Check pom.xml for dependencies to know which library to use for coding.
 - **Logging**: SLF4J + sensible backend (logback-classic usually)
