@@ -33,7 +33,8 @@ RUN mkdir -p /home/developer/.local/bin && \
 RUN git config --global --add safe.directory /workspace && \
     git config --global core.fileMode false && \
     git config --global core.autocrlf true && \
-    echo 'alias cld="claude -w"' >> ~/.bashrc
+    echo 'alias cld="claude"' >> ~/.bashrc && \
+    echo 'alias cldw="claude -w"' >> ~/.bashrc
 
 # 7. Environment Configuration
 ENV TERM=xterm-256color \
