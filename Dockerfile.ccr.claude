@@ -5,9 +5,7 @@ FROM eclipse-temurin:21-jdk-jammy AS java_source
 # Stage 2: Final Development Image
 FROM node:20-bookworm-slim
 
-# 1. Install System Deps
-# Python: Memsearch Plugin
-# npm: ripgrep MCP, CCR AI Gateway, etc.
+# 1. Install System Deps, Ripgrep, and Python for MemSearch
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash curl git vim jq ca-certificates \
     ripgrep python3 python3-pip python3-venv python3-dev build-essential \
@@ -26,14 +24,22 @@ COPY --from=maven_source $MAVEN_HOME $MAVEN_HOME
 ENV PATH="${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/root/.local/bin:${PATH}"
 
 # 5. Install Everything as Root
-# CC is installed natively wihout npm, for speed and size advantage.
 # Install Claude, Node-based MCPs, and CCR AI Gateway
 RUN npm install -g mcp-ripgrep && \
-    # npm install -g @musistudio/claude-code-router && \
+    npm install -g @musistudio/claude-code-router && \
     curl -fsSL https://claude.ai/install.sh | bash
 
-# 6. Register MCP Servers
+# Configure CCR AI Gateway by symlinking a file in project directory to its expected location at User scope location.
+# RUN mkdir -p ~/.claude-code-router && ln -sf /workspace/.ccr-config.json ~/.claude-code-router/config.json
+# RUN ccr start &
+
+# 6. Install MemSearch (Python MCP)
+# We use --break-system-packages because we are in a dedicated container root
+RUN pip install --no-cache-dir --break-system-packages memsearch
+
+# 7. Register MCP Servers
 # - Ripgrep: For exact string matching
+# We use 'npx' for the ripgrep server to ensure it handles the scope correctly at runtime
 RUN claude mcp add --scope project ripgrep -- mcp-ripgrep /workspace
 
 # 8. Git And Shell Configs (No "safe.directory" issues because we are root)
