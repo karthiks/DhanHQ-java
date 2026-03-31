@@ -22,6 +22,11 @@ Refer [Project Structure](./docs/PROJECT_STRUCTURE.md) to know how project is mo
 - **Style**: terse but complete and correct. Minimize tokens usage.
 - **MANDATORY**: Before writing any new Java code, grok this project specific coding standards as detailed in [Coding Style](./docs/JAVA_CODING_STYLE.md).
 - Follow the TDD loop: Test -> Implement -> Verify.
+- When compacting, always preserve:
+  - The full list of modified files
+  - Any test commands and their results
+  - The current implementation plan
+  - Error messages that haven't been resolved
 
 ### Typical tasks
 
