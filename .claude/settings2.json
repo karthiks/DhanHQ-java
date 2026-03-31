@@ -1,0 +1,56 @@
+{
+  "env": {
+    "ANTHROPIC_MODEL": "groq/compound",
+    "ANTHROPIC_SMALL_FAST_MODEL": "openrouter/free",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen/qwen3-32b",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "llama-3.3-70b-versatile",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "llama-3.1-8b-instant",
+    "CLAUDE_CODE_DEFAULT_MODEL": "whisper-large-v3-turbo",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_ENABLE_CACHE": "true",
+    "CLAUDE_CODE_CACHE_TTL": "300",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  },
+  "permissions": {
+    "filesystem": {
+      "read": [
+        "src/",
+        "pom.xml",
+        "README.md"
+      ],
+      "write": [
+        "src/",
+        "pom.xml",
+        "README.md"
+      ]
+    },
+    "shell": {
+      "execute": [
+        "mvn",
+        "git"
+      ]
+    },
+    "git": {
+      "enabled": true,
+      "repositories": [
+        "."
+      ],
+      "allowed_commands": [
+        "status",
+        "diff",
+        "add",
+        "commit",
+        "push",
+        "pull",
+        "checkout",
+        "branch",
+        "log",
+        "merge",
+        "rebase"
+      ]
+    }
+  },
+  "enabledPlugins": {
+    "memsearch@memsearch-plugins": true
+  }
+}
