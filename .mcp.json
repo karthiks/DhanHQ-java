@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ripgrep": {
+      "type": "stdio",
+      "command": "mcp-ripgrep",
+      "args": [
+        "/workspace"
+      ],
+      "env": {}
+    }
+  }
+}
