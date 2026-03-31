@@ -48,3 +48,10 @@ build/
 ## AI Coding  Agent Configs ###
 .claude/settings.local.json
 .claude/worktrees/
+ccr-config/.claude-code-router.pid
+ccr-config/config.json
+ccr-config/logs/
+ccr-config/plugins/
+
+# Ignore local plugins volume
+.claude-plugins/

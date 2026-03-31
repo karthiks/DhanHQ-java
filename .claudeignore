@@ -1,18 +1,38 @@
 # Files to ignore
-lmstudio.settings.json
-Dockerfile.*
-DhanHQ-java.iml
+_.iml
 .todo
 config.properties
-*.tmp
-*.log
+_.tmp
+_.log
 .env
 .DS_Store
 Thumbs.db
 
-# Folders to ignore
-.idea/
+## CC Related
+# DO NOT ignore .claude/settings.json - this is for team sharing
 
+# Ignore local plugins volume
+.claude-plugins/
+
+# Ignore personal/local Claude configuration
+*/**/_.local.json
+.claude/settings.local.json
+.claude/skills/
+.claude/agents/
+.claude/hooks/
+.claude/rules/
+
+# Project related
+docs/
+target/
+Dockerfile\*
+lmstudio.settings.json
+
+# Tools Related
+ccr-config/
+.memsearch/
+.idea/
+.git/
 
 # Node.js
 package-lock.json
@@ -22,17 +42,17 @@ coverage/
 node_modules/
 
 # Python
-__pycache__/
-*.py[cod]
-*.egg-info/
+**pycache**/
+_.py[cod]
+_.egg-info/
 dist/
 build/
-venv/  # Python virtual env
+venv/ # Python virtual env
 .venv/
 
 # Java
-*.class
-*.jar
-*.war
-*.ear
+_.class
+_.jar
+_.war
+_.ear
 target/
