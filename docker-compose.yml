@@ -1,5 +1,7 @@
 # Build the image
-# docker compose build -e CC_API_KEY=""
+# Bash: export ANTHROPIC_API_KEY="your-api-key-here"
+# PowerShell: $env:ANTHROPIC_API_KEY="your-api-key-here"
+# docker compose build
 
 # Launch the environment
 # The --rm flag ensures that once you type exit, the container instance is removed, keeping your Docker environment tidy.
@@ -9,10 +11,41 @@
 # Volume Sync: Since your volume is mapped to ${PWD}, any code changes made by the Claude Code CLI inside the container will instantly appear on your host machine.
 # Memory Safety: The deploy block ensures that even if a Maven build or a heavy Node process spikes, it stays within your defined 8GB limit.
 
-# Bash: export ANTHROPIC_API_KEY="your-api-key-here"
-# PowerShell: $env:ANTHROPIC_API_KEY="your-api-key-here"
+networks:
+    dock-network:
+        driver: bridge
+
 services:
-    # Your existing Claude Code container
+    # https://github.com/maximhq/bifrost/blob/main/examples/dockers/docker-compose.yml
+    bifrost:
+        image: maximhq/bifrost
+        container_name: bitfrost
+        ports:
+            - "8080:8080"
+        networks:
+            - dock-network
+        volumes:
+            - "D:\\DockerWSL\\data\\bitfrost:/app/data" # Persist config data on the host
+        # Uncomment for first run only:
+        user: root # Run as root to avoid permission issues with mounted volumes.
+        healthcheck:
+            # test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--no-verbose",
+                    "--tries=1",
+                    "-O",
+                    "/dev/null",
+                    "http://localhost:8080/health",
+                ]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+        restart: unless-stopped
+
     claude-dhanj:
         build:
             context: .
@@ -22,25 +55,27 @@ services:
         image: claude-dhanj:latest
         container_name: claude-dhanj
         working_dir: /workspace
+        networks:
+            - dock-network
         volumes:
             - .:/workspace
             - ./.claude-plugins:/root/.claude/plugins
-            - ./ccr-config:/root/.claude-code-router
         environment:
             - COLORTERM=truecolor
             - TERM=xterm-256color
-            # === Claude Code Router integration ===
-            - ANTHROPIC_BASE_URL=http://localhost:3456 # Point to CCR
-            - ANTHROPIC_AUTH_TOKEN=apikey-ccr # Required, can be any string
-            - NO_PROXY=127.0.0.1,localhost # Avoid proxy interference
-            - DISABLE_TELEMETRY=1
-            - DISABLE_COST_WARNINGS=1
+            # === AI Gateway integration ===
+            - ANTHROPIC_BASE_URL=http://bifrost:8080/anthropic # Point to Bitfrost AI Gateway
+            - ANTHROPIC_AUTH_TOKEN=dummykey # Required, can be any string
         deploy:
             resources:
                 limits:
                     memory: 8G
                 reservations:
                     memory: 6G
+        depends_on:
+            # - bifrost  # Only waits for bifrost to start, not be ready
+            bifrost:
+                condition: service_healthy # Waits for health check to pass
         tty: true
         stdin_open: true
         entrypoint: ["/bin/bash"]
