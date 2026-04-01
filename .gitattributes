@@ -1,0 +1,29 @@
+# 1. Handle line endings automatically for text files
+# This ensures LF in the repo, but OS-native endings in the working directory
+* text=auto
+
+# 2. Explicitly declare text files to be normalized to LF in the repo
+*.c       text
+*.h       text
+*.cpp     text
+*.py      text
+*.js      text
+*.json    text
+*.html    text
+*.css     text
+*.md      text
+*.txt     text
+
+# 3. Force LF for specific files (like shell scripts) that MUST be LF on Windows too
+*.sh      text eol=lf
+
+# 4. Force CRLF for files that MUST be CRLF (like Windows batch files)
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+
+# 5. Denote binary files (prevents Git from touching line endings in images/zips)
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.pdf     binary
