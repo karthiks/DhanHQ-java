@@ -1,6 +1,7 @@
 # Build the image
-# Bash: export ANTHROPIC_API_KEY="your-api-key-here"
-# PowerShell: $env:ANTHROPIC_API_KEY="your-api-key-here"
+# Ref.: https://openrouter.ai/docs/guides/coding-agents/claude-code-integration
+# Bash: export ANTHROPIC_BASE_URL="http://bifrost:8080/anthropic" ANTHROPIC_API_KEY="" ANTHROPIC_AUTH_TOKEN="your-api-key-here" 
+# PowerShell: $env:ANTHROPIC_BASE_URL="http://bifrost:8080/anthropic"; $env:ANTHROPIC_API_KEY=""; $env:ANTHROPIC_AUTH_TOKEN="your-api-key-here"
 # docker compose build
 
 # Launch the environment
@@ -40,8 +41,8 @@ services:
                     "/dev/null",
                     "http://localhost:8080/health",
                 ]
-            interval: 10s
-            timeout: 10s
+            interval: 15s
+            timeout: 15s
             retries: 3
             start_period: 10s
         restart: unless-stopped
@@ -50,7 +51,9 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.claude
-            args:
+            args: # Using Map syntax instead of List syntax
+                ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL}
+                ANTHROPIC_AUTH_TOKEN: ${ANTHROPIC_AUTH_TOKEN}
                 ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
         image: claude-dhanj:latest
         container_name: claude-dhanj
@@ -61,11 +64,10 @@ services:
             - .:/workspace
             - ./.claude-plugins:/root/.claude/plugins
         environment:
+            - ANTHROPIC_BASE_URL=http://bifrost:8080/anthropic # Point to Bitfrost AI Gateway
+            - ANTHROPIC_AUTH_TOKEN=dummykey  # Required, can be any string
             - COLORTERM=truecolor
             - TERM=xterm-256color
-            # === AI Gateway integration ===
-            - ANTHROPIC_BASE_URL=http://bifrost:8080/anthropic # Point to Bitfrost AI Gateway
-            - ANTHROPIC_AUTH_TOKEN=dummykey # Required, can be any string
         deploy:
             resources:
                 limits:
