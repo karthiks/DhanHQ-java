@@ -2,11 +2,12 @@
 # This ensures LF in the repo, but OS-native endings in the working directory
 * text=auto
 
-# 2. Explicitly declare text files to be normalized to LF in the repo
+# 2. Explicitly declare text files (especially your programming language file endings) to be normalized to LF in the repo
 *.c       text
 *.h       text
 *.cpp     text
 *.py      text
+*.java     text
 *.js      text
 *.json    text
 *.html    text
