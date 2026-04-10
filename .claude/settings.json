@@ -1,4 +1,5 @@
 {
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
     "env": {
         "DEFAULT_MODEL": "openrouter/free",
         "ANTHROPIC_MODEL": "openrouter/free",
@@ -41,5 +42,13 @@
     },
     "enabledPlugins": {
         "memsearch@memsearch-plugins": true
+    },
+    "feedbackSurveyState": {
+        "lastShownTime": 1754080232837
+    },
+    "statusLine": {
+        "type": "command",
+        "command": "bash .claude/statusline.sh",
+        "padding": 0
     }
 }
