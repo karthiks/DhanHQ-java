@@ -1,11 +1,13 @@
 package co.dhan.api.ondemand;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
+import co.dhan.http.DhanAPIException;
 import co.dhan.api.ondemand.OrderEndpoint.APIEndpoint;
 import co.dhan.api.ondemand.OrderEndpoint.APIParam;
 import co.dhan.constant.*;
@@ -307,6 +309,43 @@ class OrderEndpointTest extends UnitTestRoot {
 
     assertThat(orderEndpoint.getCurrentTrades()).isEqualTo(expectedTrades);
     verify(mockDhanHTTP).doHttpGetRequest(eq("/trades"));
+  }
+
+  @Test
+  void getTradesByOrderId_ShouldReturnResult() throws IOException {
+    Trade expectedTrade = new Trade();
+    String orderId = "123";
+    expectedTrade.setOrderId(orderId);
+    List<Trade> expectedTrades = List.of(expectedTrade);
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpGetRequest(anyString())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType((TypeReference<List<Trade>>) any()))
+        .thenReturn(expectedTrades);
+
+    assertThat(orderEndpoint.getTradesByOrderId(orderId)).isEqualTo(expectedTrades);
+    verify(mockDhanHTTP).doHttpGetRequest(eq("/trades/" + orderId));
+  }
+
+  @Test
+  void getTradesByOrderId_ShouldThrowException_WhenOrderIdIsNull() {
+    assertThatThrownBy(() -> orderEndpoint.getTradesByOrderId(null))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order ID must not be null or blank");
+  }
+
+  @Test
+  void getTradesByOrderId_ShouldThrowException_WhenOrderIdIsBlank() {
+    assertThatThrownBy(() -> orderEndpoint.getTradesByOrderId(""))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order ID must not be null or blank");
+  }
+
+  @Test
+  void getTradesByOrderId_ShouldThrowException_WhenOrderIdIsOnlyWhitespace() {
+    assertThatThrownBy(() -> orderEndpoint.getTradesByOrderId("   "))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order ID must not be null or blank");
   }
 
   @NotNull

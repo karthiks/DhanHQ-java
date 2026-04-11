@@ -46,6 +46,7 @@ public class OrderEndpoint {
     String PlaceOrder = "/orders";
     String PlaceSliceOrder = "/orders/slicing";
     String GetTrades = "/trades";
+    String GetTradesByOrderID = "/trades/%s";
   }
 
   private final DhanConnection dhanConnection;
@@ -199,6 +200,30 @@ public class OrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpGetRequest(APIEndpoint.GetTrades)
+        .convertToType(new TypeReference<List<Trade>>() {
+        });
+  }
+
+  /**
+   * Retrieves all trades for a specific order ID.
+   *
+   * <p>
+   * Endpoint: GET https://api.dhan.co/v2/trades/{order-id}
+   *
+   * Response contains: List of trades (including partial fills) for the specified order ID
+   *
+   * @param orderId the order ID to retrieve trades for (must not be null or blank)
+   * @return List of trades for the specified order ID
+   * @throws DhanAPIException if orderId is null or blank, or if the API returns an error
+   */
+  public List<Trade> getTradesByOrderId(String orderId) throws DhanAPIException {
+    if (orderId == null || orderId.isBlank()) {
+      throw new DhanAPIException("Input Error", "Order ID must not be null or blank");
+    }
+    String endpoint = String.format(APIEndpoint.GetTradesByOrderID, orderId);
+    return dhanConnection
+        .getDhanHTTP()
+        .doHttpGetRequest(endpoint)
         .convertToType(new TypeReference<List<Trade>>() {
         });
   }
