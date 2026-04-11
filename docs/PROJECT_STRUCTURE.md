@@ -11,3 +11,7 @@ src/main/java/co/dhan/           # Core classes
 src/test/java/co/dhan/api/        # Unit tests
 src/test/java/integration/        # Integration tests
 ```
+
+## Project Specs
+
+Project specs as markdown files can be found in `specs` directory under project root.
