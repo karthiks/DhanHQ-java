@@ -4,13 +4,11 @@
 
 Java SDK for [Dhan API](https://dhanhq.co/docs/v2/)
 
-Refer [Project Structure](./docs/PROJECT_STRUCTURE.md) to know how project is modularized.
-
 ## Commands
 
 - Build Project: `mvn clean install`
-- Run all Tests: `mvn test`
-- Run specific Test class like `OrderEndpointTest`: `mvn -Dtest=co.dhan.api.ondemand.OrderEndpointTest test`
+- Run all Unit Tests: `mvn test`
+- Run specific Unit Test class like `OrderEndpointTest`: `mvn -Dtest=co.dhan.api.ondemand.OrderEndpointTest test`
 - Check Test Coverage: `mvn jacoco:report`
 
 ## Agent Instructions (Applies to ALL agents)
@@ -20,13 +18,15 @@ Refer [Project Structure](./docs/PROJECT_STRUCTURE.md) to know how project is mo
 - When I report a bug, don't start by trying to fix it. Instead, start by writing a test that reproduces the bug. Then, let a subagent fix the bug and prove it by passing the test you wrote for this purpose.
 - **Plan**: Always plan before execution. Keep it as concise, specific and explicit as possible. At the end of each plan, give me list of unresolved questions if any, for me to answer.
 - **Style**: terse but complete and correct. Minimize tokens usage.
-- **MANDATORY**: Before writing any new Java code, grok this project specific coding standards as detailed in [Coding Style](./docs/JAVA_CODING_STYLE.md).
+- **MANDATORY**: Before starting on any code related tasks:
+    - refer [Project Structure](./docs/PROJECT_STRUCTURE.md) to know how project is modularized
+    - refer project specific coding standards as detailed in [Coding Style](./docs/JAVA_CODING_STYLE.md).
 - Follow the TDD loop: Test -> Implement -> Verify.
 - When compacting, always preserve:
-  - The full list of modified files
-  - Any test commands and their results
-  - The current implementation plan
-  - Error messages that haven't been resolved
+    - The full list of modified files
+    - Any test commands and their results
+    - The current implementation plan
+    - Error messages that haven't been resolved
 
 ### Typical tasks
 
@@ -38,6 +38,7 @@ Refer [Project Structure](./docs/PROJECT_STRUCTURE.md) to know how project is mo
 
 ### Review checklist before proposing merge/PR
 
+- [ ] Table in `SDK API Cheatsheet` section of README.md file is updated for any public API changes in SDK. No other sections of the files are modified without explicit consent.
 - [ ] mvn clean verify passes
 - [ ] Spotless applied
 - [ ] Javadoc warnings clean
