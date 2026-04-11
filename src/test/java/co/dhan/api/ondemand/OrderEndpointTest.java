@@ -13,6 +13,7 @@ import co.dhan.dto.ModifyOrderRequest;
 import co.dhan.dto.NewOrderRequest;
 import co.dhan.dto.Order;
 import co.dhan.dto.OrderResponse;
+import co.dhan.dto.Trade;
 import co.dhan.helper.BigDecimalUtils;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
@@ -290,6 +291,22 @@ class OrderEndpointTest extends UnitTestRoot {
     assertThat(orderResponse).isEqualTo(expectedOrderStatus);
     verify(mockDhanConnection).getDhanHTTP();
     verify(mockDhanHTTP).doHttpDeleteRequest(eq("/orders/" + orderID));
+  }
+
+  @Test
+  void getCurrentTrades_ShouldReturnResult() throws IOException {
+    Trade expectedTrade = new Trade();
+    String tradeId = "1";
+    expectedTrade.setExchangeTradeId(tradeId);
+    List<Trade> expectedTrades = List.of(expectedTrade);
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpGetRequest(anyString())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType((TypeReference<List<Trade>>) any()))
+        .thenReturn(expectedTrades);
+
+    assertThat(orderEndpoint.getCurrentTrades()).isEqualTo(expectedTrades);
+    verify(mockDhanHTTP).doHttpGetRequest(eq("/trades"));
   }
 
   @NotNull

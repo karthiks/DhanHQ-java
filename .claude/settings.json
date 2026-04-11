@@ -1,17 +1,17 @@
 {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
     "env": {
-        "DEFAULT_MODEL": "openrouter/free",
-        "ANTHROPIC_MODEL": "openrouter/free",
-        "ANTHROPIC_DEFAULT_SONNET_MODEL": "openrouter/free",
-        "ANTHROPIC_DEFAULT_OPUS_MODEL": "openrouter/free",
-        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "openrouter/free",
-        "CLAUDE_CODE_DEFAULT_MODEL": "openrouter/free",
+        "DEFAULT_MODEL": "nvidia/nemotron-3-super-120b-a12b:free",
+        "ANTHROPIC_MODEL": "nvidia/nemotron-3-super-120b-a12b:free",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "arcee-ai/trinity-large-preview:free",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "opennvidia/nemotron-3-super-120b-a12b:free",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "z-ai/glm-4.5-air:free",
+        "CLAUDE_CODE_DEFAULT_MODEL": "nvidia/nemotron-3-super-120b-a12b:free",
         "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "true",
         "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
         "CLAUDE_CODE_ENABLE_CACHE": "true",
         "CLAUDE_CODE_CACHE_TTL": "300",
-        "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50",
+        "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70",
         "ENABLE_TOOL_SEARCH": "true"
     },
     "permissions": {

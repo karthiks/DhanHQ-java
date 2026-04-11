@@ -23,6 +23,7 @@ Thumbs.db
 .claude/rules/
 
 # Project related
+specs/
 docs/
 target/
 Dockerfile\*
