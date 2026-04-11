@@ -4,6 +4,7 @@ import co.dhan.api.DhanConnection;
 import co.dhan.constant.ProductType;
 import co.dhan.dto.Holding;
 import co.dhan.dto.Position;
+import co.dhan.dto.PositionsExitResponse;
 import co.dhan.http.DhanAPIException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class PortfolioEndpoint {
     String GetCurrentHoldings = "/holdings";
     String GetCurrentPositions = "/positions";
     String ConvertPosition = "/positions/convert";
+    String ExitAllPositions = "/positions";
   }
 
   private final DhanConnection dhanConnection;
@@ -69,5 +71,24 @@ public class PortfolioEndpoint {
     payload.put(APIParam.ConvertQuantity, String.valueOf(quantityToConvert));
 
     dhanConnection.getDhanHTTP().doHttpPostRequest(APIEndpoint.ConvertPosition, payload);
+  }
+
+  /**
+   * Exit all open positions.
+   *
+   * <p>
+   * Endpoint: DELETE https://api.dhan.co/v2/positions
+   *
+   * Note: This only exits open positions and does NOT cancel pending orders.
+   * </p>
+   *
+   * @return PositionsExitResponse containing status and message
+   * @throws DhanAPIException if the API request fails
+   */
+  public PositionsExitResponse exitAllPositions() throws DhanAPIException {
+    return dhanConnection
+        .getDhanHTTP()
+        .doHttpDeleteRequest(APIEndpoint.ExitAllPositions)
+        .convertToType(PositionsExitResponse.class);
   }
 }

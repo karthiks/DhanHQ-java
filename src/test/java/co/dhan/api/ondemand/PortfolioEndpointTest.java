@@ -12,6 +12,7 @@ import co.dhan.constant.PositionType;
 import co.dhan.constant.ProductType;
 import co.dhan.dto.Holding;
 import co.dhan.dto.Position;
+import co.dhan.dto.PositionsExitResponse;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -92,5 +93,19 @@ class PortfolioEndpointTest extends UnitTestRoot {
                   assertThat(payload).isEqualTo(expectedPayload);
                   return true;
                 }));
+  }
+
+  @Test
+  void exitAllPositions_ReturnResponse() {
+    PositionsExitResponse expectedResponse =
+        new PositionsExitResponse("SUCCESS", "All positions exited successfully");
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpDeleteRequest(anyString())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(PositionsExitResponse.class)).thenReturn(expectedResponse);
+
+    PositionsExitResponse response = portfolioEndpoint.exitAllPositions();
+    assertThat(response).isEqualTo(expectedResponse);
+    verify(mockDhanHTTP).doHttpDeleteRequest(eq("/positions"));
   }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import co.dhan.api.ITest_DhanTestRoot;
 import co.dhan.dto.Holding;
+import co.dhan.dto.PositionsExitResponse;
 import co.dhan.http.DhanAPIException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,5 +15,12 @@ public class ITest_PortfolioEndpoint extends ITest_DhanTestRoot {
   public void getCurrentHoldingsSuccessfully() throws DhanAPIException {
     List<Holding> currentHoldings = dhanCore.getPortfolioEndpoint().getCurrentHoldings();
     assertThat(currentHoldings).isNotNull();
+  }
+
+  @Test
+  public void exitAllPositionsSuccessfully() throws DhanAPIException {
+    PositionsExitResponse response = dhanCore.getPortfolioEndpoint().exitAllPositions();
+    assertThat(response).isNotNull();
+    assertThat(response.getStatus()).isEqualToIgnoringCase("SUCCESS");
   }
 }
