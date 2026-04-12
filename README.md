@@ -34,23 +34,23 @@ algorothimic traders.
    See Is What You Get) principle,
    in bridging the gap between documentation and code.
 
-   For example, as API consumer, you want to know get a **list of your holdings** associated with Dhan's Demat Account.
-   You first check it out in [API Docs](https://dhanhq.co/docs/v2/portfolio/) to see that it's hierarchy is like
-   `API Docs > Portfolio > GET Holdings`.
-   The code implementation in SDK follows the same hierarchy like `DhanCore > Portfolio Endpoint > List<Holding>`.
-   How does this affect you? Your code implementation is ridiculously brain friendly with fluent APIs like below:
+    For example, as API consumer, you want to know get a **list of your holdings** associated with Dhan's Demat Account.
+    You first check it out in [API Docs](https://dhanhq.co/docs/v2/portfolio/) to see that it's hierarchy is like
+    `API Docs > Portfolio > GET Holdings`.
+    The code implementation in SDK follows the same hierarchy like `DhanCore > Portfolio Endpoint > List<Holding>`.
+    How does this affect you? Your code implementation is ridiculously brain friendly with fluent APIs like below:
 
-   ```java
-   List<Holding> currentHoldings = dhanCore // Think DhanCore akin to API Docs Page
-           .getPortfolioEndpoint() // The Endpoint you see on the left-pane of the API docs
-           .getCurrentHoldings(); // The intuitive method naming to make you productive
-   ```
+    ```java
+    List<Holding> currentHoldings = dhanCore // Think DhanCore akin to API Docs Page
+            .getPortfolioEndpoint() // The Endpoint you see on the left-pane of the API docs
+            .getCurrentHoldings(); // The intuitive method naming to make you productive
+    ```
 
-   The cheatsheet is as below:
-   - DhanCore = Your API Doc Page
-   - <YourResource>Endpoint = Resource (you find on the left pane of your API doc-page) under which various actions are
-     defined
-   - <YourResource>Action = Action defined on the main section of your API document.
+    The cheatsheet is as below:
+    - DhanCore = Your API Doc Page
+    - <YourResource>Endpoint = Resource (you find on the left pane of your API doc-page) under which various actions are
+      defined
+    - <YourResource>Action = Action defined on the main section of your API document.
 
 2. I want to design developer-first API design, that eases the life of an algorithmic developer.
    You will find the API design of SDK refreshingly simple instead of being simplistic like that of other SDKs.
@@ -60,40 +60,40 @@ algorothimic traders.
 
 ## SDK API Cheatsheet
 
-| Endpoint                     | Action                                                                                                                                                                                 | Returns                              |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `getOrderEndpoint()`         | `placeOrder(NewOrderRequest nordRequest)`                                                                                                                                              | `OrderResponse`                      |
-|                              | `placeOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                                  | `OrderResponse`                      |
-|                              | `placeOrder(NewOrderRequest nordRequest, String tag, boolean slice)`                                                                                                                   | `OrderResponse`                      |
-|                              | `placeSliceOrder(NewOrderRequest nordRequest)`                                                                                                                                         | `OrderResponse`                      |
-|                              | `placeSliceOrder(NewOrderRequest nordRequest, String tag)`                                                                                                                             | `OrderResponse`                      |
-|                              | `getCurrentOrders()`                                                                                                                                                                   | `List<Order>`                        |
-|                              | `getOrderByID(String orderID)`                                                                                                                                                         | `Order`                              |
-|                              | `getOrderByCorrelationID(String correlationID)`                                                                                                                                        | `Order`                              |
-|                              | `modifyOrder(ModifyOrderRequest mor)`                                                                                                                                                  | `OrderResponse`                      |
-|                              | `cancelOrder(String orderID)`                                                                                                                                                          | `OrderResponse`                      |
-|                              | `getCurrentTrades()`                                                                                                                                                                   | `List<Trade>`                        |
-|                              | `getTradesByOrderId(String orderId)`                                                                                                                                                   | `List<Trade>`                        |
-| `getForeverOrderEndpoint()`  | `placeForeverOrder(NewForeverOrderRequest foRequest)`                                                                                                                                  | `ForeverOrderResponse`               |
-|                              | `getAllForeverOrders()`                                                                                                                                                                | `List<ForeverOrder>`                 |
-|                              | `modifyForeverOrder(ModifyForeverOrderRequest mfoRequest)`                                                                                                                             | `ForeverOrderResponse`               |
-|                              | `cancelForeverOrder(String orderID)`                                                                                                                                                   | `ForeverOrderResponse`               |
-| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                                                                                                                 | `List<Holding>`                      |
-|                              | `getCurrentPositions()`                                                                                                                                                                | `List<Position>`                     |
-|                              | `convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)`                                                                                          | `DhanResponse`                       |
-| `getFundsEndpoint()`         | `getFundLimitDetails()`                                                                                                                                                                | `FundSummary`                        |
-|                              | `computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price)`                          | `Margin`                             |
-|                              | `computeMargin(String securityID, ExchangeSegment exchangeSegment, TransactionType transactionType, int quantity, ProductType productType, BigDecimal price, BigDecimal triggerPrice)` | `Margin`                             |
-| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                                                                                                                  | `String`                             |
-| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                                                                                                                | `Ledger`                             |
-| `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                       | `ExchangeSegmentCandlesticksWrapper` |
-|                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                      | `ExchangeSegmentCandlesticksWrapper` |
-|                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                                                                                                     | `ExchangeSegmentCandlesticksWrapper` |
-| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)`                                                                                                                                                         | `EDISStatus`                         |
-|                              | `generateTPIN()`                                                                                                                                                                       | `String`                             |
-|                              | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)`                                                                                      |                                      |
-|                              | `createTempHtmlFile(String formHtml)`                                                                                                                                                  | `File`                               |
-|                              | `openInBrowser(File tempFile)`                                                                                                                                                         |                                      |
+| Endpoint                     | Action                                                                                            | Returns                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `getOrderEndpoint()`         | `placeOrder(NewOrderRequest nordRequest)`                                                         | `OrderResponse`                      |
+|                              | `placeOrder(NewOrderRequest nordRequest, String tag)`                                             | `OrderResponse`                      |
+|                              | `placeOrder(NewOrderRequest nordRequest, String tag, boolean slice)`                              | `OrderResponse`                      |
+|                              | `placeSliceOrder(NewOrderRequest nordRequest)`                                                    | `OrderResponse`                      |
+|                              | `placeSliceOrder(NewOrderRequest nordRequest, String tag)`                                        | `OrderResponse`                      |
+|                              | `getCurrentOrders()`                                                                              | `List<Order>`                        |
+|                              | `getOrderByID(String orderID)`                                                                    | `Order`                              |
+|                              | `getOrderByCorrelationID(String correlationID)`                                                   | `Order`                              |
+|                              | `modifyOrder(ModifyOrderRequest mor)`                                                             | `OrderResponse`                      |
+|                              | `cancelOrder(String orderID)`                                                                     | `OrderResponse`                      |
+|                              | `getCurrentTrades()`                                                                              | `List<Trade>`                        |
+|                              | `getTradesByOrderId(String orderId)`                                                              | `List<Trade>`                        |
+| `getForeverOrderEndpoint()`  | `placeForeverOrder(NewForeverOrderRequest foRequest)`                                             | `ForeverOrderResponse`               |
+|                              | `getAllForeverOrders()`                                                                           | `List<ForeverOrder>`                 |
+|                              | `modifyForeverOrder(ModifyForeverOrderRequest mfoRequest)`                                        | `ForeverOrderResponse`               |
+|                              | `cancelForeverOrder(String orderID)`                                                              | `ForeverOrderResponse`               |
+| `getPortfolioEndpoint()`     | `getCurrentHoldings()`                                                                            | `List<Holding>`                      |
+|                              | `getCurrentPositions()`                                                                           | `List<Position>`                     |
+|                              | `convertPosition(Position currentPosition, ProductType toProductType, int quantityToConvert)`     | `DhanResponse`                       |
+| `getFundsEndpoint()`         | `getFundLimitDetails()                                                                            | `FundSummary`                        |
+|                              | `computeSingleOrderMargin(MarginRequest request)`                                                 | `Margin`                             |
+|                              | `computeMultiOrderMargin(MarginRequest request)`                                                  | `Margin`                             |
+| `getTraderControlEndpoint()` | `manageKillSwitch(KillSwitchStatus killSwitchStatus)`                                             | `String`                             |
+| `getStatementEndpoint()`     | `getLedgerReport(LocalDate fromDate, LocalDate toDate)`                                           | `Ledger`                             |
+| `getMarketQuotesEndpoint()`  | `getLTPFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                  | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getOHLCFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                 | `ExchangeSegmentCandlesticksWrapper` |
+|                              | `getQuoteFor(ExchangeSegmentSecurities exchangeSegmentSecurities)`                                | `ExchangeSegmentCandlesticksWrapper` |
+| `getSecurityEndpoint()`      | `getEDISStatusOf(String isin)`                                                                    | `EDISStatus`                         |
+|                              | `generateTPIN()`                                                                                  | `String`                             |
+|                              | `openBrowserForTPin(String isin, int quantity, Exchange exchange, Segment segment, boolean bulk)` |                                      |
+|                              | `createTempHtmlFile(String formHtml)`                                                             | `File`                               |
+|                              | `openInBrowser(File tempFile)`                                                                    |                                      |
 
 ## Cookbook
 
@@ -387,18 +387,18 @@ ANTHROPIC_API_KEY=ollama
 
 - In Powershell
 
-  ```ps
-  cd <project directory on windows>
+    ```ps
+    cd <project directory on windows>
 
-  # Docker Instruction: Take this Windows folder and project it into the container at /app.
-  docker sandbox run --name devbox claude .
-  ```
+    # Docker Instruction: Take this Windows folder and project it into the container at /app.
+    docker sandbox run --name devbox claude .
+    ```
 
-  - What this command does?:
-    - `docker sandbox run claude .`: Starts a hardened MicroVM and mounts your current folder.
-    - `host.docker.internal`: This is the magic URL that lets the container "reach out" to Ollama running on your Windows host.
-    - `ANTHROPIC_API_KEY="ollama"`: Required to bypass the login check (Ollama ignores the actual value).
-    - `--memory="4g"`: Limits the container to 4GB RAM to ensure your Windows host has enough left for Ollama and the OS.
+    - What this command does?:
+        - `docker sandbox run claude .`: Starts a hardened MicroVM and mounts your current folder.
+        - `host.docker.internal`: This is the magic URL that lets the container "reach out" to Ollama running on your Windows host.
+        - `ANTHROPIC_API_KEY="ollama"`: Required to bypass the login check (Ollama ignores the actual value).
+        - `--memory="4g"`: Limits the container to 4GB RAM to ensure your Windows host has enough left for Ollama and the OS.
 
 - Configuring Claude Inside the Container: Once the container starts and you see the claude > prompt, you must tell it to use your local model instead of the default:
   `/config set model qwen2.5-coder:7b`

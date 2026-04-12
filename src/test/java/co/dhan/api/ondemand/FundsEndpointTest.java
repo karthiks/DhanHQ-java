@@ -2,8 +2,7 @@ package co.dhan.api.ondemand;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
@@ -12,6 +11,7 @@ import co.dhan.constant.ProductType;
 import co.dhan.constant.TransactionType;
 import co.dhan.dto.FundSummary;
 import co.dhan.dto.Margin;
+import co.dhan.dto.MarginRequest;
 import co.dhan.helper.BigDecimalUtils;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
@@ -21,17 +21,20 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 
 class FundsEndpointTest extends UnitTestRoot {
 
-  @Mock DhanConnection mockDhanConnection;
+  @Mock
+  DhanConnection mockDhanConnection;
 
-  @Mock DhanHTTP mockDhanHTTP;
+  @Mock
+  DhanHTTP mockDhanHTTP;
 
-  @Mock DhanResponse mockDhanResponse;
+  @Mock
+  DhanResponse mockDhanResponse;
 
-  @Spy @InjectMocks FundsEndpoint fundsEndpoint;
+  @InjectMocks
+  FundsEndpoint fundsEndpoint;
 
   @Test
   void getFundLimitDetails_ReturnsFundSummary() {
@@ -46,7 +49,7 @@ class FundsEndpointTest extends UnitTestRoot {
   }
 
   @Test
-  void computeMargin_ReturnsMargin() {
+  void computeSingleOrderMargin_ReturnsMargin() {
     String securityid = "1";
     ExchangeSegment exseg = ExchangeSegment.NSE_EQ;
     TransactionType transTypeBuy = TransactionType.BUY;
@@ -69,10 +72,16 @@ class FundsEndpointTest extends UnitTestRoot {
     when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
     when(mockDhanResponse.convertToType(Margin.class)).thenReturn(expectedMargin);
 
-    assertThat(
-            fundsEndpoint.computeMargin(
-                securityid, exseg, transTypeBuy, qty, prodTypeCnc, price, triggerPrice))
-        .isEqualTo(expectedMargin);
+    MarginRequest request = new MarginRequest();
+    request.setSecurityID(securityid);
+    request.setExchangeSegment(exseg);
+    request.setTransactionType(transTypeBuy);
+    request.setQuantity(qty);
+    request.setProductType(prodTypeCnc);
+    request.setPrice(price);
+    request.setTriggerPrice(triggerPrice);
+
+    assertThat(fundsEndpoint.computeSingleOrderMargin(request)).isEqualTo(expectedMargin);
     verify(mockDhanHTTP)
         .doHttpPostRequest(
             eq("/margincalculator"),

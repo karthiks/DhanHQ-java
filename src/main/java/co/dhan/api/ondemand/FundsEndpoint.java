@@ -1,13 +1,10 @@
 package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
-import co.dhan.constant.ExchangeSegment;
-import co.dhan.constant.ProductType;
-import co.dhan.constant.TransactionType;
 import co.dhan.dto.FundSummary;
 import co.dhan.dto.Margin;
+import co.dhan.dto.MarginRequest;
 import co.dhan.http.DhanAPIException;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +22,7 @@ public class FundsEndpoint {
   interface APIEndpoint {
     String GetFundLimitDetails = "/fundlimit";
     String ComputeMargin = "/margincalculator";
+    String ComputeMarginMulti = "/margincalculator/multi";
   }
 
   private final DhanConnection dhanConnection;
@@ -40,45 +38,22 @@ public class FundsEndpoint {
         .convertToType(FundSummary.class);
   }
 
-  public Margin computeMargin(
-      String securityID,
-      ExchangeSegment exchangeSegment,
-      TransactionType transactionType,
-      int quantity,
-      ProductType productType,
-      BigDecimal price,
-      BigDecimal triggerPrice)
-      throws DhanAPIException {
+  public Margin computeSingleOrderMargin(MarginRequest request) throws DhanAPIException {
+    if (request == null) {
+      throw new DhanAPIException("Input Error", "MarginRequest cannot be null");
+    }
     Map<String, String> payload = new HashMap<>();
-    payload.put(APIParam.SecurityID, securityID);
-    payload.put(APIParam.ExchangeSegment, String.valueOf(exchangeSegment));
-    payload.put(APIParam.TransactionType, String.valueOf(transactionType));
-    payload.put(APIParam.Quantity, String.valueOf(quantity));
-    payload.put(APIParam.ProductType, String.valueOf(productType));
-    payload.put(APIParam.Price, price.toString());
-    payload.put(APIParam.TriggerPrice, triggerPrice.toString());
+    payload.put(APIParam.SecurityID, request.getSecurityID());
+    payload.put(APIParam.ExchangeSegment, String.valueOf(request.getExchangeSegment()));
+    payload.put(APIParam.TransactionType, String.valueOf(request.getTransactionType()));
+    payload.put(APIParam.Quantity, String.valueOf(request.getQuantity()));
+    payload.put(APIParam.ProductType, String.valueOf(request.getProductType()));
+    payload.put(APIParam.Price, request.getPrice().toString());
+    payload.put(APIParam.TriggerPrice, request.getTriggerPrice().toString());
 
     return dhanConnection
         .getDhanHTTP()
         .doHttpPostRequest(APIEndpoint.ComputeMargin, payload)
         .convertToType(Margin.class);
-  }
-
-  public Margin computeMargin(
-      String securityID,
-      ExchangeSegment exchangeSegment,
-      TransactionType transactionType,
-      int quantity,
-      ProductType productType,
-      BigDecimal price)
-      throws DhanAPIException {
-    return computeMargin(
-        securityID,
-        exchangeSegment,
-        transactionType,
-        quantity,
-        productType,
-        price,
-        new BigDecimal(0));
   }
 }
