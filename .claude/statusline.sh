@@ -20,19 +20,17 @@ CUR_DIR=$(basename "$PWD")
 # The "// 0" provides a fallback if the field is null
 CUP_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 CWIN_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | cut -d. -f1)
-CWIN_TOTAL_INPUT_TOKENS=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0' | cut -d. -f1)
-CWIN_TOTAL_OUTPUT_TOKENS=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0' | cut -d. -f1)
-#CWIN_USED=$((CWIN_TOTAL_INPUT_TOKENS + CWIN_TOTAL_OUTPUT_TOKENS))
-CWIN_USED=$((CWIN_TOTAL_INPUT_TOKENS))
-CWIN_REMAINING=$((CWIN_SIZE - CWIN_USED))
-
 
 # Colors
 WHITE='\033[0;37m'
 RED='\033[0;31m'
+LIGHT_RED='\033[0;91m'
+ORANGE='\033[1;33m'
+BROWN='\033[0;33m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
+LIGHT_MAGENTA='\033[0;95m'
 LIGHT_BLUE='\033[0;94m'
 YELLOW='\033[0;33m'
 LIGHT_YELLOW='\033[0;93m'
@@ -105,7 +103,6 @@ else
 fi
 
 # Output the status line
-echo -e "📁${WHITE}${PWD}${NC} 🌿${git_info} "
-echo -e "${CYAN}${MODEL}${NC} ${YELLOW}ContextUsed:${CUP_PCT}%${NC}"
-echo -e "${LIGHT_BLUE}ContextWindow: Used ${CWIN_USED} of ${CWIN_SIZE} tokens${NC}. Remaining: ${CWIN_REMAINING} tokens.${NC}"
-echo -e "${GRAY}Claude Code v${CC_VER}${NC}"
+echo -e "📁 ${LIGHT_YELLOW}${PWD}${NC} 🔀 ${git_info} "
+echo -e "🤖 ${BROWN}${MODEL}${NC} 🪣 ${CYAN}ContextUsed:${CUP_PCT}%${NC}"
+echo -e "🦀 ${LIGHT_RED}Claude Code v${CC_VER}${NC}"
