@@ -8,9 +8,11 @@ import static org.mockito.Mockito.*;
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
 import co.dhan.api.ondemand.SuperOrderEndpoint.APIEndpoint;
+import co.dhan.api.ondemand.SuperOrderEndpoint.APIParam;
 import co.dhan.constant.*;
 import co.dhan.constant.SuperOrderStatus;
 import co.dhan.dto.SuperOrder;
+import co.dhan.dto.SuperOrderModificationRequest;
 import co.dhan.dto.SuperOrderRequest;
 import co.dhan.dto.SuperOrderResponse;
 import co.dhan.http.DhanAPIException;
@@ -201,6 +203,192 @@ class SuperOrderEndpointTest extends UnitTestRoot {
     assertThatThrownBy(() -> superOrderEndpoint.placeSuperOrder(request))
         .isInstanceOf(DhanAPIException.class)
         .hasMessageContaining("Super order must have at least one leg");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldReturnResult() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderId("super123")
+            .orderType(OrderType.LIMIT)
+            .legName(LegName.ENTRY_LEG)
+            .validity(Validity.DAY)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    SuperOrderResponse expectedResponse =
+        new SuperOrderResponse("super123", SuperOrderStatus.PENDING);
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpPutRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(SuperOrderResponse.class)).thenReturn(expectedResponse);
+
+    SuperOrderResponse actualResponse = superOrderEndpoint.modifySuperOrder(request);
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+
+    verify(mockDhanConnection).getDhanHTTP();
+    verify(mockDhanHTTP)
+        .doHttpPutRequest(
+            eq(String.format(APIEndpoint.ModifySuperOrder, request.getOrderId())),
+            argThat(
+                payload -> {
+                  // Verify that payload contains expected values
+                  return payload != null
+                      && payload.get(APIParam.OrderID).equals(request.getOrderId())
+                      && payload.get(APIParam.OrderType).equals(request.getOrderType().toString())
+                      && payload.get(APIParam.LegName).equals(request.getLegName().toString())
+                      && payload.get(APIParam.Validity).equals(request.getValidity().toString())
+                      && payload
+                          .get(APIParam.Quantity)
+                          .equals(String.valueOf(request.getQuantity()))
+                      && payload
+                          .get(APIParam.DisclosedQuantity)
+                          .equals(String.valueOf(request.getDisclosedQuantity()))
+                      && payload.get(APIParam.Price).equals(String.valueOf(request.getPrice()))
+                      && payload
+                          .get(APIParam.TriggerPrice)
+                          .equals(String.valueOf(request.getTriggerPrice()));
+                }));
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenRequestIsNull() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(null))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenOrderIdIsNull() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderType(OrderType.LIMIT)
+            .legName(LegName.ENTRY_LEG)
+            .validity(Validity.DAY)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenOrderIdIsBlank() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderType(OrderType.LIMIT)
+            .legName(LegName.ENTRY_LEG)
+            .validity(Validity.DAY)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenOrderTypeIsNull() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderId("super123")
+            .legName(LegName.ENTRY_LEG)
+            .validity(Validity.DAY)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenLegNameIsNull() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderId("super123")
+            .orderType(OrderType.LIMIT)
+            .validity(Validity.DAY)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenValidityIsNull() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderId("super123")
+            .orderType(OrderType.LIMIT)
+            .legName(LegName.ENTRY_LEG)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void modifySuperOrder_ShouldThrowException_WhenQuantityIsZero() throws DhanAPIException {
+    SuperOrderModificationRequest request =
+        SuperOrderModificationRequest.builder()
+            .orderId("super123")
+            .orderType(OrderType.LIMIT)
+            .legName(LegName.ENTRY_LEG)
+            .validity(Validity.DAY)
+            .quantity(0)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .disclosedQuantity(10)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.modifySuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining(
+            "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
 
     verify(mockDhanConnection, never()).getDhanHTTP();
   }

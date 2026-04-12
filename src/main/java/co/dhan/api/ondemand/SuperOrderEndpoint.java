@@ -2,6 +2,7 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.dto.SuperOrder;
+import co.dhan.dto.SuperOrderModificationRequest;
 import co.dhan.dto.SuperOrderRequest;
 import co.dhan.dto.SuperOrderResponse;
 import co.dhan.http.DhanAPIException;
@@ -55,6 +56,7 @@ public class SuperOrderEndpoint {
   interface APIEndpoint {
     String GetAllSuperOrders = "/super/orders";
     String CreateSuperOrder = "/super/orders";
+    String ModifySuperOrder = "/super/orders/%s";
   }
 
   private final DhanConnection dhanConnection;
@@ -200,6 +202,54 @@ public class SuperOrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpPostRequest(APIEndpoint.CreateSuperOrder, payload)
+        .convertToType(SuperOrderResponse.class);
+  }
+
+  /**
+   * Modifies a pending super order.
+   *
+   * <p>Endpoint: PUT https://api.dhan.co/v2/super/orders/{order-id}
+   *
+   * <p>Request contains: Super order modification details including order type, leg name, validity,
+   * quantity, price, and trigger price.
+   *
+   * <p>Response contains: Super order confirmation with order ID and status.
+   *
+   * <p>Throws: - DhanAPIException: For API authentication/authorization failure, invalid request
+   * format, or non-200 status code from the API
+   *
+   * @param request Super order modification request containing order ID and updated parameters
+   * @return Super order confirmation with order ID and status
+   */
+  public SuperOrderResponse modifySuperOrder(SuperOrderModificationRequest request)
+      throws DhanAPIException {
+    // Input validation
+    if (request == null
+        || request.getOrderId() == null
+        || request.getOrderId().isEmpty()
+        || request.getOrderType() == null
+        || request.getLegName() == null
+        || request.getValidity() == null
+        || request.getQuantity() == 0) {
+      throw new DhanAPIException(
+          "Input Error",
+          "One of the values are invalid -> OrderID, OrderType, OrderLegName, OrderValidity, OrderQuantity.");
+    }
+    Map<String, String> payload = new HashMap<>();
+
+    payload.put(APIParam.OrderID, request.getOrderId());
+    payload.put(APIParam.OrderType, request.getOrderType().toString());
+    payload.put(APIParam.LegName, request.getLegName().toString());
+    payload.put(APIParam.Validity, request.getValidity().toString());
+    payload.put(APIParam.Quantity, String.valueOf(request.getQuantity()));
+    payload.put(APIParam.DisclosedQuantity, String.valueOf(request.getDisclosedQuantity()));
+    payload.put(APIParam.Price, String.valueOf(request.getPrice()));
+    payload.put(APIParam.TriggerPrice, String.valueOf(request.getTriggerPrice()));
+
+    String endpoint = String.format(APIEndpoint.ModifySuperOrder, request.getOrderId());
+    return dhanConnection
+        .getDhanHTTP()
+        .doHttpPutRequest(endpoint, payload)
         .convertToType(SuperOrderResponse.class);
   }
 }
