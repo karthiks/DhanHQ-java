@@ -16,6 +16,7 @@ public class DhanCore {
   private final StatementEndpoint statementEndpoint;
   private final SecurityEndpoint securityEndpoint;
   private final MarketQuotesEndpoint marketQuotesEndpoint;
+  private final SuperOrderEndpoint superOrderEndpoint;
   private final LiveMarketFeed liveMarketFeed;
   private final LiveMarketDepth liveMarketDepth;
 
@@ -28,6 +29,7 @@ public class DhanCore {
     statementEndpoint = new StatementEndpoint(dhanConnection);
     securityEndpoint = new SecurityEndpoint(dhanConnection);
     marketQuotesEndpoint = new MarketQuotesEndpoint(dhanConnection);
+    superOrderEndpoint = new SuperOrderEndpoint(dhanConnection);
     liveMarketFeed = new LiveMarketFeed(dhanConnection);
     liveMarketDepth = new LiveMarketDepth(dhanConnection);
   }
