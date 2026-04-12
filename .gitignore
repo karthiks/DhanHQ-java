@@ -55,3 +55,13 @@ ccr-config/plugins/
 
 # Ignore local plugins volume
 .claude-plugins/
+
+specs/005-create-super-order.md
+specs/006-modify-super-order.md
+specs/007-cancel-super-order.md
+specs/008-calc-margin-for-multi-orders.md
+specs/009-kill-switch-status.md
+specs/010-configure-pnl-exit.md
+specs/011-delete-pnl-exit.md
+specs/012-get-pnl-exit.md
+specs/All.md

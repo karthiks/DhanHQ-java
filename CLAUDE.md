@@ -28,6 +28,10 @@ Java SDK for [Dhan API](https://dhanhq.co/docs/v2/)
     - Any test commands and their results
     - The current implementation plan
     - Error messages that haven't been resolved
+- **Discovery Trigger:** Whenever you encounter a non-obvious bug, a specific fix for a dependency issue, or a unique architectural pattern, you MUST suggest an update to the [Project Learnings](./CLAUDE.md#project-learnings) section of this file.
+- **Session Handover:** At the end of a complex task, summarize what was learned and ask if you should update `CLAUDE.md` to ensure the next session (or a teammate) starts with this context.
+- **Autonomous Documentation:** You are authorized to create or update files in the `.claude/rules/` directory to document sub-system specific logic (e.g., `.claude/rules/database.md`) when you find recurring patterns.
+- **Tooling Constraints:** If a specific test command or build flag is found to be necessary for this environment, record it immediately in the "Build & Test" section.
 
 ### Typical tasks
 
@@ -45,3 +49,5 @@ Java SDK for [Dhan API](https://dhanhq.co/docs/v2/)
 - [ ] Javadoc warnings clean
 - [ ] No credential leaks
 - [ ] Public API remains backward compatible (unless major bump)
+
+### Project Learnings
