@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
-import co.dhan.http.DhanAPIException;
 import co.dhan.api.ondemand.OrderEndpoint.APIEndpoint;
 import co.dhan.api.ondemand.OrderEndpoint.APIParam;
 import co.dhan.constant.*;
@@ -17,6 +16,7 @@ import co.dhan.dto.Order;
 import co.dhan.dto.OrderResponse;
 import co.dhan.dto.Trade;
 import co.dhan.helper.BigDecimalUtils;
+import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
 import com.fasterxml.jackson.core.type.TypeReference;

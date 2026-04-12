@@ -1,38 +1,31 @@
 package co.dhan.http;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import co.dhan.UnitTestRoot;
 import co.dhan.api.stream.listener.LiveMarketFeedListener;
-import co.dhan.constant.DataAPIError;
 import co.dhan.constant.FeedResponseCode;
 import co.dhan.dto.LiveOI;
 import co.dhan.dto.LivePrevClose;
 import co.dhan.dto.LiveQuote;
 import co.dhan.dto.LiveQuoteMax;
 import co.dhan.dto.LiveTicker;
-import co.dhan.http.DhanAPIException;
-import co.dhan.http.LiveMarketFeedTransformer;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.ByteString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.WebSocket;
 
 class LiveMarketFeedTransformerTest extends UnitTestRoot {
 
-  @Mock
-  private LiveMarketFeedListener mockFeedListener;
+  @Mock private LiveMarketFeedListener mockFeedListener;
 
   @BeforeEach
   public void setup() {
@@ -56,11 +49,13 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
 
     transformer.onClosed(null, 1001, reason);
 
-    verify(mockFeedListener).onTermination(
-        Mockito.argThat(
-            e -> e.getMessage().contains("Client terminated the connection") &&
-                e.getCode().equals("1001") &&
-                e.getMessage().contains(reason)));
+    verify(mockFeedListener)
+        .onTermination(
+            Mockito.argThat(
+                e ->
+                    e.getMessage().contains("Client terminated the connection")
+                        && e.getCode().equals("1001")
+                        && e.getMessage().contains(reason)));
   }
 
   @Test
@@ -75,11 +70,13 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
 
     transformer.onFailure(null, new RuntimeException("Test failure"), mockResponse);
 
-    verify(mockFeedListener).onError(
-        Mockito.argThat(
-            e -> e instanceof DhanAPIException &&
-                ((DhanAPIException) e).getCode().equals("500") &&
-                ((DhanAPIException) e).getMessage().equals("Internal Server Error")));
+    verify(mockFeedListener)
+        .onError(
+            Mockito.argThat(
+                e ->
+                    e instanceof DhanAPIException
+                        && ((DhanAPIException) e).getCode().equals("500")
+                        && ((DhanAPIException) e).getMessage().equals("Internal Server Error")));
   }
 
   @Test
@@ -95,11 +92,13 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
 
     transformer.onFailure(null, new RuntimeException("Test failure"), mockResponse);
 
-    verify(mockFeedListener).onError(
-        Mockito.argThat(
-            e -> e instanceof DhanAPIException &&
-                ((DhanAPIException) e).getCode().isEmpty() &&
-                ((DhanAPIException) e).getMessage().contains("500")));
+    verify(mockFeedListener)
+        .onError(
+            Mockito.argThat(
+                e ->
+                    e instanceof DhanAPIException
+                        && ((DhanAPIException) e).getCode().isEmpty()
+                        && ((DhanAPIException) e).getMessage().contains("500")));
   }
 
   @Test
@@ -109,9 +108,7 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
 
     transformer.onFailure(null, testException, null);
 
-    verify(mockFeedListener).onError(
-        Mockito.argThat(
-            e -> e.getMessage().equals("Network error")));
+    verify(mockFeedListener).onError(Mockito.argThat(e -> e.getMessage().equals("Network error")));
   }
 
   @Test
@@ -183,7 +180,7 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
   @Test
   void onMessage_UndefinedResponseCode_Success_CallsOnError() {
     LiveMarketFeedTransformer transformer = new LiveMarketFeedTransformer(mockFeedListener);
-    byte[] undefinedData = new byte[] { (byte) 0xFF, 0x00, 0x00, 0x00 };
+    byte[] undefinedData = new byte[] {(byte) 0xFF, 0x00, 0x00, 0x00};
     ByteString bytes = ByteString.of(undefinedData);
 
     transformer.onMessage(null, bytes);
@@ -194,7 +191,7 @@ class LiveMarketFeedTransformerTest extends UnitTestRoot {
   @Test
   void onMessage_ExceptionDuringProcessing_Success_LogsErrorWithoutPropagating() {
     LiveMarketFeedTransformer transformer = new LiveMarketFeedTransformer(mockFeedListener);
-    byte[] invalidData = new byte[] { 0x02 }; // Ticker packet with insufficient data
+    byte[] invalidData = new byte[] {0x02}; // Ticker packet with insufficient data
     ByteString bytes = ByteString.of(invalidData);
 
     transformer.onMessage(null, bytes);

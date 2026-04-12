@@ -76,11 +76,9 @@ public class PortfolioEndpoint {
   /**
    * Exit all open positions.
    *
-   * <p>
-   * Endpoint: DELETE https://api.dhan.co/v2/positions
+   * <p>Endpoint: DELETE https://api.dhan.co/v2/positions
    *
-   * Note: This only exits open positions and does NOT cancel pending orders.
-   * </p>
+   * <p>Note: This only exits open positions and does NOT cancel pending orders.
    *
    * @return PositionsExitResponse containing status and message
    * @throws DhanAPIException if the API request fails

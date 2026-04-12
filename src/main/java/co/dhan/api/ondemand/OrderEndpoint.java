@@ -59,14 +59,15 @@ public class OrderEndpoint {
    * The order request API allows you to place new order.
    *
    * @param nordRequest: order that is to be placed
-   * @param slice:       boolean value true makes this a slice-order
+   * @param slice: boolean value true makes this a slice-order
    * @return OrderResponse
    * @throws DhanAPIException
    */
   public OrderResponse placeOrder(NewOrderRequest nordRequest, String tag, boolean slice)
       throws DhanAPIException {
 
-    EnumSet<AMOTime> afterMarketOrderTimes = EnumSet.of(AMOTime.OPEN, AMOTime.OPEN_30, AMOTime.OPEN_60);
+    EnumSet<AMOTime> afterMarketOrderTimes =
+        EnumSet.of(AMOTime.OPEN, AMOTime.OPEN_30, AMOTime.OPEN_60);
     if (nordRequest.isAfterMarketOrder()
         && !afterMarketOrderTimes.contains(nordRequest.getAmoTime())) {
       throw new DhanAPIException(
@@ -116,8 +117,7 @@ public class OrderEndpoint {
   }
 
   /**
-   * The api allows you to modify pending order in orderbook. The fields that can
-   * be modified are
+   * The api allows you to modify pending order in orderbook. The fields that can be modified are
    * price, quantity, order type & validity.
    *
    * @param mor
@@ -165,8 +165,7 @@ public class OrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpGetRequest(APIEndpoint.GetOrders)
-        .convertToType(new TypeReference<List<Order>>() {
-        });
+        .convertToType(new TypeReference<List<Order>>() {});
   }
 
   public Order getOrderByID(String orderID) throws DhanAPIException {
@@ -182,16 +181,13 @@ public class OrderEndpoint {
   /**
    * Retrieves all trades executed today for the authenticated user.
    *
-   * <p>
-   * Endpoint: GET https://api.dhan.co/v2/trades
+   * <p>Endpoint: GET https://api.dhan.co/v2/trades
    *
-   * Response contains: Complete list of trades with all 49+ required fields
+   * <p>Response contains: Complete list of trades with all 49+ required fields
    *
-   * Throws:
-   * - DhanClientException: API authentication/authorization failure
-   * - InvalidFormatException: Invalid response format from Dhan API
-   * - InvalidRequestException: Non-200 status code from Dhan API
-   * </p>
+   * <p>Throws: - DhanClientException: API authentication/authorization failure -
+   * InvalidFormatException: Invalid response format from Dhan API - InvalidRequestException:
+   * Non-200 status code from Dhan API
    *
    * @return List of trades with all required fields populated
    * @see OrderEndpoint
@@ -200,17 +196,15 @@ public class OrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpGetRequest(APIEndpoint.GetTrades)
-        .convertToType(new TypeReference<List<Trade>>() {
-        });
+        .convertToType(new TypeReference<List<Trade>>() {});
   }
 
   /**
    * Retrieves all trades for a specific order ID.
    *
-   * <p>
-   * Endpoint: GET https://api.dhan.co/v2/trades/{order-id}
+   * <p>Endpoint: GET https://api.dhan.co/v2/trades/{order-id}
    *
-   * Response contains: List of trades (including partial fills) for the specified order ID
+   * <p>Response contains: List of trades (including partial fills) for the specified order ID
    *
    * @param orderId the order ID to retrieve trades for (must not be null or blank)
    * @return List of trades for the specified order ID
@@ -224,7 +218,6 @@ public class OrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpGetRequest(endpoint)
-        .convertToType(new TypeReference<List<Trade>>() {
-        });
+        .convertToType(new TypeReference<List<Trade>>() {});
   }
 }
