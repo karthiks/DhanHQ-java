@@ -58,7 +58,6 @@ ccr-config/plugins/
 .claude-plugins/
 
 
-specs/007-cancel-super-order.md
 specs/008-calc-margin-for-multi-orders.md
 specs/009-kill-switch-status.md
 specs/010-configure-pnl-exit.md

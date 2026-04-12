@@ -57,6 +57,7 @@ public class SuperOrderEndpoint {
     String GetAllSuperOrders = "/super/orders";
     String CreateSuperOrder = "/super/orders";
     String ModifySuperOrder = "/super/orders/%s";
+    String CancelSuperOrderLeg = "/super/orders/%s/%s";
   }
 
   private final DhanConnection dhanConnection;
@@ -250,6 +251,32 @@ public class SuperOrderEndpoint {
     return dhanConnection
         .getDhanHTTP()
         .doHttpPutRequest(endpoint, payload)
+        .convertToType(SuperOrderResponse.class);
+  }
+
+  /**
+   * Cancels a specific leg of a pending super order.
+   *
+   * <p>Endpoint: DELETE https://api.dhan.co/v2/super/orders/{order-id}/{order-leg}
+   *
+   * @param orderId   the super order ID (must not be null or blank)
+   * @param orderLeg  the order leg to cancel (must not be null or blank)
+   * @return Super order confirmation with order ID and status
+   * @throws DhanAPIException if orderId or orderLeg is null or blank, or if the API returns an error
+   */
+  public SuperOrderResponse cancelSuperOrderLeg(String orderId, String orderLeg)
+      throws DhanAPIException {
+    // Input validation
+    if (orderId == null || orderId.isBlank()) {
+      throw new DhanAPIException("Input Error", "Order ID must not be null or blank");
+    }
+    if (orderLeg == null || orderLeg.isBlank()) {
+      throw new DhanAPIException("Input Error", "Order leg must not be null or blank");
+    }
+    String endpoint = String.format(APIEndpoint.CancelSuperOrderLeg, orderId, orderLeg);
+    return dhanConnection
+        .getDhanHTTP()
+        .doHttpDeleteRequest(endpoint)
         .convertToType(SuperOrderResponse.class);
   }
 }

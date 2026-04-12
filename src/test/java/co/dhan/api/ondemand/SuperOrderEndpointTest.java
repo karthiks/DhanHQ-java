@@ -392,4 +392,57 @@ class SuperOrderEndpointTest extends UnitTestRoot {
 
     verify(mockDhanConnection, never()).getDhanHTTP();
   }
+
+  @Test
+  void cancelSuperOrderLeg_ShouldReturnResult() throws DhanAPIException {
+    SuperOrderResponse expectedResponse =
+        new SuperOrderResponse("super123", SuperOrderStatus.PENDING);
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpDeleteRequest(anyString())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(SuperOrderResponse.class)).thenReturn(expectedResponse);
+
+    SuperOrderResponse actualResponse = superOrderEndpoint.cancelSuperOrderLeg("super123", "leg1");
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+
+    verify(mockDhanConnection).getDhanHTTP();
+    verify(mockDhanHTTP)
+        .doHttpDeleteRequest(eq("/super/orders/super123/leg1"));
+  }
+
+  @Test
+  void cancelSuperOrderLeg_ShouldThrowException_WhenOrderIdIsNull() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.cancelSuperOrderLeg(null, "leg1"))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order ID must not be null or blank");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void cancelSuperOrderLeg_ShouldThrowException_WhenOrderIdIsBlank() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.cancelSuperOrderLeg("", "leg1"))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order ID must not be null or blank");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void cancelSuperOrderLeg_ShouldThrowException_WhenOrderLegIsNull() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.cancelSuperOrderLeg("super123", null))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order leg must not be null or blank");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void cancelSuperOrderLeg_ShouldThrowException_WhenOrderLegIsBlank() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.cancelSuperOrderLeg("super123", ""))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Order leg must not be null or blank");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
 }
