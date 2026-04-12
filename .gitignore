@@ -57,7 +57,7 @@ ccr-config/plugins/
 # Ignore local plugins volume
 .claude-plugins/
 
-specs/005-create-super-order.md
+
 specs/006-modify-super-order.md
 specs/007-cancel-super-order.md
 specs/008-calc-margin-for-multi-orders.md

@@ -7,9 +7,12 @@ import static org.mockito.Mockito.*;
 
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
+import co.dhan.api.ondemand.SuperOrderEndpoint.APIEndpoint;
 import co.dhan.constant.*;
 import co.dhan.constant.SuperOrderStatus;
 import co.dhan.dto.SuperOrder;
+import co.dhan.dto.SuperOrderRequest;
+import co.dhan.dto.SuperOrderResponse;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
@@ -101,5 +104,104 @@ class SuperOrderEndpointTest extends UnitTestRoot {
     leg.setAverageTradedPrice(BigDecimal.ZERO);
     leg.setAfterMarketOrder(false);
     return leg;
+  }
+
+  @Test
+  void placeSuperOrder_ShouldReturnResult() throws DhanAPIException {
+    SuperOrderRequest.SuperOrderLegRequest leg1 =
+        SuperOrderRequest.SuperOrderLegRequest.builder()
+            .securityId("123")
+            .exchangeSegment(ExchangeSegment.NSE_EQ)
+            .transactionType(TransactionType.BUY)
+            .orderType(OrderType.LIMIT)
+            .quantity(100)
+            .price(BigDecimal.valueOf(99.99))
+            .triggerPrice(BigDecimal.valueOf(99))
+            .legName(LegName.ENTRY_LEG)
+            .disclosedQuantity(10)
+            .afterMarketOrder(false)
+            .amoTime(AMOTime.OPEN)
+            .build();
+
+    SuperOrderRequest.SuperOrderLegRequest leg2 =
+        SuperOrderRequest.SuperOrderLegRequest.builder()
+            .securityId("456")
+            .exchangeSegment(ExchangeSegment.NSE_EQ)
+            .transactionType(TransactionType.BUY)
+            .orderType(OrderType.LIMIT)
+            .quantity(50)
+            .price(BigDecimal.valueOf(199.99))
+            .triggerPrice(BigDecimal.valueOf(199))
+            .legName(LegName.STOP_LOSS_LEG)
+            .disclosedQuantity(5)
+            .afterMarketOrder(false)
+            .amoTime(AMOTime.OPEN)
+            .build();
+
+    SuperOrderRequest.TriggerCondition condition =
+        SuperOrderRequest.TriggerCondition.builder()
+            .type(TriggerType.PRICE_TRIGGER)
+            .fromLeg("leg1")
+            .toLeg("leg2")
+            .triggerValue(BigDecimal.valueOf(105))
+            .operator(TriggerOperator.GREATER_THAN)
+            .isMet(false)
+            .build();
+
+    SuperOrderRequest request =
+        SuperOrderRequest.builder()
+            .legs(List.of(leg1, leg2))
+            .conditions(List.of(condition))
+            .orderType(OrderType.LIMIT)
+            .validity(Validity.DAY)
+            .productType(ProductType.CNC)
+            .correlationId("super-order-123")
+            .build();
+
+    SuperOrderResponse expectedResponse =
+        new SuperOrderResponse("super123", SuperOrderStatus.PENDING);
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpPostRequest(eq(APIEndpoint.CreateSuperOrder), anyMap()))
+        .thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(SuperOrderResponse.class)).thenReturn(expectedResponse);
+
+    SuperOrderResponse actualResponse = superOrderEndpoint.placeSuperOrder(request);
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+
+    verify(mockDhanConnection).getDhanHTTP();
+    verify(mockDhanHTTP)
+        .doHttpPostRequest(
+            eq(APIEndpoint.CreateSuperOrder),
+            argThat(
+                payload -> {
+                  // Verify that payload is not null and not empty
+                  return payload != null && !payload.isEmpty();
+                }));
+  }
+
+  @Test
+  void placeSuperOrder_ShouldThrowException_WhenRequestIsNull() throws DhanAPIException {
+    assertThatThrownBy(() -> superOrderEndpoint.placeSuperOrder(null))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("SuperOrderRequest cannot be null");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
+  }
+
+  @Test
+  void placeSuperOrder_ShouldThrowException_WhenNoLegs() throws DhanAPIException {
+    SuperOrderRequest request =
+        SuperOrderRequest.builder()
+            .orderType(OrderType.LIMIT)
+            .validity(Validity.DAY)
+            .productType(ProductType.CNC)
+            .build();
+
+    assertThatThrownBy(() -> superOrderEndpoint.placeSuperOrder(request))
+        .isInstanceOf(DhanAPIException.class)
+        .hasMessageContaining("Super order must have at least one leg");
+
+    verify(mockDhanConnection, never()).getDhanHTTP();
   }
 }
