@@ -20,7 +20,11 @@ CUR_DIR=$(basename "$PWD")
 # The "// 0" provides a fallback if the field is null
 CUP_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 CWIN_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | cut -d. -f1)
-CWIN_USED=$(echo "$input" | jq -r '.context_window.used // 0' | cut -d. -f1)
+CWIN_TOTAL_INPUT_TOKENS=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0' | cut -d. -f1)
+CWIN_TOTAL_OUTPUT_TOKENS=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0' | cut -d. -f1)
+#CWIN_USED=$((CWIN_TOTAL_INPUT_TOKENS + CWIN_TOTAL_OUTPUT_TOKENS))
+CWIN_USED=$((CWIN_TOTAL_INPUT_TOKENS))
+CWIN_REMAINING=$((CWIN_SIZE - CWIN_USED))
 
 
 # Colors
@@ -103,5 +107,5 @@ fi
 # Output the status line
 echo -e "📁${WHITE}${PWD}${NC} 🌿${git_info} "
 echo -e "${CYAN}${MODEL}${NC} ${YELLOW}ContextUsed:${CUP_PCT}%${NC}"
-echo -e "${LIGHT_BLUE}ContextWindow: Used ${CWIN_USED} of ${CWIN_SIZE} tokens${NC}"
+echo -e "${LIGHT_BLUE}ContextWindow: Used ${CWIN_USED} of ${CWIN_SIZE} tokens${NC}. Remaining: ${CWIN_REMAINING} tokens.${NC}"
 echo -e "${GRAY}Claude Code v${CC_VER}${NC}"
