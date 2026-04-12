@@ -1,30 +1,43 @@
 #!/bin/bash
 
 # This script generates a status line for the Claude terminal interface, showing the current directory, model name, and git status if applicable.
-# ref.: https://github.com/fatih/dotfiles/blob/add-claude-config/claude/statusline-git.sh
-# ref.: https://maeda.pm/2025/12/22/claude-status-line-mod/
+# ref.:
+#   https://code.claude.com/docs/en/statusline
+#   https://maeda.pm/2025/12/22/claude-status-line-mod/
+#   https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 
-# Read JSON input from stdin
+# Read JSON data that Claude Code sends to stdin
 input=$(cat)
 
-# Extract information from JSON
-model_name=$(echo "$input" | jq -r '.model.display_name')
-current_dir=$(echo "$input" | jq -r '.workspace.current_dir')
+# Extract information from JSON using jq
+CC_VER=$(echo "$input" | jq -r '.version')
+MODEL=$(echo "$input" | jq -r '.model.display_name')
+PWD=$(echo "$input" | jq -r '.workspace.current_dir')
 
 # Get directory name (basename)
-dir_name=$(basename "$current_dir")
+CUR_DIR=$(basename "$PWD")
+
+# The "// 0" provides a fallback if the field is null
+CUP_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
+CWIN_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | cut -d. -f1)
+CWIN_USED=$(echo "$input" | jq -r '.context_window.used // 0' | cut -d. -f1)
+
 
 # Colors
+WHITE='\033[0;37m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+LIGHT_BLUE='\033[0;94m'
 YELLOW='\033[0;33m'
+LIGHT_YELLOW='\033[0;93m'
 CYAN='\033[0;36m'
 GRAY='\033[0;90m'
 NC='\033[0m' # No Color
 
 # Change to the current directory to get git info
-cd "$current_dir" 2>/dev/null || cd /
+cd "$PWD" 2>/dev/null || cd /
 
 # Get git branch
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -88,4 +101,7 @@ else
 fi
 
 # Output the status line
-echo -e "${BLUE}${dir_name}${NC} ${CYAN}${model_name}${NC}${git_info}"
+echo -e "📁${WHITE}${PWD}${NC} 🌿${git_info} "
+echo -e "${CYAN}${MODEL}${NC} ${YELLOW}ContextUsed:${CUP_PCT}%${NC}"
+echo -e "${LIGHT_BLUE}ContextWindow: Used ${CWIN_USED} of ${CWIN_SIZE} tokens${NC}"
+echo -e "${GRAY}Claude Code v${CC_VER}${NC}"

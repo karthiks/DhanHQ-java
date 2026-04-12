@@ -1,19 +1,20 @@
 {
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
-    "ANTHROPIC_API_KEY": "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"
-  },
-  "permissions": {
-    "allow": [
-      "Bash(mvn test:*)",
-      "Bash(mvn clean)",
-      "Bash(java -jar /home/developer/.m2/repository/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar report target/jacoco.exec --classfiles target/classes --html target/site/jacoco --csv target/site/jacoco/coverage.csv)",
-      "Bash(java -jar /home/developer/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar dump --address localhost --port 6300 --destfile /workspace/target/jacoco.dump.exec)",
-      "Bash(mvn org.jacoco:jacoco-maven-plugin:0.8.12:report -DskipTests=true)",
-      "Bash(java -version)",
-      "Bash(mvn -Dtest=LiveMarketFeedTransformerTest test 2>&1 | tail -50)"
-    ]
-  },
-  "enabledMcpjsonServers": ["ripgrep"],
-  "enableAllProjectMcpServers": true
+    "env": {
+        "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+        "ANTHROPIC_AUTH_TOKEN": "your-custom-api-key",
+        "ANTHROPIC_API_KEY": ""
+    },
+    "permissions": {
+        "allow": [
+            "Bash(mvn test:*)",
+            "Bash(mvn clean)",
+            "Bash(java -jar /home/developer/.m2/repository/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar report target/jacoco.exec --classfiles target/classes --html target/site/jacoco --csv target/site/jacoco/coverage.csv)",
+            "Bash(java -jar /home/developer/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar dump --address localhost --port 6300 --destfile /workspace/target/jacoco.dump.exec)",
+            "Bash(mvn org.jacoco:jacoco-maven-plugin:0.8.12:report -DskipTests=true)",
+            "Bash(java -version)",
+            "Bash(mvn -Dtest=LiveMarketFeedTransformerTest test 2>&1 | tail -50)"
+        ]
+    },
+    "enabledMcpjsonServers": ["ripgrep"],
+    "enableAllProjectMcpServers": true
 }

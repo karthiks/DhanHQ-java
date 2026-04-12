@@ -9,6 +9,7 @@ Java SDK for [Dhan API](https://dhanhq.co/docs/v2/)
 - Build Project: `mvn clean install`
 - Run all Unit Tests: `mvn test`
 - Run specific Unit Test class like `OrderEndpointTest`: `mvn -Dtest=co.dhan.api.ondemand.OrderEndpointTest test`
+- Code formatting: `mvn spotless:apply`
 - Check Test Coverage: `mvn jacoco:report`
 
 ## Agent Instructions (Applies to ALL agents)
