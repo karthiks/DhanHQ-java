@@ -42,6 +42,9 @@ build/
 ### Application Logs ###
 *.log
 
+### AI Worktrees ###
+.worktrees/
+
 ### Property Files ###
 *test.properties
 .todo
