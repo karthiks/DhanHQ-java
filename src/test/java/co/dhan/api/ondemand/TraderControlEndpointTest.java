@@ -8,8 +8,10 @@ import static org.mockito.Mockito.when;
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
+import co.dhan.dto.KillSwitchStatusResponse;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,15 +31,29 @@ class TraderControlEndpointTest extends UnitTestRoot {
   void manageKillSwitch_ReturnResultSuccessfully() {
     String expectedResponse =
         """
-                {
-                    "dhanClientId":"123",
-                    "killSwitchStatus": "Kill Switch has been successfully activated"
-                }""";
+        {
+            "dhanClientId":"123",
+            "killSwitchStatus": "Kill Switch has been successfully activated"
+        }""";
     when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
     when(mockDhanHTTP.doHttpPostRequest(anyString(), anyMap())).thenReturn(mockDhanResponse);
     when(mockDhanResponse.toString()).thenReturn(expectedResponse);
     assertThat(traderControlEndpoint.manageKillSwitch(KillSwitchStatus.ACTIVATE))
         .contains("activated");
     verify(mockDhanHTTP).doHttpPostRequest(eq("/killswitch?killSwitchStatus=ACTIVATE"), anyMap());
+  }
+
+  @Test
+  void getKillSwitchStatus_ReturnResultSuccessfully() throws IOException {
+    KillSwitchStatusResponse expectedStatus =
+        new KillSwitchStatusResponse("123", KillSwitchStatus.ACTIVATE);
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpGetRequest(anyString())).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(KillSwitchStatusResponse.class)).thenReturn(expectedStatus);
+
+    assertThat(traderControlEndpoint.getKillSwitchStatus())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedStatus);
+    verify(mockDhanHTTP).doHttpGetRequest(eq("/killswitch"));
   }
 }

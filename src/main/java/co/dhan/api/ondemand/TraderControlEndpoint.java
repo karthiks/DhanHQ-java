@@ -2,6 +2,7 @@ package co.dhan.api.ondemand;
 
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
+import co.dhan.dto.KillSwitchStatusResponse;
 import co.dhan.helper.HTTPUtils;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanResponse;
@@ -40,5 +41,21 @@ public class TraderControlEndpoint {
       log.error(msg);
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Retrieves the current status of the Kill Switch (Trader's Control).
+   *
+   * <p>Endpoint: GET https://api.dhan.co/v2/killswitch
+   *
+   * <p>Response contains: Kill switch status details including client ID, status, enabled state,
+   * reason, and timestamps
+   *
+   * @return KillSwitchStatusResponse object containing the kill switch status information
+   * @throws DhanAPIException if the API request fails
+   */
+  public KillSwitchStatusResponse getKillSwitchStatus() throws DhanAPIException {
+    DhanResponse dhanResponse = dhanConnection.getDhanHTTP().doHttpGetRequest("/killswitch");
+    return dhanResponse.convertToType(KillSwitchStatusResponse.class);
   }
 }
