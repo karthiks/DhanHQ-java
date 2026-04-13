@@ -83,4 +83,18 @@ public class TraderControlEndpoint {
     DhanResponse dhanResponse = dhanConnection.getDhanHTTP().doHttpGetRequest("/killswitch");
     return dhanResponse.convertToType(KillSwitchStatusResponse.class);
   }
+
+  /**
+   * Disable/stop P&L based exit rules.
+   *
+   * <p>Endpoint: DELETE https://api.dhan.co/v2/pnlExit
+   *
+   * @return PnlExitResponse object containing the status and message
+   * @throws DhanAPIException if the API request fails
+   */
+  public PnlExitResponse disablePnlExit() throws DhanAPIException {
+    DhanResponse dhanResponse =
+        dhanConnection.getDhanHTTP().doHttpDeleteRequest(APIEndpoint.ConfigurePnlExit);
+    return dhanResponse.convertToType(PnlExitResponse.class);
+  }
 }
