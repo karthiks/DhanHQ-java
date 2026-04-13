@@ -406,8 +406,7 @@ class SuperOrderEndpointTest extends UnitTestRoot {
     assertThat(actualResponse).isEqualTo(expectedResponse);
 
     verify(mockDhanConnection).getDhanHTTP();
-    verify(mockDhanHTTP)
-        .doHttpDeleteRequest(eq("/super/orders/super123/leg1"));
+    verify(mockDhanHTTP).doHttpDeleteRequest(eq("/super/orders/super123/leg1"));
   }
 
   @Test

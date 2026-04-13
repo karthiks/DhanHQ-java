@@ -24,17 +24,13 @@ import org.mockito.Mock;
 
 class FundsEndpointTest extends UnitTestRoot {
 
-  @Mock
-  DhanConnection mockDhanConnection;
+  @Mock DhanConnection mockDhanConnection;
 
-  @Mock
-  DhanHTTP mockDhanHTTP;
+  @Mock DhanHTTP mockDhanHTTP;
 
-  @Mock
-  DhanResponse mockDhanResponse;
+  @Mock DhanResponse mockDhanResponse;
 
-  @InjectMocks
-  FundsEndpoint fundsEndpoint;
+  @InjectMocks FundsEndpoint fundsEndpoint;
 
   @Test
   void getFundLimitDetails_ReturnsFundSummary() {

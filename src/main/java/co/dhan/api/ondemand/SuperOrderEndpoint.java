@@ -259,10 +259,11 @@ public class SuperOrderEndpoint {
    *
    * <p>Endpoint: DELETE https://api.dhan.co/v2/super/orders/{order-id}/{order-leg}
    *
-   * @param orderId   the super order ID (must not be null or blank)
-   * @param orderLeg  the order leg to cancel (must not be null or blank)
+   * @param orderId the super order ID (must not be null or blank)
+   * @param orderLeg the order leg to cancel (must not be null or blank)
    * @return Super order confirmation with order ID and status
-   * @throws DhanAPIException if orderId or orderLeg is null or blank, or if the API returns an error
+   * @throws DhanAPIException if orderId or orderLeg is null or blank, or if the API returns an
+   *     error
    */
   public SuperOrderResponse cancelSuperOrderLeg(String orderId, String orderLeg)
       throws DhanAPIException {
