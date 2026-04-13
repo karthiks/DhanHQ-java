@@ -3,6 +3,8 @@ package co.dhan.api.ondemand;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
 import co.dhan.dto.KillSwitchStatusResponse;
+import co.dhan.dto.PnlExitRequest;
+import co.dhan.dto.PnlExitResponse;
 import co.dhan.helper.HTTPUtils;
 import co.dhan.http.DhanAPIException;
 import co.dhan.http.DhanResponse;
@@ -18,8 +20,9 @@ public class TraderControlEndpoint {
     String KillSwitchStatus = "killSwitchStatus";
   }
 
-  interface APIEndopint {
+  interface APIEndpoint {
     String ManageKillSwitch = "/killswitch?killSwitchStatus=%s";
+    String ConfigurePnlExit = "/pnlExit";
   }
 
   private final DhanConnection dhanConnection;
@@ -28,8 +31,30 @@ public class TraderControlEndpoint {
     this.dhanConnection = dhanConnection;
   }
 
+  /**
+   * Configure P&L based exit rules.
+   *
+   * <p>Endpoint: POST https://api.dhan.co/v2/pnlExit
+   *
+   * @param request PnlExitRequest object containing profitValue, lossValue, enableKillSwitch, and
+   *     productType
+   * @return PnlExitResponse object containing the status and message
+   * @throws DhanAPIException if the API request fails
+   */
+  public PnlExitResponse configurePnlExit(PnlExitRequest request) throws DhanAPIException {
+    Map<String, String> payload = new HashMap<>();
+    payload.put("profitValue", request.getProfitValue().toString());
+    payload.put("lossValue", request.getLossValue().toString());
+    payload.put("enableKillSwitch", String.valueOf(request.isEnableKillSwitch()));
+    payload.put("productType", request.getProductType().toString());
+
+    DhanResponse dhanResponse =
+        dhanConnection.getDhanHTTP().doHttpPostRequest(APIEndpoint.ConfigurePnlExit, payload);
+    return dhanResponse.convertToType(PnlExitResponse.class);
+  }
+
   public String manageKillSwitch(KillSwitchStatus killSwitchStatus) throws DhanAPIException {
-    String endpoint = String.format(APIEndopint.ManageKillSwitch, killSwitchStatus.toString());
+    String endpoint = String.format(APIEndpoint.ManageKillSwitch, killSwitchStatus.toString());
     DhanResponse dhanResponse =
         dhanConnection.getDhanHTTP().doHttpPostRequest(endpoint, new HashMap<>());
     Map<String, String> map = null;

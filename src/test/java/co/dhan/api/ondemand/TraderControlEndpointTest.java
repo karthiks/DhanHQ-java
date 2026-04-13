@@ -8,10 +8,17 @@ import static org.mockito.Mockito.when;
 import co.dhan.UnitTestRoot;
 import co.dhan.api.DhanConnection;
 import co.dhan.constant.KillSwitchStatus;
+import co.dhan.constant.PnLExitStatus;
+import co.dhan.constant.ProductType;
 import co.dhan.dto.KillSwitchStatusResponse;
+import co.dhan.dto.PnlExitRequest;
+import co.dhan.dto.PnlExitResponse;
 import co.dhan.http.DhanHTTP;
 import co.dhan.http.DhanResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -55,5 +62,36 @@ class TraderControlEndpointTest extends UnitTestRoot {
         .usingRecursiveComparison()
         .isEqualTo(expectedStatus);
     verify(mockDhanHTTP).doHttpGetRequest(eq("/killswitch"));
+  }
+
+  @Test
+  void configurePnlExit_ReturnResultSuccessfully() {
+    PnlExitRequest request =
+        PnlExitRequest.builder()
+            .profitValue(new BigDecimal("1000"))
+            .lossValue(new BigDecimal("500"))
+            .enableKillSwitch(true)
+            .productType(ProductType.INTRADAY)
+            .build();
+
+    PnlExitResponse expectedResponse =
+        new PnlExitResponse(PnLExitStatus.ACTIVE, "P&L exit configured successfully");
+    Map<String, String> expectedPayload = new HashMap<>();
+    expectedPayload.put("profitValue", "1000");
+    expectedPayload.put("lossValue", "500");
+    expectedPayload.put("enableKillSwitch", "true");
+    expectedPayload.put("productType", "INTRADAY");
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpPostRequest(
+            eq("/pnlExit"), argThat(payload -> expectedPayload.equals(payload))))
+        .thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(PnlExitResponse.class)).thenReturn(expectedResponse);
+
+    assertThat(traderControlEndpoint.configurePnlExit(request))
+        .usingRecursiveComparison()
+        .isEqualTo(expectedResponse);
+    verify(mockDhanHTTP)
+        .doHttpPostRequest(eq("/pnlExit"), argThat(payload -> expectedPayload.equals(payload)));
   }
 }

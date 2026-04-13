@@ -59,7 +59,6 @@ ccr-config/plugins/
 
 
 specs/008-calc-margin-for-multi-orders.md
-specs/010-configure-pnl-exit.md
 specs/011-delete-pnl-exit.md
 specs/012-get-pnl-exit.md
 specs/All.md
