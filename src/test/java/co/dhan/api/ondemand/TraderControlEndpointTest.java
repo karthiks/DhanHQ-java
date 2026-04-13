@@ -109,4 +109,19 @@ class TraderControlEndpointTest extends UnitTestRoot {
         .isEqualTo(expectedResponse);
     verify(mockDhanHTTP).doHttpDeleteRequest(eq("/pnlExit"));
   }
+
+  @Test
+  void getPnlExitConfig_ReturnResultSuccessfully() {
+    PnlExitResponse expectedResponse =
+        new PnlExitResponse(PnLExitStatus.ACTIVE, "P&L exit configured successfully");
+
+    when(mockDhanConnection.getDhanHTTP()).thenReturn(mockDhanHTTP);
+    when(mockDhanHTTP.doHttpGetRequest(eq("/pnlExit"))).thenReturn(mockDhanResponse);
+    when(mockDhanResponse.convertToType(PnlExitResponse.class)).thenReturn(expectedResponse);
+
+    assertThat(traderControlEndpoint.getPnlExitConfig())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedResponse);
+    verify(mockDhanHTTP).doHttpGetRequest(eq("/pnlExit"));
+  }
 }

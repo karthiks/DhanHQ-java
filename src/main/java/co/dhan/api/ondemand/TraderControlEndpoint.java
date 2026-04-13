@@ -97,4 +97,18 @@ public class TraderControlEndpoint {
         dhanConnection.getDhanHTTP().doHttpDeleteRequest(APIEndpoint.ConfigurePnlExit);
     return dhanResponse.convertToType(PnlExitResponse.class);
   }
+
+  /**
+   * Retrieves the configured P&L based exit rules.
+   *
+   * <p>Endpoint: GET https://api.dhan.co/v2/pnlExit
+   *
+   * @return PnlExitResponse object containing the status and message
+   * @throws DhanAPIException if the API request fails
+   */
+  public PnlExitResponse getPnlExitConfig() throws DhanAPIException {
+    DhanResponse dhanResponse =
+        dhanConnection.getDhanHTTP().doHttpGetRequest(APIEndpoint.ConfigurePnlExit);
+    return dhanResponse.convertToType(PnlExitResponse.class);
+  }
 }
