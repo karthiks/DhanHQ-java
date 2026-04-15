@@ -48,7 +48,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ============================================
 # Step 3: Setup Workspace
 # ============================================
-# USER node
+USER node
 WORKDIR /workspace
 RUN chown $USERNAME:$USERNAME /workspace
 
@@ -97,7 +97,7 @@ RUN  git config --global core.fileMode false \
 	&& git config --global --add safe.directory /workspace  \
 	&& echo 'alias cld="claude"' >> ~/.zshrc \
     && echo 'alias cldw="claude -w"' >> ~/.zshrc \
-    && echo 'export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"' >> ~/.zshrc 
+    && echo '$PATH' >> ~/.zshrc 
 
 # ============================================
 # Step 10: Set Default User and Entrypoint
