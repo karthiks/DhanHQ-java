@@ -6,15 +6,8 @@ FROM eclipse-temurin:21-jdk-jammy AS java_source
 FROM node:20-bookworm-slim
 
 # Build arguments for user configuration
-# On Windows with Docker Desktop (especially using WSL2 backend), file permissions are mapped based on UID/GIDs.
-# The default first user in WSL2 is typically UID 1000. If you use UID 2000 inside the container, files created by the container will have owner UID 2000, which on the WSL2 host will appear as an unknown user (or a different user), leading to permission issues when you try to edit those files from the host.
-# Better approach: Reuse UID 1000 cleanly by renaming the existing node user (which already has UID 1000) to your desired username, instead of deleting it or creating a new user with a different UID.
-# ARG USERNAME=ccagent
-# ARG USER_UID=1000
-# ARG USER_GID=1000
-
-# We'll use the existing 'node' user (UID 1000)
-ARG USERNAME=node
+# We'll replace existing 'node' user (UID 1000) with $USERNAME to ensure it has the same UID and permissions
+ARG USERNAME=ccagent
 
 # ============================================
 # Step 1: Install System Dependencies
@@ -34,29 +27,42 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # RUN chsh -s $(which zsh) $USERNAME
 
 # ============================================
-# Step 2: Create User with Sudo Access
-# Reuse existing 'node' user (UID 1000) by renaming it to $USERNAME and setting zsh
+# Step 2: Reuse existing 'node' user (UID 1000) by renaming it to $USERNAME
+# groupmod -n, --new-name NEW_GROUP: to rename a group
+# usermod -l, --login NEW_LOGIN: to rename user account
+# usermod -m, --move-home: Moves the contents of the current home directory to the new directory (used with -d).
+# usermod -d, --home HOME_DIR: Changes the user's home directory to a new path.
+# usermod -s, --shell SHELL: Changes the user’s login shell (e.g., /bin/bash or /sbin/nologin).
 # ============================================
-# RUN usermod -l $USERNAME node \
-    # && usermod -d /home/$USERNAME -m node \
-    # && groupmod -n $USERNAME node \
-    # && usermod -s /usr/bin/zsh $USERNAME \
+
+# 2.1. Rename the group and the user
+RUN groupmod -n $USERNAME node \
+    && usermod -l $USERNAME -m -d /home/$USERNAME node \
     # Add user to sudoers with NOPASSWD
-    # && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    # && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# 2.2. Update environment variables
+ENV NODE_USER=$USERNAME
 
 # ============================================
-# Step 3: Setup Workspace
+# Step 3: Set zsh as the system default for the non-root user (adjust user name as needed)
 # ============================================
-USER node
+RUN chsh -s $(which zsh) $USERNAME
+
+# ============================================
+# Step 4: Setup Workspace
+# ============================================
+USER $USERNAME
 WORKDIR /workspace
 RUN chown $USERNAME:$USERNAME /workspace
 
+# If step-3 fails, this should fix it
 # Create a small bashrc that hands interactive bash sessions over to zsh
 RUN echo 'if [ -t 1 ]; then\n  exec /bin/zsh\nfi' > /home/$USERNAME/.bashrc
 
 # ============================================
-# Step 4: Copy Java and Maven
+# Step 5: Copy Java and Maven
 # ============================================
 ENV JAVA_HOME=/opt/java/openjdk
 ENV MAVEN_HOME=/usr/share/maven
@@ -64,7 +70,7 @@ COPY --from=java_source $JAVA_HOME $JAVA_HOME
 COPY --from=maven_source $MAVEN_HOME $MAVEN_HOME
 
 # ============================================
-# Step 5: Environment Variables
+# Step 6: Environment Variables
 # ============================================
 ENV PATH="/home/$USERNAME/.local/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PATH}"
 ENV TERM=xterm-256color \
@@ -97,7 +103,7 @@ RUN  git config --global core.fileMode false \
 	&& git config --global --add safe.directory /workspace  \
 	&& echo 'alias cld="claude"' >> ~/.zshrc \
     && echo 'alias cldw="claude -w"' >> ~/.zshrc \
-    && echo '$PATH' >> ~/.zshrc 
+    && echo '$PATH' >> ~/.zshrc
 
 # ============================================
 # Step 10: Set Default User and Entrypoint

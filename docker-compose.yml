@@ -1,35 +1,35 @@
 # Build the image
 # Ref.: https://openrouter.ai/docs/guides/coding-agents/claude-code-integration
-# Bash: export ANTHROPIC_BASE_URL="http://bifrost:8080/anthropic" ANTHROPIC_API_KEY="" ANTHROPIC_AUTH_TOKEN="your-api-key-here" 
-# PowerShell: $env:ANTHROPIC_BASE_URL="http://bifrost:8080/anthropic"; $env:ANTHROPIC_API_KEY=""; $env:ANTHROPIC_AUTH_TOKEN="your-api-key-here"
+# Bash: export ANTHROPIC_BASE_URL="https://openrouter.ai/api" ANTHROPIC_API_KEY="" ANTHROPIC_AUTH_TOKEN="your-api-key-here"
+# PowerShell: $env:ANTHROPIC_BASE_URL="https://openrouter.ai/api"; $env:ANTHROPIC_API_KEY=""; $env:ANTHROPIC_AUTH_TOKEN="your-api-key-here"
 # docker compose build
 
 # Launch the environment
 # The --rm flag ensures that once you type exit, the container instance is removed, keeping your Docker environment tidy.
-# docker compose run --rm claude-dhanj
+# docker compose run --rm cc4dhanjsdk
 
-# Consistency: If you run docker ps, you'll see claude-dhanj. If you run docker images, you'll see claude-dhanj.
+# Consistency: If you run docker ps, you'll see cc4dhanjsdk. If you run docker images, you'll see cc4dhanjsdk.
 # Volume Sync: Since your volume is mapped to ${PWD}, any code changes made by the Claude Code CLI inside the container will instantly appear on your host machine.
 # Memory Safety: The deploy block ensures that even if a Maven build or a heavy Node process spikes, it stays within your defined 8GB limit.
 
 services:
-    claude-dhanj:
+    cc4dhanjsdk:
         build:
             context: .
             dockerfile: Dockerfile.claude
-            args:  
+            args:
                 ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL}
                 ANTHROPIC_AUTH_TOKEN: ${ANTHROPIC_AUTH_TOKEN}
                 ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-        image: claude-dhanj:latest
-        container_name: claude-dhanj
+        image: cc4dhanjsdk:latest
+        container_name: cc4dhanjsdk
         working_dir: /workspace
         volumes:
             - .:/workspace
             - ./.claude-plugins:/root/.claude/plugins
         environment:
             - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
-            - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}  
+            - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
             - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
             - COLORTERM=truecolor
             - TERM=xterm-256color
