@@ -22,12 +22,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Set root's shell to zsh as well
     # && chsh -s $(which zsh) $USERNAME
 
-# Set zsh as the system default for the non-root user (adjust user name as needed)
-# If your container user is 'node' (official image), use that; otherwise use the user you want.
-# RUN chsh -s $(which zsh) $USERNAME
 
 # ============================================
-# Step 2: Reuse existing 'node' user (UID 1000) by renaming it to $USERNAME
+# Step 2: Install JDTLS that CC can leverage
+# Pre-requisite: JDK 21+ and Python (for the wrapper script)
+# ============================================
+# Set JDTLS version and path
+ENV JDTLS_HOME=/opt/jdtls
+RUN mkdir -p $JDTLS_HOME
+
+# Download and extract the latest JDTLS snapshot
+RUN wget -qO- https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz \
+    | tar -xvz -C $JDTLS_HOME
+
+# Create a symlink to the jdtls executable script
+RUN ln -s $JDTLS_HOME/bin/jdtls /usr/local/bin/jdtls
+
+
+# ============================================
+# Step 3: Reuse existing 'node' user (UID 1000) by renaming it to $USERNAME
 # groupmod -n, --new-name NEW_GROUP: to rename a group
 # usermod -l, --login NEW_LOGIN: to rename user account
 # usermod -m, --move-home: Moves the contents of the current home directory to the new directory (used with -d).
@@ -35,23 +48,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # usermod -s, --shell SHELL: Changes the user’s login shell (e.g., /bin/bash or /sbin/nologin).
 # ============================================
 
-# 2.1. Rename the group and the user
+# 3.1. Rename the group and the user
 RUN groupmod -n $USERNAME node \
     && usermod -l $USERNAME -m -d /home/$USERNAME node \
     # Add user to sudoers with NOPASSWD
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-# 2.2. Update environment variables
+# 3.2. Update environment variables
 ENV NODE_USER=$USERNAME
 
 # ============================================
-# Step 3: Set zsh as the system default for the non-root user (adjust user name as needed)
+# Step 4: Set zsh as the system default for the non-root user (adjust user name as needed)
 # ============================================
 RUN chsh -s $(which zsh) $USERNAME
 
 # ============================================
-# Step 4: Setup Workspace
+# Step 5: Setup Workspace
 # ============================================
 USER $USERNAME
 WORKDIR /workspace
@@ -62,7 +75,7 @@ RUN chown $USERNAME:$USERNAME /workspace
 RUN echo 'if [ -t 1 ]; then\n  exec /bin/zsh\nfi' > /home/$USERNAME/.bashrc
 
 # ============================================
-# Step 5: Copy Java and Maven
+# Step 6: Copy Java and Maven
 # ============================================
 ENV JAVA_HOME=/opt/java/openjdk
 ENV MAVEN_HOME=/usr/share/maven
@@ -70,21 +83,20 @@ COPY --from=java_source $JAVA_HOME $JAVA_HOME
 COPY --from=maven_source $MAVEN_HOME $MAVEN_HOME
 
 # ============================================
-# Step 6: Environment Variables
+# Step 7: Environment Variables
 # ============================================
 ENV PATH="/home/$USERNAME/.local/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PATH}"
-ENV TERM=xterm-256color \
-    COLORTERM=truecolor \
-    CONTAINER=docker
+ENV TERM=CONTAINER=docker \
+	ENABLE_LSP_TOOL=1
 
 # ============================================
-# Step 6: Install Oh My Zsh for User
+# Step 8: Install Oh My Zsh for User
 # ============================================
 USER $USERNAME
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # ============================================
-# Step 7: Install npm global packages
+# Step 9: Install npm global packages
 # ============================================
 # Configure npm to install global packages in user's home directory
 RUN mkdir -p ~/.local/bin \
@@ -92,12 +104,12 @@ RUN mkdir -p ~/.local/bin \
 RUN npm install -g mcp-ripgrep
 
 # ============================================
-# Step 8: Install Claude CLI
+# Step 10: Install Claude CLI
 # ============================================
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # ============================================
-# Step 9: Configure Git, Aliases and PATH
+# Step 11: Configure Git, Aliases and PATH
 # ============================================
 RUN  git config --global core.fileMode false \
 	&& git config --global --add safe.directory /workspace  \
@@ -106,7 +118,7 @@ RUN  git config --global core.fileMode false \
     && echo '$PATH' >> ~/.zshrc
 
 # ============================================
-# Step 10: Set Default User and Entrypoint
+# Step 12: Set Default User and Entrypoint
 # ============================================
 USER $USERNAME
 ENTRYPOINT ["zsh", "-i"]
