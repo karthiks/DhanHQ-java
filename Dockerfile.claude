@@ -87,7 +87,8 @@ COPY --from=maven_source $MAVEN_HOME $MAVEN_HOME
 # ============================================
 ENV PATH="/home/$USERNAME/.local/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PATH}"
 ENV TERM=CONTAINER=docker \
-	ENABLE_LSP_TOOL=1
+	ENABLE_LSP_TOOL=1 \
+    USE_BUILTIN_RIPGREP=0
 
 # ============================================
 # Step 8: Install Oh My Zsh for User
@@ -101,7 +102,6 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 # Configure npm to install global packages in user's home directory
 RUN mkdir -p ~/.local/bin \
 		&& npm config set prefix ~/.local
-RUN npm install -g mcp-ripgrep
 
 # ============================================
 # Step 10: Install Claude CLI

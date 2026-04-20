@@ -13,7 +13,8 @@
     "CLAUDE_CODE_CACHE_TTL": "300",
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70",
     "ENABLE_TOOL_SEARCH": "true",
-    "ENABLE_LSP_TOOL": "1"
+    "ENABLE_LSP_TOOL": "1",
+    "USE_BUILTIN_RIPGREP": "0"
   },
   "permissions": {
     "filesystem": {
@@ -60,7 +61,6 @@
     "padding": 2
   },
   "enabledPlugins": {
-    "memsearch@memsearch-plugins": true,
     "superpowers@claude-plugins-official": true,
     "jdtls-lsp@claude-plugins-official": true
   },
