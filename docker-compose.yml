@@ -42,4 +42,4 @@ services:
                     memory: 6G
         tty: true
         stdin_open: true
-        entrypoint: ["/bin/bash"]
+        #entrypoint: ["/bin/bash"]
